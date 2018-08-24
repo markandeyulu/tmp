@@ -1,0 +1,63 @@
+<project name="ResourceManagementApp Web Application" default="deploy" basedir="./..">
+	<property environment="env"/>
+	<property name="app.name" value="ResourceManagementApp" />
+	<property name="deploy.path" value="D:\apache-tomcat-8.0.52\webapps" />
+	<property name="work.home" value="${basedir}/build" />
+	<property name="src.home" value="${basedir}/src/main" />
+	<property name="web.home" value="${src.home}/webapp" />
+	<property name="app.home" value="${basedir}/app" />
+	<property name="test.home" value="${work.home}/test" />
+	<property name="test.reports" value="${test.home}/reports" />
+	<property name="test.source" value="${basedir}/src/test" />
+	<property name="mainversion.num" value="2"/>
+
+	<path id="compile.classpath">
+		<fileset dir="${basedir}/lib">
+			<include name="*.jar" />
+		</fileset>
+		
+	</path>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${work.home}/classes" />
+		<mkdir dir="${work.home}/dist" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac destdir="${work.home}/classes" debug="true" target="1.8" source="1.8">
+			<src path="${src.home}/java" />
+			<!--<src path="${test.source}/java" />-->
+			<classpath refid="compile.classpath" />
+		</javac>
+		<copy todir="${work.home}/classes">
+			<fileset dir="${src.home}/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="war" depends="compile">
+		<war destfile="${work.home}/dist/ResourceManagementApp.war" webxml="${web.home}/WEB-INF/web.xml">
+			<fileset dir="${web.home}">
+				<include name="**/*.*"/>
+			</fileset>
+			<lib dir="${basedir}/lib" />
+			<classes dir="${work.home}/classes" />
+		</war>
+	</target>
+
+	<target name="deploy" depends="war">
+		<delete dir="${deploy.path}/ResourceManagementApp" />
+		<delete file="${deploy.path}/ResourceManagementApp.war" />
+		<copy todir="${deploy.path}" preservelastmodified="true">
+			<fileset dir="${work.home}/dist">
+				<include name="*.war"/>
+			</fileset>
+		</copy>
+		<delete dir="${work.home}/classes" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${work.home}/classes" />
+	</target>
+</project>
