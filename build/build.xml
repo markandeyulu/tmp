@@ -1,7 +1,7 @@
 <project name="ResourceManagementApp Web Application" default="deploy" basedir="./..">
 	<property environment="env"/>
 	<property name="app.name" value="ResourceManagementApp" />
-	<property name="deploy.path" value="D:\apache-tomcat-8.0.52\webapps" />
+	<property name="deploy.path" value="D:\tomcat\apache-tomcat-7.0.26\webapps" />
 	<property name="work.home" value="${basedir}/build" />
 	<property name="src.home" value="${basedir}/src/main" />
 	<property name="web.home" value="${src.home}/webapp" />
@@ -24,7 +24,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac destdir="${work.home}/classes" debug="true" target="1.8" source="1.8">
+		<javac destdir="${work.home}/classes" debug="true" target="1.7" source="1.7">
 			<src path="${src.home}/java" />
 			<!--<src path="${test.source}/java" />-->
 			<classpath refid="compile.classpath" />

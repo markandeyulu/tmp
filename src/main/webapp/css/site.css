@@ -1,0 +1,107 @@
+body {
+	background-color: #fafafa;
+  font-family:'Roboto';
+}
+
+.container {}
+#StaffList {
+  height: 350px;
+  m
+  argin-bottom: 10px;
+}
+#PresenterList,
+#ContactList,
+#FacilitatorList {
+  height: 95px;
+  margin-bottom: 10px;
+}
+
+.style-select select {
+  padding: 0;
+}
+
+.style-select select option {
+  padding: 4px 10px 4px 10px;
+}
+
+.style-select select option:hover {
+  background: #EEEEEE;
+}
+
+.add-btns {
+  padding: 0;
+}
+
+.add-btns input {
+  margin-top: 25px;
+  width: 100%;
+}
+
+.selected-left {
+  float: left;
+  width: 88%;
+}
+
+.selected-right {
+  float: left;
+}
+
+.selected-right button {
+  display: block;
+  margin-left: 4px;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 517px) {
+  .selected-right button {
+    display: inline;
+    margin-bottom: 5px;
+  }
+}
+
+.subject-info-box-1,
+.subject-info-box-2 {
+  float: left;
+  width: 45%;
+}
+
+.subject-info-box-1 select,
+.subject-info-box-2 select {
+  height: 200px;
+  padding: 0;
+  border-top-width:3px;
+  
+  border-radius: 4px 4px 4px 4px;
+-moz-border-radius: 4px 4px 4px 4px;
+-webkit-border-radius: 4px 4px 4px 4px;
+border: 0px solid #000000;
+/* -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75); */
+-webkit-box-shadow: 0px 0px 10px 2px rgba(117,117,117,1);
+-moz-box-shadow: 0px 0px 10px 2px rgba(117,117,117,1);
+box-shadow: 0px 0px 10px 2px rgba(117,117,117,1);
+}
+
+.subject-info-box-1 select option,
+.subject-info-box-2 select option {
+  padding: 4px 10px 4px 10px;
+  padding-top:8px;
+  border-bottom: 1px solid #969696;
+}
+
+.subject-info-box-1 select option:hover,
+.subject-info-box-2 select option:hover {
+  background: #EEEEEE;
+  border-left: 3px solid #b30000;
+}
+
+.subject-info-arrows {
+  float: left;
+  width: 10%;
+}
+
+.subject-info-arrows input {
+  width: 70%;
+  margin-bottom: 5px;
+}
