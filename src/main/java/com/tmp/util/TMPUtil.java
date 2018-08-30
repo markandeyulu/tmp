@@ -329,8 +329,8 @@ public class TMPUtil {
 		return configDAO.getAdminInfoKeyValues(adminInfoKeyId);
 	}
 
-	public int createRequirement(Requirement requirement, String userId) {
-		return requirementDAO.createRequirement(requirement, userId);
+	public int createRequirement(Requirement requirement, String userId, String userName) {
+		return requirementDAO.createRequirement(requirement, userId, userName);
 	}
 
 	public int updateRequirement(Requirement requirement, String userId) {

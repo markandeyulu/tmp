@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -206,7 +205,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		return null;
 	}
 
-	public int createRequirement(Requirement requirement, String userId) {
+	@Override
+	public int createRequirement(Requirement requirement, String userId, String userName) {
 		StringBuffer sql = new StringBuffer(
 				"INSERT INTO REQUIREMENT (ID, CRITICALITY, SKILL_CATEGORY, PRIMARY_SKILL, JOB_DESCRIPTION, \r\n")
 				.append("LOCATION, CITY, BILLING_RATE, INTIMATION_DATE, INTIMATED_BY, INTIMATOR_EMAIL, INTIMATION_MODE, \r\n")
@@ -220,7 +220,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			requirement.setId(getRequirementId());
+			requirement.setId(getRequirementId(requirement.getAccount1(),requirement.getProjectAdd(), userName));
 			populateRequirementForInsert(ps, requirement, userId);
 			 value = ps.executeUpdate();
 			ps.close();
@@ -409,52 +409,69 @@ public class RequirementDAOImpl implements RequirementDAO {
 		}
 	}
 
-	private String getRequirementId() {
+	/**
+	 * Generates requirement ID
+	 * Format : YYYY_MM_AccountName_NameOfUser_incrementor
+	 * Eg : 2018_08_FD_SS_01
+	 * @param projectName 
+	 * @param accountName 
+	 * @param userName 
+	 * @return
+	 */
+	private String getRequirementId(String accountName, String projectName, String userName) { 
 		String requirementId = getLatestRequirementId();
-		String twoDigit=null;
+		String[] requirementIdParts = requirementId.split("_");
+		String incrementor=null;
 		String dbDate=null;
-		//system.out.println("requirementId.length()"+requirementId.length());
-		if(requirementId.length()< 14){
-			requirementId = getRandomString(dbDate,twoDigit);
-		}else{
-			twoDigit = requirementId.substring(12,14);
-			//system.out.println("twoDigit"+twoDigit);
-			dbDate = requirementId.substring(3,12);
-			//system.out.println("dbDate"+dbDate);
-			requirementId = getRandomString(dbDate,twoDigit);
+		if(requirementIdParts.length==5){
+			incrementor = requirementIdParts[4];
+			dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
 		}
+		requirementId = getRandomString(dbDate, incrementor, accountName, projectName, userName);
 		return requirementId;
 	}
 
-	private String getRandomString(String dbDate, String twoDigit) {
+	private static String getRandomString(String dbDate, String incrementor, String accountName, String projectName, String userName) {
 
-		DateFormat df = new SimpleDateFormat("ddMMMyyyy");
+		DateFormat df = new SimpleDateFormat("yyyy_MM");
 		Date today = Calendar.getInstance().getTime(); 
 		String currDate = df.format(today);
-		//system.out.println("currDate"+currDate);
-		String req="REQ";
-		String digit="01";
+		String defaultIncrementor="01";
 		String reqRandomNo =null;
-		//system.out.println("dbDate"+dbDate);
-
-		if(dbDate == null){
-			reqRandomNo = req+currDate+digit;
-			//system.out.println("null dbdate reqrandomNo"+reqRandomNo);
-		}else if(dbDate.equals(currDate)){
-			int reqDateIncr= Integer.parseInt(twoDigit)+1;
-			if(reqDateIncr<=9){
-				reqRandomNo = req+currDate+0+reqDateIncr;
+		String shortNames = "_"+getShortName(accountName)+"_"+getShortName(projectName)+"_"+getShortName(userName)+"_";
+		try {
+			if(dbDate == null){
+				reqRandomNo = currDate+shortNames+defaultIncrementor;
+			}else if(dbDate.equals(currDate)){
+				int reqDateIncr= Integer.parseInt(incrementor)+1;
+				if(reqDateIncr<=9){
+					reqRandomNo = currDate+shortNames+0+reqDateIncr;
+				}else{
+					reqRandomNo = currDate+shortNames+reqDateIncr;
+				}
 			}else{
-				reqRandomNo = req+currDate+reqDateIncr;
+				reqRandomNo = currDate+shortNames+defaultIncrementor;
 			}
-			//system.out.println("equals date"+reqRandomNo);
-		}else{
-			reqRandomNo = req+currDate+digit;
-			//system.out.println("not equals date"+reqRandomNo);
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 
-
 		return reqRandomNo;
+	}
+	
+	private static String getShortName(String name) {
+		
+		String shortName = "";
+		String[] words = name.split(" ");
+		if(words.length == 1) { // ONE WORD ONLY
+			shortName = words[0].substring(0, 2);
+		}else{
+			shortName = words[0].substring(0, 1)+words[1].substring(0, 1);
+		}
+		
+		System.out.println(shortName.toUpperCase());
+		return shortName.toUpperCase();
 	}
 	
 	private String getLatestRequirementId() {

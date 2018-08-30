@@ -16,7 +16,7 @@ public interface RequirementDAO {
 
 	public Requirements createRequirements(List<Requirement> requirements);
 
-	public int createRequirement(Requirement requirement, String userId);
+	public int createRequirement(Requirement requirement, String userId, String userName);
 
 	public Requirements updateRequirements(List<Requirement> requirements);
 
