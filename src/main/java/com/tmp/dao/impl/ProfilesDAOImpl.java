@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,7 +203,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			int profileId = isProfilesExist(profile,strUserId);
 			
 			if(profileId == 0){
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			populateProfileForInsert(ps, profile, strUserId);
 			
 			result = ps.executeUpdate();
@@ -492,7 +493,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 						String emailId = rs.getString("EMAIL_ID");
 						String reqRefNum = rs.getString("REQUIREMENT_ID");
 						
-						if((contactNum.equals(profile.getContactNo()) && reqRefNum.equals(profile.getReqRefNo())) || (emailId.equals(profile.getEmail()) && reqRefNum.equals(profile.getReqRefNo()))){
+						if((contactNum.equals(profile.getContactNo()) && reqRefNum.equals(profile.getReqRefNo())) || 
+								(emailId.equals(profile.getEmail()) && reqRefNum.equals(profile.getReqRefNo()))){
 							id = rs.getInt("ID");
 							//system.out.println("Profile ID==> "+id);
 						}else{
