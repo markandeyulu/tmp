@@ -376,6 +376,10 @@ public class TMPUtil {
 		return profilesDAO.getProfile(profileId);
 	}
 
+	public int getRefId(String RefId) {
+		return profilesDAO.getRefId(RefId);
+	}
+	
 	public int createProfile(Profile profile, String strUserId) {
 		return profilesDAO.createProfile(profile, strUserId);
 	}

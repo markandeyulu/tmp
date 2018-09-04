@@ -136,14 +136,14 @@ table.dataTable thead th:first-child {
 
 <script type="text/x-handlebars-template" id="profileView">
 {{#each profilesJson}}
-
+		
   <tr>
 		<td> <input type="checkbox" name="" value=""></td>
 		<td href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
 		<td>{{reqRefNo}}</td>
 		<td>{{location}}</td>
 		<td>{{primarySkill.configValue.value}}</td>
-		<td>{{profileSharedDate}}</td>
+		
 		<td>{{profileSource.configValue.value}}</td>
 		<td>{{profileSharedBy}}</td>
 		<td>{{name}}</td>
@@ -161,12 +161,42 @@ table.dataTable thead th:first-child {
 		<td>{{profileSharedCustomerDate}}</td>
 		<td>{{customerInterviewStatus.configValue.value}}</td>
 		<td>{{remarks}}</td>
-
+		<td>{{profileSharedDatestr}}</td>
 </tr>
 {{/each}}
 
-</script> 
+</script>
+<!-- <td>{{profileSharedDate}}</td> --> 
  <script>
+ function  validatereqid(){
+	 var x = document.getElementById("reqRefNo").value;
+		  
+		
+		$.ajax({
+			 type: "GET",
+			 dataType: 'json',
+			 url: '/ResourceManagementApp/validateRefById.action',
+			 data: { "id": x },
+			 
+			 success: function (data) {
+				/*  alert(data) */
+				 if(data == 1){
+				 	document.getElementById("refback").innerHTML = "";
+				 	 $("#addButton").attr("disabled",false); 
+				 }
+				 else{
+					 document.getElementById("refback").innerHTML = "Invalid Ref Number"; 
+					  $("#addButton").attr("disabled",true); 
+				 }
+			 },
+			 failure: function(data){
+				/*  alert('Inside Ajax call. data failed') */
+				 
+			 }
+			 }); 
+	}
+ 
+ 
  $(document).ready(function(){
  
 	 var table = $('#reqtable2').DataTable();
@@ -429,10 +459,11 @@ $('#logout').click(function () {
 										<spring:label path="reqRefNo">Requirement Ref Number<span style="color:red">*</span></spring:label>
 									</div>
 									<div class="col-75">
-										<spring:input class="form-control" path="reqRefNo" oninvalid="this.setCustomValidity('Requirement Ref Number must not be empty')" 
-											id="reqRefNo" type="text" required="required" oninput="this.setCustomValidity('')" 
+										<spring:input class="form-control" path="reqRefNo" action="validaterefById"  oninvalid="this.setCustomValidity('Requirement Ref Number must not be empty')" 
+											id="reqRefNo" type="text" required="required" oninput="this.setCustomValidity('')"  onchange="validatereqid()" 
 											placeholder="Enter Requirement Ref Number.." />
 									</div>
+									<div id="refback" style="color:red"></div>
 								</div>
 								
 								<div class="row">
@@ -651,7 +682,7 @@ $('#logout').click(function () {
 								</div>
 																	
 								<div class="row">
-									<Button name="submit" class="btn btn-md button1" 
+									<Button name="submit" id="addButton" class="btn btn-md button1" 
 										style="background-color: #cc0000; color: white; float:right;margin-right:7%;" type="submit">Submit</Button>
 								</div>
 							</spring:form>
@@ -673,7 +704,7 @@ $('#logout').click(function () {
 					<th>Requirement ID</th>
 					<th>Current Location</th>
 					<th>Primary Skill</th>
-					<th>Profile shared date</th>
+					<!-- <th>Profile shared date</th> -->
 					<th>Source of Profile</th>
 					<th>Profile shared by</th>
                     <th>Candidate Name</th>
@@ -691,7 +722,7 @@ $('#logout').click(function () {
 					<th>Profile shared with customer date</th>
 					<th>Customer interview status</th>
 					<th>Remarks</th>
-					
+					<th>Profile shared date</th>
       </tr>
     </thead>
 <tbody align="center" id="profileView_content">

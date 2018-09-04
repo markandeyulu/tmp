@@ -1,10 +1,11 @@
 package com.tmp.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,7 +146,39 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			}
 		}
 	}
+	
+	public int getRefId(String RefId) {
+		StringBuffer sql = new StringBuffer("SELECT ID FROM requirement WHERE ID = ?");
 
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps.setString(1, RefId);
+			int retid = 0;
+			ResultSet rs = ps.executeQuery();
+			if (rs != null) {
+				
+				while (rs.next()) {
+					retid = 1;
+				}
+			}
+			rs.close();
+			ps.close();
+			return retid;
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+	}
+	
 	public Profile getProfile(String profileId) {
 		StringBuffer sql = new StringBuffer("SELECT * FROM PROFILE WHERE ID = ?");
 
@@ -203,7 +236,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			int profileId = isProfilesExist(profile,strUserId);
 			
 			if(profileId == 0){
-			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			populateProfileForInsert(ps, profile, strUserId);
 			
 			result = ps.executeUpdate();
@@ -315,7 +348,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setLocation(rs.getString("LOCATION"));
 		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
-		profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));
+		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
 		profile.setYearsOfExperience(rs.getInt("YEARS_OF_EXPERIENCE"));
 		profile.setRelevantExperience(rs.getInt("RELEVANT_EXPERIENCE"));
@@ -350,6 +383,10 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		}else{
 			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
 		}
+		Date sqldate=rs.getDate("PROFILE_SHARED_DATE");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
+		String DateToStr = simpleDateFormat.format(sqldate);
+		profile.setProfileSharedDatestr(DateToStr);
 		return profile;
 	}
 

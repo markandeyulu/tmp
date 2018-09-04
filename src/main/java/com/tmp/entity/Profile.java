@@ -20,6 +20,16 @@ public class Profile implements Serializable {
 	private String location;
 	private ConfigKeyValueMapping primarySkill;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date profileSharedDate;
+	private String profileSharedDatestr;
+	
+	public String getProfileSharedDatestr() {
+		return profileSharedDatestr;
+	}
+
+	public void setProfileSharedDatestr(String profileSharedDatestr) {
+		this.profileSharedDatestr = profileSharedDatestr;
+	}
+
 	private String profileSharedBy;
 	private int yearsOfExperience;
 	private int relevantExperience;

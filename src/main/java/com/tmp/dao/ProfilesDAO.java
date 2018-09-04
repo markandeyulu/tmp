@@ -31,4 +31,6 @@ public interface ProfilesDAO {
 	public int isProfilesExist(Profile profile, String userId);
 	
 	public int isProfileMapingExist(int profileId, String refNo);
+
+	public int getRefId(String refId);
 }

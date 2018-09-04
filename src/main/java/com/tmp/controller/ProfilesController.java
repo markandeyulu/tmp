@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -148,6 +147,10 @@ public class ProfilesController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/validateRefById", method = RequestMethod.GET, produces="application/json")
+	public @ResponseBody int validateRefById(@RequestParam("id") String refId) {
+		return tmpUtil.getRefId(refId);
+	}
 	
 	@RequestMapping(value = "/profileById", method = RequestMethod.GET, produces="application/json")
 	public @ResponseBody Profile profileById(@RequestParam("id") String profileId) {
