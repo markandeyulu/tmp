@@ -423,11 +423,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 		String[] requirementIdParts = requirementId.split("_");
 		String incrementor=null;
 		String dbDate=null;
-		if(requirementIdParts.length==5){
-			incrementor = requirementIdParts[4];
+		if(requirementIdParts.length==6){
+			incrementor = requirementIdParts[5];
 			dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
 		}
 		requirementId = getRandomString(dbDate, incrementor, accountName, projectName, userName);
+		System.out.println(" New Req ID : "+requirementId);
 		return requirementId;
 	}
 
@@ -469,8 +470,6 @@ public class RequirementDAOImpl implements RequirementDAO {
 		}else{
 			shortName = words[0].substring(0, 1)+words[1].substring(0, 1);
 		}
-		
-		System.out.println(shortName.toUpperCase());
 		return shortName.toUpperCase();
 	}
 	
