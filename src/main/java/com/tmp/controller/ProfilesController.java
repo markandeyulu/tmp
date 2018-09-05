@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -158,7 +159,7 @@ public class ProfilesController {
 	}
 	
 	@RequestMapping(value = "/profileDelete", method = RequestMethod.POST, produces="text/plain")
-	public @ResponseBody String deleteProfile(@RequestParam("id") String profileId) {
+	public @ResponseBody String deleteProfile(@RequestParam("dataArr[]") ArrayList<String>  profileId) {
 				
 		tmpUtil.deleteProfile(profileId);
 		 return "Successfully the profile has been deleted!!";
@@ -389,7 +390,7 @@ public class ProfilesController {
 									if(profId>0){
 										int profileMapingId = tmpUtil.isProfileMapingExist(profId,refNo);
 										if(profileMapingId == 0){
-											profile.setId(profileId);
+											profile.setId(profId);
 											if(profile.getId()>0){
 												result = tmpUtil.createProfileRequirementMapping(profile,refNo, userId);
 											}
@@ -422,8 +423,15 @@ public class ProfilesController {
 					}
 
 				}
-				//if(result>0){
+				
+				if(result == 0) {
+					return "Profile upload is failed";
+				}else {
 					return "Successfully uploaded a profile(s)";
+				}
+				
+				//if(result>0){
+					
 				/*}else{
 					return "Failed to upload profile(s)";	
 				}*/
