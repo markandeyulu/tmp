@@ -89,31 +89,52 @@ function validate(evt) {
 	}
 	
 $(document).ready(function () {
-	var table = $('#reqtable3').DataTable();
-	 var chkbox_checked = $('tbody input[type="checkbox"]:checked', table);
-	    $('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
-	        var row = $(this).closest('tr');
-	        var data = table.row(row).data();
-	        var rowId = data[1];
-	        var result = rowId.split('<a>');
-	        result = result[1].split('</a>')[0];
-		    $("#deleteReqRow").click(function(){
-		    if (result.length>0) {
-		        $.ajax({
-		            type: 'POST',
-		   		 url: "/ResourceManagementApp/requirementDelete.action",
-		   		 data: { "id": result },
-		            success: function(e){ 		         
-                 		$('#deleteReqMsg').html(e); 
-		            	 $('#reqtable3').dataTable().fnDeleteRow(row.index());
-		            	
-         			}
-		        });
-		    }else {
-		        alert("Please select items.");
-		    }
-		});
-	});
+	 $('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
+    	 var row = $(this).closest('tr');
+		row.addClass('selected');
+	   	});
+	 $('#deleteReqRow').click(function (){
+		    var dataArr = [];
+		    $.each($("#reqtable3 tr.selected"),function(){
+		       dataArr.push($(this).find('td').eq(1).text());
+		      
+		    });
+		    if(dataArr.length == 0){
+				  alert("Please select atleast one Record to delete");
+			  }else{
+		    $.ajax({
+	            type: 'POST',
+	   		 url: "/ResourceManagementApp/requirementDelete.action",
+	   		 data: { dataArr:dataArr},
+	            success: function(e){ 		         
+         		$('#deleteReqMsg').html(e); 
+         		 $.each( dataArr, function( key, value ) {
+   		    	   $( "tr:contains('" + value + "')").each(function() {
+   		    		   $('#reqtable3').dataTable().fnDeleteRow(this);
+   		    	   });
+   		    	 });
+         		 $("#checkall").prop("checked", false);
+ 			}
+	        });
+			  }
+	 });
+	 
+	 
+	 $("#reqtable3 #checkall").click(function () {
+	        if ($("#reqtable3 #checkall").is(':checked')) {
+	            $("#reqtable3 input[type=checkbox]").each(function () {
+	                $(this).prop("checked", true);
+	                $(this).parent().parent().addClass('selected');
+	            });
+
+	        } else {
+	            $("#reqtable3 input[type=checkbox]").each(function () {
+	                $(this).prop("checked", false);
+	                $(this).parent().parent().removeClass('selected');
+	            });
+	        }
+	    });
+	  $("[data-toggle=tooltip]").tooltip();
 	   
 	    var updateMessage = ${updateMessage};	    
 	      if (undefined != updateMessage) {

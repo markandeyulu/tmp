@@ -374,30 +374,41 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setString(35, requirement.getId());
 	}
 
-	public int deleteRequirement(String requirementId) {
+	public int deleteRequirement(ArrayList<String> requirementId) {
 
 		StringBuffer sql = new StringBuffer("DELETE FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID=?");
 		StringBuffer sql1 = new StringBuffer("DELETE FROM PROFILE WHERE REQUIREMENT_ID=?");
 		StringBuffer sql2 = new StringBuffer("DELETE FROM REQUIREMENT WHERE ID=?");
-
+		ArrayList<String> reqIdList = requirementId;
+		 for (String num : reqIdList) { 		      
+	           System.out.println(num); 		
+	      }
+		int index = 0;
 		Connection conn = null;
 
 		try {
+			for (String reqId : reqIdList) { 
+		
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
 			PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
-			ps.setString(1, requirementId);
-			ps1.setString(1, requirementId);
-			ps2.setString(1, requirementId);
-			ps.executeUpdate();
-			ps1.executeUpdate();
-			int result = ps2.executeUpdate();
+			
+			if(null!=reqId){
+				ps.setString(1, reqId);
+				ps1.setString(1, reqId);
+				ps2.setString(1, reqId);
+				ps.executeUpdate();
+				ps1.executeUpdate();
+				int result = ps2.executeUpdate();
+				++index;
 			ps.close();
 			ps1.close();
 			ps2.close();
-			return result;
-		} catch (SQLException sqlException) {
+			//return result;
+			}
+		} 
+		}catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
 			if (conn != null) {
@@ -407,6 +418,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 				}
 			}
 		}
+		return index;
 	}
 
 	/**

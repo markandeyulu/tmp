@@ -167,7 +167,7 @@ public class RequirementController {
 	}
 	
 	@RequestMapping(value = "/requirementDelete", method = RequestMethod.POST, produces="text/plain")
-	public @ResponseBody String deleteRequirement(@RequestParam("id") String requirementId) {
+	public @ResponseBody String deleteRequirement(@RequestParam("dataArr[]") ArrayList<String> requirementId) {
 		 tmpUtil.deleteRequirement(requirementId);
 		 return "Successfully the requirement has been deleted!!";
 	}

@@ -82,21 +82,5 @@ $(document).ready(function() {
     } );
 } );
 
-$(document).ready(function(){
-$("#reqtable3 #checkall").click(function () {
-        if ($("#reqtable3 #checkall").is(':checked')) {
-            $("#reqtable3 input[type=checkbox]").each(function () {
-                $(this).prop("checked", true);
-            });
-
-        } else {
-            $("#reqtable3 input[type=checkbox]").each(function () {
-                $(this).prop("checked", false);
-            });
-        }
-    });
-    
-    $("[data-toggle=tooltip]").tooltip();
-});
 
 			

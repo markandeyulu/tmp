@@ -22,7 +22,7 @@ public interface RequirementDAO {
 
 	public int updateRequirement(Requirement requirement, String userId);
 
-	public int deleteRequirement(String requirementId);
+	public int deleteRequirement(ArrayList<String> requirementId);
 
 	public Requirement getRequirementValues(String userId);
 	

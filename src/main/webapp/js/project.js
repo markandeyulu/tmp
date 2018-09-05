@@ -22,7 +22,7 @@ var initialEvaluationResultData=initialEvaluationResultJson.locationJson;
 	    g_item.push(initialEvaluationResultData[index].id);	             		
 	    g_initialEvaluationResultArray.push(g_item);	             		
  });
-	    $("#initialEvaluationResultProfile,#initialEvaluationResultAdd").append('<option value="0">Select Initial Evaluation Result</option>'); 
+	    $("#initialEvaluationResultProfile,#initialEvaluationResultAdd").append('<option value="">Select Initial Evaluation Result</option>'); 
 	      $.each(g_initialEvaluationResultArray, function(i) {
 	          var g_initialEvaluationResultItem = g_initialEvaluationResultArray[i];
 	          $("#initialEvaluationResultProfile,#initialEvaluationResultAdd").append('<option id="' + g_initialEvaluationResultItem[1] + '" value="' + g_initialEvaluationResultItem[1] + '">' + g_initialEvaluationResultItem[0] + '</option>');
@@ -35,7 +35,7 @@ var g_customerEvaluationResultArray = [];
 	        g_item.push(customerEvaluationResultData[index].id);	             		
 	        g_customerEvaluationResultArray.push(g_item);	             		
 	  });
-	       $("#customerInterviewStatusProfile,#customerInterviewStatusAdd").append('<option value="0">Select Customer Interview Status</option>'); 
+	       $("#customerInterviewStatusProfile,#customerInterviewStatusAdd").append('<option value="">Select Customer Interview Status</option>'); 
 	       $.each(g_customerEvaluationResultArray, function(i) {
 	       var g_customerEvaluationResultItem = g_customerEvaluationResultArray[i];
 	       $("#customerInterviewStatusProfile,#customerInterviewStatusAdd").append('<option id="' + g_customerEvaluationResultItem[1] + '" value="' + g_customerEvaluationResultItem[1] + '">' + g_customerEvaluationResultItem[0] + '</option>');

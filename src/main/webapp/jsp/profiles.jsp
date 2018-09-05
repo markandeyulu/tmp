@@ -199,37 +199,56 @@ table.dataTable thead th:first-child {
  
  $(document).ready(function(){
  
-	 var table = $('#reqtable2').DataTable();
-	 var chkbox_checked = $('tbody input[type="checkbox"]:checked', table);
-	    $('#reqtable2 tbody').on('click', 'input[type="checkbox"]', function(e){
-	        var $row = $(this).closest('tr');
-	        var data = table.row($row).data();
-	        var rowId = data[1];
-	        var result = rowId.split('<a>');
-	        result = result[1].split('</a>')[0];
+	 $('#reqtable2 tbody').on('click', 'input[type="checkbox"]', function(e){
+	        var row = $(this).closest('tr');
+	        row.addClass('selected');
+	   	});
+	       
 		    $("#deleteProfile").click(function(){
-		    if (result.length>0) {
+		    	 var dataArr = [];
+				    $.each($("#reqtable2 tr.selected"),function(){
+				       dataArr.push($(this).find('td').eq(1).text());
+				    });
+		  if(dataArr.length == 0){
+			  alert("Please select atleast one Record to delete");
+		  }else{
 		        $.ajax({
-		           /*  type: 'GET',
-		            url: "profile/"+result, */
+		           
 		            type: 'POST',
 			   		 url: "/ResourceManagementApp/profileDelete.action",
-			   		 data: { "id": result },
+			   		 data: { dataArr: dataArr},
 		            success: function(e){      
-                    $('#deleteProfileMsg').html(e);
-                   // table.api().data.reload();
-                    $('#reqtable2').dataTable().fnDeleteRow($row.index());
-                   	//table.reload();
-           			}
+                	 		$('#deleteProfileMsg').html(e);
+                	 	$.each( dataArr, function( key, value ) {
+        		    	   $( "tr:contains('" + value + "')").each(function() {
+        		    		   $('#reqtable2').dataTable().fnDeleteRow(this);
+        		    	   });
+        		    	 });
+                	 $("#checkall").prop("checked", false);
+        			}
 		        });
-		       
-		    }else {
-		        alert("Please select checkbox.");
-		    }
+		  }
+		   
 		});
- });
 
-	   
+		    $("#reqtable2 #checkall").click(function () {
+		        if ($("#reqtable2 #checkall").is(':checked')) {
+		            $("#reqtable2 input[type=checkbox]").each(function () {
+		                $(this).prop("checked", true);
+		                $(this).parent().parent().addClass('selected');
+		            });
+
+		        } else {
+		            $("#reqtable2 input[type=checkbox]").each(function () {
+		                $(this).prop("checked", false);
+		                $(this).parent().parent().removeClass('selected');
+		            });
+		        }
+		    });
+		    
+		    $("[data-toggle=tooltip]").tooltip();
+		    
+		    
 	    	$('#uploadFile').on('click', function(e){
 	    		
 	    	var filename = $('input[type=file]').val().split('\\').pop();
@@ -443,14 +462,16 @@ $('#logout').click(function () {
 					<div class="modal-header" style="background-color: #b30000;">
 						<button type="button" id="reload" class="close" data-dismiss="modal"
 							style="background-color: white;">
-							<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							<!-- <span aria-hidden="true">×</span><span class="sr-only" onclick="window.location.reload()">Close</span> -->
+							<a class="button" onclick="window.location.reload()" href="#">x</a>
+							
 						</button>
 						<h3 class="modal-title" id="lineModalLabel" style="color: white;">Upload File</h3>
 					</div>
 					<div class="modal-body">
 						<div class="container" id="modelreload">
 							<div style="width: 60%; margin-left: 8%;">
-								<div class="card-body">
+								<div class="card-body" id="uploadDiv">
 									<form enctype="multipart/form-data" >
 										<div class="form-group">
 											<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
@@ -723,7 +744,7 @@ $('#logout').click(function () {
 								</div>
 																	
 								<div class="row">
-									<Button name="submit" class="btn btn-md button1" 
+									<Button name="submit" id="addButton" class="btn btn-md button1" 
 										style="background-color: #cc0000; color: white; float:right;margin-right:7%;" type="submit">Submit</Button>
 								</div>
 							</spring:form>

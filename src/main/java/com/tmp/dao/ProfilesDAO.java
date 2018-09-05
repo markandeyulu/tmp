@@ -1,10 +1,10 @@
 package com.tmp.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
-import com.tmp.entity.Requirement;
 
 public interface ProfilesDAO {
 
@@ -22,7 +22,7 @@ public interface ProfilesDAO {
 
 	public int updateProfile(Profile profile,String userId);
 
-	public int deleteProfile(String profileId);
+	public int deleteProfile(ArrayList<String>  profileId);
 	
 	public int insertProfile(Profile profile, String userId);
 	

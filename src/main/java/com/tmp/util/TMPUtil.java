@@ -337,7 +337,7 @@ public class TMPUtil {
 		return requirementDAO.updateRequirement(requirement,userId);
 	}
 
-	public int deleteRequirement(String requirementId) {
+	public int deleteRequirement(ArrayList<String> requirementId) {
 		return requirementDAO.deleteRequirement(requirementId);
 	}
 	
@@ -388,7 +388,7 @@ public class TMPUtil {
 		return profilesDAO.updateProfile(profile,userId);
 	}
 
-	public int deleteProfile(String profileId) {
+	public int deleteProfile(ArrayList<String> profileId) {
 		return profilesDAO.deleteProfile(profileId);
 	}
 

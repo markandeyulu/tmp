@@ -501,24 +501,33 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	}
 	
 	
-	public int deleteProfile(String profileId) {
+	public int deleteProfile(ArrayList<String> profileId) {
 		StringBuffer sql = new StringBuffer("DELETE FROM REQUIREMENT_PROFILE_MAPPING WHERE PROFILE_ID=?");
 		StringBuffer sql1 = new StringBuffer("DELETE FROM PROFILE WHERE ID=?");
-
+		ArrayList<String> profIdList = profileId;
+		 for (String num : profIdList) { 		      
+	           System.out.println(num); 		
+	      }
+		 int index = 0;
 		Connection conn = null;
 		try {
+			for (String profId : profIdList) { 
+				 System.out.println(profId); 
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
-			ps.setString(1, profileId);
-			ps1.setString(1, profileId);
+			if(null!=profId){
+			ps.setString(1, profId);
+			ps1.setString(1, profId);
 			int result = ps.executeUpdate();
 			int result1 = ps1.executeUpdate();
-			//system.out.println("result==> "+result+"result1==> "+result1);
+			System.out.println("result==> "+result+"result1==> "+result1);
+			++index;
 			ps.close();
 			ps1.close();
-			return result1;
-		} catch (SQLException sqlException) {
+			}
+			}
+		}catch (SQLException sqlException) {
 			//system.out.println("sqlException.getMessage()"+sqlException.getMessage());
 			throw new RuntimeException(sqlException);
 		} finally {
@@ -529,6 +538,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				}
 			}
 		}
+		return index;
 	}
 
 		public int isProfilesExist(Profile profile, String userId){
@@ -621,7 +631,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		int profileId;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			populateProfileForInsertExcel(ps, profile, userId);
 			 value = ps.executeUpdate();
 			
