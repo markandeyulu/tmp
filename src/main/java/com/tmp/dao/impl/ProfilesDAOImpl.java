@@ -290,8 +290,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				"UPDATE PROFILE SET NAME=?, EMAIL_ID =?, CONTACT_NO=?, CURRENT_COMPANY=?, \r\n")
 		.append("LOCATION=?, PRIMARY_SKILL=?, PROFILE_SHARED_DATE=?, PROFILE_SHARED_BY=?, YEARS_OF_EXPERIENCE=?, RELEVANT_EXPERIENCE=?, NOTICE_PERIOD=?, \r\n")
 		.append("CURRENT_CTC=?, EXPECTED_CTC=?, IS_ALLOCATED=?, ALLOCATION_START_DATE=?, ALLOCATION_END_DATE=?, CREATED_ON=?, \r\n")
-		.append(" UPDATED_ON=?, PROFILE_SOURCE=?, INTERNAL_EVALUATION_RESULT_DATE=?, INITIAL_EVALUATION_RESULT=?, PROFILE_SHARED_CUSTOMER=?, \r\n")
-		.append("PROFILE_SHARED_CUSTOMER_DATE=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?,UPDATED_BY=?") ;
+		.append(" UPDATED_ON=?, PROFILE_SOURCE=?, INTERNAL_EVALUATION_RESULT_DATE=?, INITIAL_EVALUATION_RESULT=?,  \r\n")
+		.append("PROFILE_SHARED_CUSTOMER=?, PROFILE_SHARED_CUSTOMER_DATE=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?,UPDATED_BY=?") ;
 		
 		StringBuffer sql1 = new StringBuffer("UPDATE REQUIREMENT_PROFILE_MAPPING SET INTERNAL_EVALUATION_RESULT=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?, REQUIREMENT_ID=? WHERE PROFILE_ID=?");
 		
@@ -299,10 +299,10 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 
 		try {
 			conn = dataSource.getConnection();
-			if(null != profile.getAccount()){
+			if(null != profile.getAccount() && profile.getAccount().getId()!=0){
 				sql.append(", ACCOUNT=?");
 			}
-			if(null != profile.getProject()){
+			if(null != profile.getProject() &&  profile.getProject().getId()!=0){
 				sql.append(", PROJECT=?"); 
 			}
 			
@@ -467,12 +467,12 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			ps.setInt(i++,61);
 		ps.setString(i++, profile.getRemarks());
 		ps.setString(i++, userId);
-		if(null != profile.getAccount() && profile.getAccount().getId()!=0 && profile.getAccount().getId()>0){
+		if(null != profile.getAccount() && profile.getAccount().getId()!=0){
 			ps.setInt(i++, profile.getAccount().getId());
 		}else{
 			//ps.setInt(i++, configDAO.getConfigKeyValueMapping("0").getId());
 		}
-		if(null != profile.getProject() && profile.getProject().getId()!=0 && profile.getProject().getId()>0){
+		if(null != profile.getProject() && profile.getProject().getId()!=0){
 			ps.setInt(i++, profile.getProject().getId());
 		}
 		else{
@@ -527,7 +527,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			ps1.close();
 			}
 			}
-		}catch (SQLException sqlException) {
+		} catch (SQLException sqlException) {
 			//system.out.println("sqlException.getMessage()"+sqlException.getMessage());
 			throw new RuntimeException(sqlException);
 		} finally {

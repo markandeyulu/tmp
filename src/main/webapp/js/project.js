@@ -9,7 +9,7 @@ var g_sourceOfProfileArray = [];
 	        g_sourceOfProfileArray.push(g_item);
 	                                          	                   	             		
   });	                                          	                   	             	
-	 $("#profileSourceProfile,#profileSource").append('<option value="0">Select Profile Source</option>');                    	                   	             	
+	 $("#profileSourceProfile,#profileSource").append('<option value="">Select Profile Source</option>');                    	                   	             	
 	     $.each(g_sourceOfProfileArray, function(i) {
 	         var g_sourceOfProfileItem = g_sourceOfProfileArray[i];
 	             $("#profileSourceProfile,#profileSource").append('<option id="' + g_sourceOfProfileItem[1] + '" value="' + g_sourceOfProfileItem[1] + '">' + g_sourceOfProfileItem[0] + '</option>');
