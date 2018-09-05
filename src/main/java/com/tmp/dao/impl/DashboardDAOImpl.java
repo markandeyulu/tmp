@@ -97,7 +97,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 				+ "INNER JOIN TMP.ADMIN_INFO_KEY F ON F.ID = E.ADMIN_INFO_KEY_ID INNER JOIN TMP.ADMIN_INFO_VALUE G ON G.ID =E.ADMIN_INFO_VALUE_ID "
 				+ "LEFT JOIN USER_ROLE_ACCOUNT_MAPPING A ON A.ACCOUNT_ID = R.ACCOUNT LEFT JOIN ACCOUNT_MAPPING AM ON AM.ID = A.ACCOUNT_ID "
 				+ "LEFT JOIN USER_ROLE_MAPPING B ON B.ID = A.USER_ROLE_ID LEFT JOIN USER U ON U.ID = B.USER_ID "
-				+ "JOIN CONFIG_KEY_VALUE_MAPPING C WHERE R.STATUS = C.ID and U.ID = ? GROUP BY R.ACCOUNT ");
+				+ "JOIN CONFIG_KEY_VALUE_MAPPING C WHERE R.STATUS = C.ID and U.ID = ? GROUP BY R.ACCOUNT,R.STATUS ");
 		
 		Connection conn = null;
 
@@ -298,7 +298,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 
 			}
 
-			queryString1.append("GROUP BY R.ACCOUNT ");
+			queryString1.append("GROUP BY R.ACCOUNT,R.STATUS ");
 
 			conn = dataSource.getConnection();
 			PreparedStatement ps1 = conn.prepareStatement(queryString1.toString());
