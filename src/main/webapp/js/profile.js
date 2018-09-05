@@ -63,15 +63,32 @@ function loadDetail(id){
 			 $('#profileSharedByProfile').val(data.profileSharedBy);
 			 $('#relevantExperienceProfile').val(data.relevantExperience);
 			 $('#currentCTCProfile').val(data.currentCTC);
-			 $("#isAllocatedProfile option:contains(" + data.isAllocated.configValue.value+ ")").attr('selected', 'selected');
+			 if(null!=data.isAllocated.configValue){
+				 $("#isAllocatedProfile option:contains(" + data.isAllocated.configValue.value+ ")").attr('selected', 'selected');
+			 }
 			 $('#allocationEndDateProfile').val(data.allocationEndDate);
 			 $('#createdByProfile').val(data.createdBy.name);
 			 $('#updatedByProfile').val(data.updatedBy.name);
 			 $("#initialEvaluationResultProfile option:contains(" + data.initialEvaluationResult.configValue.value + ")").attr('selected', 'selected');
-			 $("#accountProfile option:contains(" + data.account.account.adminInfoValue.value + ")").attr('selected', 'selected');
-			 $("#projectProfile option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');
+			 /*$("#accountProfile option:contains(" + data.account.adminInfoValue.value + ")").attr('selected', 'selected');
+			 $("#projectProfile option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');*/
 			 $('#profileSharedCustomerDateProfile').val(data.profileSharedCustomerDate);
 			 $('#remarksProfile').val(data.remarks);
+			 
+			//("#profileSharedCustomerDateProfile).attr("disabled","disabled");
+			 if($('#profileSharedCustomerProfile').val()=="No"){
+				 $("#profileSharedCustomerDateProfile").attr('disabled','disabled');
+				 $("#customerInterviewStatusProfile").attr('disabled','disabled');
+			 } else{
+				 $("#profileSharedCustomerDateProfile").removeAttr('disabled');
+				 $("#customerInterviewStatusProfile").removeAttr('disabled');
+			 }
+			 if(null!=data.account && null!=data.account.account){
+				 $("#accountProfile option:contains(" + data.account.account.adminInfoValue.value + ")").attr('selected', 'selected');	 
+			 }
+			 if(null!=data.project && null != data.project.project){
+				 $("#projectProfile option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');	 
+			 }
 			
 		 },
 		 failure: function(data){

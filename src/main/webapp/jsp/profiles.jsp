@@ -136,7 +136,7 @@ table.dataTable thead th:first-child {
 
 <script type="text/x-handlebars-template" id="profileView">
 {{#each profilesJson}}
-		
+
   <tr>
 		<td> <input type="checkbox" name="" value=""></td>
 		<td href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
@@ -282,6 +282,41 @@ table.dataTable thead th:first-child {
  	  }
  	}
 
+ function changeTextBoxUpdate(){
+		var e = document.getElementById("profileSharedCustomerProfile");
+     
+	    //var strSel = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
+	var chkBoxValue = e.options[e.selectedIndex].value;
+	
+	
+	//alert(chkBoxValue);
+
+		if(chkBoxValue=="No"){
+			document.getElementById("profileSharedCustomerDateProfile").disabled=true;
+			document.getElementById("customerInterviewStatusProfile").disabled=true;
+		}else{
+			document.getElementById("profileSharedCustomerDateProfile").disabled=false;
+			document.getElementById("customerInterviewStatusProfile").disabled=false;
+		}
+		}
+ function changeTextBoxAdd(){
+	    var f=document.getElementById("profileSharedCustomer");
+ 
+	    //var strSel = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
+	var chkValue = f.options[f.selectedIndex].value;
+	
+	
+	//alert(chkValue);
+
+		if(chkValue=="No"){
+			document.getElementById("datepicker").disabled=true;
+			document.getElementById("customerInterviewStatusAdd").disabled=true;
+		}else{
+			document.getElementById("datepicker").disabled=false;
+			document.getElementById("customerInterviewStatusAdd").disabled=false;
+		}
+		}
+ 
 </script>
 <script type="text/javascript">
 
@@ -637,10 +672,12 @@ $('#logout').click(function () {
 								</div>
 									<div class="row">
 									<div class="col-25">
-										<spring:label path="profileSharedCustomer">Profile Shared with Customer</spring:label>
+										<spring:label path="profileSharedCustomer">Profile Shared with Customer<span style="color:red">*</span></spring:label>
 									</div>
 									<div class="col-75">
-										<spring:select class="form-control" id="profileSharedCustomer" path="profileSharedCustomer">
+										<spring:select class="form-control" onchange="changeTextBoxAdd();" id="profileSharedCustomer" path="profileSharedCustomer"
+										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')">
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
@@ -649,20 +686,24 @@ $('#logout').click(function () {
 								</div>
 								<div class="row">
 									<div class="col-25">
-										<spring:label path="profileSharedCustomerDate">Profile Shared with Customer Date</spring:label>
+										<spring:label path="profileSharedCustomerDate">Profile Shared with Customer Date<span style="color:red">*</span></spring:label>
 									</div>
 									<div class="col-75">
 										<spring:input class="form-control" path="profileSharedCustomerDate" 
-											id="datepicker"  type="text" 
-											placeholder="Enter Profile Shared with Customer Date.." />
+											id="datepicker"  type="text" placeholder="Enter Profile Shared with Customer Date.." 
+											oninvalid="this.setCustomValidity('Profile Shared Customer Date must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')"
+											/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-25">
-										<spring:label path="customerInterviewStatusAdd">Customer Interview Status</spring:label>
+										<spring:label path="customerInterviewStatusAdd">Customer Interview Status<span style="color:red">*</span></spring:label>
 									</div>
 									<div class="col-75">
-										<spring:select class="form-control" id="customerInterviewStatusAdd" path="customerInterviewStatusAdd">
+										<spring:select class="form-control" id="customerInterviewStatusAdd" path="customerInterviewStatusAdd"
+										 oninvalid="this.setCustomValidity('Customer Interview Status must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')">
 											<!-- <option value="">Select Customer Interview Status</option>
 											<option value="selected">Selected</option>
 											<option value="rejected">Rejected</option>
@@ -682,7 +723,7 @@ $('#logout').click(function () {
 								</div>
 																	
 								<div class="row">
-									<Button name="submit" id="addButton" class="btn btn-md button1" 
+									<Button name="submit" class="btn btn-md button1" 
 										style="background-color: #cc0000; color: white; float:right;margin-right:7%;" type="submit">Submit</Button>
 								</div>
 							</spring:form>
@@ -1001,9 +1042,11 @@ $('#logout').click(function () {
 						            </spring:select></td>
 									</tr>
 									<tr>
-										<td><spring:label path="profileSharedCustomer">Profile Shared Customer</spring:label></td>
+										<td><spring:label path="profileSharedCustomer">Profile Shared Customer<span style="color:red">*</span></spring:label></td>
 									
-										<td><spring:select class="form-control" id="profileSharedCustomerProfile" path="profileSharedCustomer">
+										<td><spring:select class="form-control" onchange="changeTextBoxUpdate();" id="profileSharedCustomerProfile" path="profileSharedCustomer"
+										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')" >
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
@@ -1011,11 +1054,12 @@ $('#logout').click(function () {
 										
 									</tr>
 									<tr>
-										<td><spring:label path="profileSharedCustomerDate">Profile Shared Customer Date</spring:label></td>
+										<td><spring:label path="profileSharedCustomerDate">Profile Shared Customer Date<span style="color:red">*</span></spring:label></td>
 									
 									
 										<td><spring:input class="form-control" path="profileSharedCustomerDate" id="profileSharedCustomerDateProfile"
-											type="text"  /></td>
+											type="text" oninvalid="this.setCustomValidity('Profile Shared Customer Date must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')" /></td>
 									</tr>
 									<tr>
 										<td><spring:label path="customerInterviewStatus">Customer Interview Status<span style="color:red">*</span></spring:label></td>

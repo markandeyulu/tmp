@@ -5,12 +5,14 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -236,7 +238,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			int profileId = isProfilesExist(profile,strUserId);
 			
 			if(profileId == 0){
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			populateProfileForInsert(ps, profile, strUserId);
 			
 			result = ps.executeUpdate();
@@ -253,18 +255,19 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 
 			profile.setId(newProfileId);
 			
-			if(profile.getId()>0){
-				result = insertProfileMapping(profile, "", strUserId);
-			}
-			}else{
+				if (profile.getId() > 0) {
+					result = insertProfileMapping(profile, "", strUserId);
+				}
+			} else {
 				profile.setId(profileId);
-				if(profile.getId()>0){
+				if (profile.getId() > 0) {
 					result = insertProfileMapping(profile, "", strUserId);
 				}
 			}
 			
 			return result;
 		} catch (SQLException sqlException) {
+			sqlException.printStackTrace();
 			throw new RuntimeException(sqlException);
 		} finally {
 			if (conn != null) {
@@ -413,8 +416,15 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setDate(15, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
 		ps.setString(16, profile.getInitialEvaluationResultAdd());
 		ps.setString(17, profile.getProfileSharedCustomer());
+		
 		ps.setDate(18, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
-		ps.setString(19, profile.getCustomerInterviewStatusAdd());
+		//ps.setString(19, profile.getCustomerInterviewStatusAdd());
+		
+		if(null!=profile.getCustomerInterviewStatusAdd())
+			ps.setString(19, profile.getCustomerInterviewStatusAdd());
+		else
+			ps.setString(19,"61");
+		
 		ps.setString(20, profile.getRemarks());
 		ps.setTimestamp(21,tmpDAOUtil.getCurrentTimestamp());
 		ps.setString(22,strUserId);
@@ -451,34 +461,43 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setInt(i++, profile.getInitialEvaluationResult().getId());
 		ps.setString(i++, profile.getProfileSharedCustomer());
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
-		ps.setInt(i++, profile.getCustomerInterviewStatus().getId());
+		if(null!=profile.getCustomerInterviewStatus())
+			ps.setInt(i++, profile.getCustomerInterviewStatus().getId());
+		else
+			ps.setInt(i++,61);
 		ps.setString(i++, profile.getRemarks());
 		ps.setString(i++, userId);
-		if(null != profile.getAccount() && profile.getAccount().getId()!=0){
+		if(null != profile.getAccount() && profile.getAccount().getId()!=0 && profile.getAccount().getId()>0){
 			ps.setInt(i++, profile.getAccount().getId());
 		}else{
-			ps.setInt(i++, configDAO.getConfigKeyValueMapping("0").getId());
+			//ps.setInt(i++, configDAO.getConfigKeyValueMapping("0").getId());
 		}
-		if(null != profile.getProject() && profile.getProject().getId()!=0){
+		if(null != profile.getProject() && profile.getProject().getId()!=0 && profile.getProject().getId()>0){
 			ps.setInt(i++, profile.getProject().getId());
 		}
 		else{
-			ps.setInt(i++, configDAO.getConfigKeyValueMapping("0").getId());
+			//ps.setInt(i++, configDAO.getConfigKeyValueMapping("0").getId());
 		}
 		//ps.setString(29, profile.getReqRefNo());
 		ps.setInt(i++, profile.getId());
 		
 	}
+
 	
 	private void populateProfileForUpdateForMapping(PreparedStatement ps1, Profile profile, String userId) throws SQLException {
 		if (ps1 == null) {
 			return;
 		}
-		ps1.setInt(1, profile.getInitialEvaluationResult().getId());
-		ps1.setInt(2, profile.getCustomerInterviewStatus().getId());
-		ps1.setString(3, profile.getRemarks());
-		ps1.setString(4, profile.getReqRefNo());
-		ps1.setInt(5, profile.getId());
+		int i=1;
+		ps1.setInt(i++, profile.getInitialEvaluationResult().getId());
+		if(null!=profile.getCustomerInterviewStatus())
+			ps1.setInt(i++, profile.getCustomerInterviewStatus().getId());
+		else
+			ps1.setInt(i++,61);
+		//ps1.setInt(i++, profile.getCustomerInterviewStatus().getId());
+		ps1.setString(i++, profile.getRemarks());
+		ps1.setString(i++, profile.getReqRefNo());
+		ps1.setInt(i++, profile.getId());
 	}
 	
 	
@@ -513,13 +532,14 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	}
 
 		public int isProfilesExist(Profile profile, String userId){
-			StringBuffer sql = new StringBuffer("SELECT ID, EMAIL_ID, CONTACT_NO, REQUIREMENT_ID FROM PROFILE WHERE EMAIL_ID=? ");
+			StringBuffer sql = new StringBuffer("SELECT ID, EMAIL_ID, CONTACT_NO, REQUIREMENT_ID FROM PROFILE WHERE EMAIL_ID=? AND REQUIREMENT_ID = ?");
 			Connection conn = null;
 			int id = 0;
 			try {
 				conn = dataSource.getConnection();
 				PreparedStatement ps = conn.prepareStatement(sql.toString());
 				ps.setString(1, profile.getEmail());
+				ps.setString(2, profile.getReqRefNo());
 				ResultSet rs = ps.executeQuery();
 				 
 				if (rs != null ) {
@@ -790,7 +810,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			 //system.out.println("INSERT INTO REQUIREMENT_PROFILE_MAPPING valueee...."+value);
 			ps.close();
 		} catch (SQLException sqlException) {
-			sqlException.getMessage();
+			sqlException.printStackTrace();
 			return 0;
 		} finally {
 			if (conn != null) {
@@ -814,14 +834,14 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		}
 		ps.setInt(2,profile.getId());
 		
-		if((profile.getInitialEvaluationResultAdd()!=null) && !(profile.getInitialEvaluationResultAdd().isEmpty())){
-			ps.setInt(3,configDAO.getConfigKeyValueMapping(profile.getInitialEvaluationResultAdd()).getId());
+		if(StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd()) && !profile.getInitialEvaluationResultAdd().equals("0")){
+			ps.setInt(3, new Integer(profile.getInitialEvaluationResultAdd()));
 			}else{
 				ps.setInt(3,configDAO.getConfigKeyValueMapping("In Progress").getId());
 		}
 		
 		if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
-			ps.setInt(4,configDAO.getConfigKeyValueMapping(profile.getCustomerInterviewStatusAdd()).getId());
+			ps.setInt(4, new Integer(profile.getCustomerInterviewStatusAdd()));
 			}else{
 				ps.setInt(4,configDAO.getConfigKeyValueMapping("Yet to Process").getId());
 		}
