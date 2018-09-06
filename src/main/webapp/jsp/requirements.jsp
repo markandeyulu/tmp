@@ -107,7 +107,9 @@ $(document).ready(function () {
 	   		 url: "/ResourceManagementApp/requirementDelete.action",
 	   		 data: { dataArr:dataArr},
 	            success: function(e){ 		         
-         		$('#deleteReqMsg').html(e); 
+         		/* $('#deleteReqMsg').html(e);  */
+         		alert(e);
+         		window.location.href = "requirements.html";
          		 $.each( dataArr, function( key, value ) {
    		    	   $( "tr:contains('" + value + "')").each(function() {
    		    		   $('#reqtable3').dataTable().fnDeleteRow(this);
@@ -139,10 +141,13 @@ $(document).ready(function () {
 	    var updateMessage = ${updateMessage};	    
 	      if (undefined != updateMessage) {
 	            if (updateMessage == 1) {
-	            	
 	                  $("#updateReqMsg").text('Successfully the requirement has been updated!!');
+	                  $("#updateReqMsg").fadeOut(10000);
+	                  /* window.location.href = "requirements.html"; */
 	            } else if (updateMessage == 0) {
 	                  $("#updateReqMsg").text('Failure!! the requirement has not been updated!!');
+	                  $("#updateReqMsg").fadeOut(10000);
+	                  updateMessage = undefined;
 	            }
 	      }
 	      else
@@ -152,8 +157,12 @@ $(document).ready(function () {
 	if (undefined != addMessage) {
 		if (addMessage == 1) {
 			$("#addReqMsg").text('Successfully the requirement has been created!!');
+			$("#addReqMsg").fadeOut(10000);
+			
 		} else if (addMessage == 0) {
 			$("#addReqMsg").text('Failure!! the requirement has not been created!!');
+			$("#addReqMsg").fadeOut(10000);
+		
 		}
 	}
 	
@@ -340,7 +349,7 @@ $('#logout').click(function () {
 				<br />
 			</div>
 			<!-- Icon Cards-->
-			<div class=" row w3-container">
+			<div class=" row w3-container" id="blockref">
 
 				<div id="rcorners5" class="w3-panel w3-card chcol_1"
 					style="margin-left: 2%;">

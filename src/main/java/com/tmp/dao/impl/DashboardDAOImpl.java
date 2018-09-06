@@ -298,7 +298,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 
 			}
 
-			queryString1.append("GROUP BY R.ACCOUNT,R.STATUS ");
+			queryString1.append("GROUP BY R.ACCOUNT ");
 
 			conn = dataSource.getConnection();
 			PreparedStatement ps1 = conn.prepareStatement(queryString1.toString());
