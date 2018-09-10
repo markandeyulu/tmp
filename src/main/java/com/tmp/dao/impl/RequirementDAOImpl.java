@@ -21,6 +21,8 @@ import org.springframework.stereotype.Repository;
 import com.tmp.dao.AdminDAO;
 import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.RequirementDAO;
+import com.tmp.entity.Account;
+import com.tmp.entity.Project;
 import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
 import com.tmp.entity.Requirements;
@@ -220,7 +222,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			requirement.setId(getRequirementId(requirement.getAccount1(),requirement.getProjectAdd(), userName));
+			requirement.setId(getRequirementId(requirement, userName, userId));
 			populateRequirementForInsert(ps, requirement, userId);
 			 value = ps.executeUpdate();
 			ps.close();
@@ -269,22 +271,21 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setInt(19, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId());
 		adminDAO.getRequirementAdminMappingValue(requirement.getIbu_cdu(), 5, userId);
 		ps.setInt(20, configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
-		int accNewMappingId = adminDAO.getRequirementAdminAccountMapping(requirement.getAccount1(), 6, userId, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId(),
+		/*int accNewMappingId = adminDAO.getRequirementAdminAccountMapping(requirement.getAccount1(), 6, userId, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId(),
 				configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
 		int accId = configDAO.getAdminInfoKeyValueMapping(requirement.getAccount1()).getId();
 		int accountId = configDAO.getAccountMappingId(accId).getAccountId();
 		ps.setInt(21, accountId);
 		adminDAO.getRequirementAdminProjectMapping(requirement.getProjectAdd(), 7, userId, requirement.getAccount1(), accNewMappingId, accountId);
 		int projectId = configDAO.getAdminInfoKeyValueMapping(requirement.getProjectAdd()).getId();
-		ps.setInt(22, configDAO.getProjectMappingId(accountId,projectId).getId());
+		ps.setInt(22, configDAO.getProjectMappingId(accountId,projectId).getId());*/
+		
+		ps.setInt(21, Integer.parseInt(requirement.getAccount1()));
+		ps.setInt(22, Integer.parseInt(requirement.getProjectAdd()));
 		ps.setTimestamp(23, tmpDAOUtil.getCurrentTimestamp());
 		ps.setString(24, userId);
 		ps.setString(25, requirement.getBand());
 		ps.setString(26, requirement.getQuantity());
-		/*getRequirementAdminMappingValue(requirement.getIbg_cdg(), 4, userId);
-		ps.setInt(26, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId());
-		getRequirementAdminMappingValue(requirement.getIbu_cdu(), 5, userId);
-		ps.setInt(27, configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());*/
 		ps.setString(27, requirement.getProjectDuration());
 		ps.setString(28, requirement.getPid_crmid_so());
 		ps.setString(29, requirement.getYearExperience());
@@ -430,17 +431,33 @@ public class RequirementDAOImpl implements RequirementDAO {
 	 * @param userName 
 	 * @return
 	 */
-	private String getRequirementId(String accountName, String projectName, String userName) { 
-		String requirementId = getLatestRequirementId();
-		String[] requirementIdParts = requirementId.split("_");
-		String incrementor=null;
-		String dbDate=null;
-		if(requirementIdParts.length==6){
-			incrementor = requirementIdParts[5];
-			dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
+	private String getRequirementId(Requirement requirement, String userName, String userId) { 
+		String requirementId = null;
+		try {
+			requirementId = getLatestRequirementId();
+			String[] requirementIdParts = requirementId.split("_");
+			String incrementor=null;
+			String dbDate=null;
+			if(requirementIdParts.length==6){
+				incrementor = requirementIdParts[5];
+				dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
+			}
+			
+			String accountName = null, projectName = null;
+			
+			int accountId = Integer.parseInt(requirement.getAccount1());
+			accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
+			
+			int projectId = Integer.parseInt(requirement.getProjectAdd());
+			projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
+			
+			requirementId = getRandomString(dbDate, incrementor, accountName, projectName, userName);
+			System.out.println(" New Req ID : "+requirementId);
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
-		requirementId = getRandomString(dbDate, incrementor, accountName, projectName, userName);
-		System.out.println(" New Req ID : "+requirementId);
+		
 		return requirementId;
 	}
 
@@ -453,6 +470,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		String reqRandomNo =null;
 		String shortNames = "_"+getShortName(accountName)+"_"+getShortName(projectName)+"_"+getShortName(userName)+"_";
 		try {
+			
 			if(dbDate == null){
 				reqRandomNo = currDate+shortNames+defaultIncrementor;
 			}else if(dbDate.equals(currDate)){
@@ -802,6 +820,84 @@ public class RequirementDAOImpl implements RequirementDAO {
 		}
 		
 		
+	}
+	public ArrayList<Account> getAccountList(){
+		StringBuffer sql = new StringBuffer("SELECT * FROM account_master;");
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			
+			ResultSet rs = ps.executeQuery();
+
+			if (rs == null) {
+				return null;
+			}
+
+			 ArrayList<Account>  tmp=new ArrayList<Account>();
+
+			while(rs.next()){
+				Account rq = new Account();
+				rq.setAccountId((rs.getInt(1)));
+				rq.setAccountName((rs.getString(2)));
+				
+				tmp.add(rq);
+			}rs.close();
+			ps.close();
+			return tmp ;
+			
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+	}
+	
+	public ArrayList<Project> getProjectList(){
+		StringBuffer sql = new StringBuffer("SELECT * FROM Projects;");
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			
+			ResultSet rs = ps.executeQuery();
+
+			if (rs == null) {
+				return null;
+			}
+
+			 ArrayList<Project>  tmp=new ArrayList<Project>();
+
+			while(rs.next()){
+				Project rq = new Project();
+				rq.setProjectId((rs.getInt(1)));
+				rq.setProjectName((rs.getString(2)));
+				rq.setAccountId(rs.getInt(3));
+				
+				tmp.add(rq);
+			}rs.close();
+			ps.close();
+			return tmp ;
+			
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
 	}
 	
 	private ArrayList<Requirement> populateTableSubmit(ResultSet rs) throws SQLException {

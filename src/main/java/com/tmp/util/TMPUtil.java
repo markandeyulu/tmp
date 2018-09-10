@@ -20,12 +20,14 @@ import com.tmp.dao.LoginDAO;
 import com.tmp.dao.ProfilesDAO;
 import com.tmp.dao.ReportDAO;
 import com.tmp.dao.RequirementDAO;
+import com.tmp.entity.Account;
 import com.tmp.entity.AdminInfoKeyValueMapping;
 import com.tmp.entity.ConfigKeyValueMapping;
 import com.tmp.entity.DashboardRequirement;
 import com.tmp.entity.LoginRoleAccounts;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
+import com.tmp.entity.Project;
 import com.tmp.entity.Report;
 import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
@@ -127,6 +129,8 @@ public class TMPUtil {
 		return null;
 	}
 	
+	
+	
 	public String getRequirementJson(DashboardRequirement dashboardRequirement, String userId) {
 		ArrayList<DashboardRequirement> dashboardRequirementList = dashboardDAO.getRequirementJson(dashboardRequirement,userId);
 		try {
@@ -154,6 +158,33 @@ public class TMPUtil {
 		return null;
 	}
 	
+	public String getAccountList() {
+		ArrayList<Account> accountListJson = requirementDAO.getAccountList();
+		try {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("accountListJson", accountListJson);
+			String jsonStr = jsonObj.toString();			
+			//system.out.println("jsonStr : "+jsonStr);
+			return jsonStr;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getProjectList() {
+		ArrayList<Project> projectListJson = requirementDAO.getProjectList();
+		try {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("projectListJson", projectListJson);
+			String jsonStr = jsonObj.toString();			
+			//system.out.println("jsonStr : "+jsonStr);
+			return jsonStr;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public String getRequirementTableJson(String userId) {
 		ArrayList<Requirement> requirementList = requirementDAO.getRequirementTable(userId);

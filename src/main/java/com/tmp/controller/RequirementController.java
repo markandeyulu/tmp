@@ -63,6 +63,9 @@ public class RequirementController {
 		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
 		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
 		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
+		model.addObject("accountListJson", tmpUtil.getAccountList());
+		model.addObject("projectListJson", tmpUtil.getProjectList());
+		
 		
 		if(session != null && !session.isNew()) {
 			   //do something here

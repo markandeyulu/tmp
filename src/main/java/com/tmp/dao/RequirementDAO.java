@@ -3,7 +3,8 @@ package com.tmp.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import com.tmp.entity.Account;
+import com.tmp.entity.Project;
 import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
 import com.tmp.entity.Requirements;
@@ -29,6 +30,10 @@ public interface RequirementDAO {
 	public Requirement getRequirementValuesSubmit(Requirement requirement, String userId);
 	
 	public ArrayList<Requirement> getRequirementTable(String userId);
+	
+	public ArrayList<Account> getAccountList();
+	
+	public ArrayList<Project> getProjectList();
 	
 	public ArrayList<Requirement> getRequirementTable(Requirement requirement, String userId);
 	

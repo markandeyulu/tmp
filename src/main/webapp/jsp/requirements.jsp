@@ -76,6 +76,7 @@ var table=${requirementtableJson};
 var locationJson=${locationJson};
 var accountValues = ${accountValuesJson};
 var projectValues = ${projectValuesJson};
+/* var accountListJson=${accountListJson};  */
 
 function validate(evt) {
 	  var theEvent = evt || window.event;
@@ -89,6 +90,35 @@ function validate(evt) {
 	}
 	
 $(document).ready(function () {
+	
+	$('#account1').change(function() {
+		var account_id=$('#account1').val();
+		$('#projectAdd option').remove();
+		
+		var projectListData=projectListJson.projectListJson;
+		var g_projectListArray = [];	
+	      $.each(projectListData, function(index) {
+	      var g_item = [];
+	      if ($("#account1").val() == (projectListData[index].accountId)) {
+	    	  g_item.push(projectListData[index].projectId);	 
+		      g_item.push(projectListData[index].projectName);	
+		      g_projectListArray.push(g_item);	
+	      }
+	       
+	                   		
+	     });
+	      $("#projectAdd").append('<option value="">Select Project</option>');  
+	      
+	  	$.each(g_projectListArray, function(i) {
+	  		var g_projectListItem = g_projectListArray[i];
+	  		$("#projectAdd").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
+	  	}); 
+	  	
+	  	
+      
+    });
+	
+	
 	 $('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
     	 var row = $(this).closest('tr');
 		row.addClass('selected');
@@ -107,8 +137,7 @@ $(document).ready(function () {
 	   		 url: "/ResourceManagementApp/requirementDelete.action",
 	   		 data: { dataArr:dataArr},
 	            success: function(e){ 		         
-         		/* $('#deleteReqMsg').html(e);  */
-         		alert(e);
+         		$('#reqMsg').html(e); 
          		window.location.href = "requirements.html";
          		 $.each( dataArr, function( key, value ) {
    		    	   $( "tr:contains('" + value + "')").each(function() {
@@ -141,13 +170,12 @@ $(document).ready(function () {
 	    var updateMessage = ${updateMessage};	    
 	      if (undefined != updateMessage) {
 	            if (updateMessage == 1) {
-	                  $("#updateReqMsg").text('Successfully the requirement has been updated!!');
-	                  $("#updateReqMsg").fadeOut(10000);
-	                  /* window.location.href = "requirements.html"; */
+                  $("#reqMsg").text('Successfully the requirement has been updated!!');
+                  $("#reqMsg").fadeOut(10000);
 	            } else if (updateMessage == 0) {
-	                  $("#updateReqMsg").text('Failure!! the requirement has not been updated!!');
-	                  $("#updateReqMsg").fadeOut(10000);
-	                  updateMessage = undefined;
+                  $("#reqMsg").text('Failure!! the requirement has not been updated!!');
+                  $("#reqMsg").fadeOut(10000);
+                  updateMessage = undefined;
 	            }
 	      }
 	      else
@@ -156,13 +184,11 @@ $(document).ready(function () {
 	var addMessage = ${addMessage};
 	if (undefined != addMessage) {
 		if (addMessage == 1) {
-			$("#addReqMsg").text('Successfully the requirement has been created!!');
-			$("#addReqMsg").fadeOut(10000);
-			
+			$("#reqMsg").text('Successfully the requirement has been created!!');
+			$("#reqMsg").fadeOut(10000);
 		} else if (addMessage == 0) {
-			$("#addReqMsg").text('Failure!! the requirement has not been created!!');
-			$("#addReqMsg").fadeOut(10000);
-		
+			$("#reqMsg").text('Failure!! the requirement has not been created!!');
+			$("#reqMsg").fadeOut(10000);
 		}
 	}
 	
@@ -416,13 +442,14 @@ $('#logout').click(function () {
 					data-target="#squarespaceModal">Add Requirement</button>
 					<Button name="submit" id="deleteReqRow" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="submit">Delete</Button>
 					
-					<div id="addReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
+					<!-- <div id="addReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
                     </div>
 					<div id="deleteReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
 					</div>
 					<div id="updateReqMsg" style="display: inline-block; margin-left:2%; font-weight: bold">
-					</div>
-					
+					</div> -->
+					<div id="reqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
+                    </div>
 			</div>
 		<div class="modal fade" id="mappingmodel" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog" style="width:60%;">
@@ -525,9 +552,11 @@ $('#logout').click(function () {
 										<spring:label path="account1">Customer Name<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<spring:input class="form-control" path="account1" id="account1" oninvalid="this.setCustomValidity('Customer name must not be empty')" 
-											oninput="this.setCustomValidity('')"
-											type="text" placeholder="Enter Customer Name.." required="required"/>
+										<spring:select required="required" class="form-control" id="account1" path="account1"
+										oninvalid="this.setCustomValidity('Please select Customer name')" 
+										oninput="this.setCustomValidity('')" >
+										
+										</spring:select>
 										</div>
 									</div>
 									 <div class="row">
@@ -535,10 +564,18 @@ $('#logout').click(function () {
 										<spring:label path="projectAdd">Project Name<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
+										<spring:select required="required" class="form-control" id="projectAdd" path="projectAdd"
+										oninvalid="this.setCustomValidity('Project name must not be empty')" 
+										oninput="this.setCustomValidity('')" >
+										
+										</spring:select>
+										</div>
+										
+										<%-- <div class="col-75">
 										<spring:input class="form-control" path="projectAdd" id="projectAdd" oninvalid="this.setCustomValidity('Project name must not be empty')" 
 										oninput="this.setCustomValidity('')"
 											type="text" placeholder="Enter Project Name.." required="required"/>
-										</div>
+										</div> --%>
 									</div> 
 									<div class="row">
 										<div class="col-25">
@@ -1167,6 +1204,9 @@ $('#logout').click(function () {
 		    var opportunityStatusJson=${opportunityStatusJson};
 		    var skillCategoryJson=${skillCategoryJson};
 		    var primarySkillJson=${primarySkillJson};
+		    var accountListJson=${accountListJson};
+		    var projectListJson=${projectListJson};
+		    
 </script>
 
 		<script>

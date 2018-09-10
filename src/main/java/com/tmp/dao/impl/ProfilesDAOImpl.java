@@ -195,7 +195,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			if (rs != null) {
 				profile = new Profile();
 				while (rs.next()) {
-					profile = populateProfile(rs);
+					profile = populateProfileUpdate(rs);
 				}
 			}
 			rs.close();
@@ -392,7 +392,66 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setProfileSharedDatestr(DateToStr);
 		return profile;
 	}
+	
+	private Profile populateProfileUpdate(ResultSet rs) throws SQLException {
+		if (rs == null) {
+			return null;
+		}
+		
+		Profile profile = new Profile();
+		profile.setId(rs.getInt("ID"));
+		profile.setReqRefNo(rs.getString("REQUIREMENT_ID"));
+		profile.setName(rs.getString("NAME"));
+		profile.setEmail(rs.getString("EMAIL_ID"));
+		profile.setContactNo(rs.getString("CONTACT_NO"));
+		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
+		profile.setLocation(rs.getString("LOCATION"));
+		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
+		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
+		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
+		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
+		profile.setYearsOfExperience(rs.getInt("YEARS_OF_EXPERIENCE"));
+		profile.setRelevantExperience(rs.getInt("RELEVANT_EXPERIENCE"));
+		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
+		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
+		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
+		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));
+		profile.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
+		profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));
+		profile.setAllocationStartDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_START_DATE")));
+		profile.setAllocationEndDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_END_DATE")));		
+		profile.setCreatedBy(configDAO.getUserId(rs.getInt("CREATED_BY")));
+		profile.setUpdatedBy(configDAO.getUserId(rs.getInt("UPDATED_BY")));
+		profile.setInternalEvaluationResultDate(rs.getDate("INTERNAL_EVALUATION_RESULT_DATE"));
+		//profile.setInitialEvaluationResult(rs.getString("INITIAL_EVALUATION_RESULT"));
+		profile.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
+		profile.setProfileSharedCustomerDate(rs.getDate("PROFILE_SHARED_CUSTOMER_DATE"));
+		//profile.setCustomerInterviewStatus(rs.getString("CUSTOMER_INTERVIEW_STATUS"));
+		profile.setRemarks(rs.getString("REMARKS"));
+		profile.setCreatedOn(rs.getDate("CREATED_ON"));
+		profile.setUpdatedOn(rs.getDate("UPDATED_ON"));
+		int iniEvalResult = rs.getInt("INITIAL_EVALUATION_RESULT");
+		if(iniEvalResult>0){
+			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
+		}else{
+			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping("In Progress"));
+		}
+		
+		int customerInterStatus = rs.getInt("CUSTOMER_INTERVIEW_STATUS");
+		if(customerInterStatus>0){
+			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
+		}else{
+			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
+		}
+		profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));
+	/*	Date sqldate=rs.getDate("PROFILE_SHARED_DATE");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
+		String DateToStr = simpleDateFormat.format(sqldate);
+		profile.setProfileSharedDatestr(DateToStr);*/
+		return profile;
+	}
 
+	
 	private void populateProfileForInsert(PreparedStatement ps, Profile profile, String strUserId) throws SQLException {
 
 		if (ps == null) {

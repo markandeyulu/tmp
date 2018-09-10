@@ -218,7 +218,7 @@ table.dataTable thead th:first-child {
 			   		 url: "/ResourceManagementApp/profileDelete.action",
 			   		 data: { dataArr: dataArr},
 		            success: function(e){      
-                	 		$('#deleteProfileMsg').html(e);
+                	 		$('#profileMsg').html(e);
                 	 	$.each( dataArr, function( key, value ) {
         		    	   $( "tr:contains('" + value + "')").each(function() {
         		    		   $('#reqtable2').dataTable().fnDeleteRow(this);
@@ -272,18 +272,18 @@ table.dataTable thead th:first-child {
  var addMessage = ${addMessage};
 	if (undefined != addMessage) {
 		if (addMessage == 1) {
-			$("#addProfileMsg").text('Successfully the profile has been created!!');
+			$("#profileMsg").text('Successfully the profile has been created!!');
 		} else if (addMessage == 0) {
-			$("#addProfileMsg").text('Failure!! the profile has not been created!!');
+			$("#profileMsg").text('Failure!! the profile has not been created!!');
 		}
 	}
  var updateMessage = ${updateMessage};
 	      if (undefined != updateMessage) {
 	            if (updateMessage == 1) {
-	                  $("#updateProfileMsg").text('Successfully the profile has been updated!!');
+	                  $("#profileMsg").text('Successfully the profile has been updated!!');
 	                  //window.location.href = "profiles.html";
 	            } else if (updateMessage == 0) {
-	                  $("#updateProfileMsg").text('Failure!! the profile has not been updated!!');
+	                  $("#profileMsg").text('Failure!! the profile has not been updated!!');
 	            }
 	      }
 	      
@@ -448,12 +448,16 @@ $('#logout').click(function () {
 					style="margin-left: 0%; background-color: #b30000; color: white;"
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#uploadModal">Upload Profile</button>
-	<div id="addProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
+	<!-- <div id="addProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
 					</div>
 	<div id="deleteProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
 			</div>
 			<div id="updateProfileMsg" style="display: inline-block; margin-left:2%; font-weight: bold">
+			</div> -->
+			<div id="profileMsg" style="display: inline-block; margin-left:2%; font-weight: bold">
 			</div>
+			
+			
 		</div>
 <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
 			aria-labelledby="modalLabel" aria-hidden="true">
