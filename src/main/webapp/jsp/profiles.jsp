@@ -348,6 +348,21 @@ table.dataTable thead th:first-child {
 			document.getElementById("customerInterviewStatusAdd").disabled=false;
 		}
 		}
+ function validateEmail(event){
+     var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+     alert(event.value);
+     if (reg.test(event.value) == false) 
+     {
+         alert('Invalid Email Address');
+         document.getElementById("email").focus();
+         return false;
+         
+     }
+
+     return true;
+
+}
+ 
  
 </script>
 <script type="text/javascript">
@@ -555,9 +570,10 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input class="form-control" path="email" oninvalid="this.setCustomValidity('Candidate email id must not be empty')" 
-											id="email" type="text" required="required" oninput="this.setCustomValidity('')" 
+											id="email" type="text" required="required" oninput="this.setCustomValidity('')" onChange="validateEmail(this);"
 											placeholder="Enter Candidate Email ID.." />
 									</div>
+									<div id="refback" style="color:red"></div>
 								</div>
 
 								<div class="row">
@@ -856,7 +872,7 @@ $('#logout').click(function () {
 									
 										<td><spring:input class="form-control" path="email" id="emailProfile"
 											type="text" oninvalid="this.setCustomValidity('Email Id must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')"/></td>
+											required="required" onchange="validateEmail(this);" oninput="this.setCustomValidity('')"/></td>
 									</tr>
 									<tr>
 										<td><spring:label path="contactNo">Contact No<span style="color:red">*</span></spring:label></td>
