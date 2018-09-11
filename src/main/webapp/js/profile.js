@@ -25,6 +25,14 @@ $(document).ready(function(){
 			$("#updateBtn").attr("disabled",false);
 			
 		});
+	   
+	   $( "#name,#profileSharedBy,#currentCompany" ).keypress(function(e) {
+               var key = e.keyCode;
+               if (key >= 48 && key <= 57) {
+                   e.preventDefault();
+               }
+           });
+	  
 })
  
 

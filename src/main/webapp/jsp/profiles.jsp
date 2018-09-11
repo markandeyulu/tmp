@@ -138,7 +138,7 @@ table.dataTable thead th:first-child {
 {{#each profilesJson}}
 
   <tr>
-		<td> <input type="checkbox" name="" value=""></td>
+		<td> <input type="checkbox" class="checkbox" name="" value=""></td>
 		<td href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
 		<td>{{reqRefNo}}</td>
 		<td>{{location}}</td>
@@ -245,6 +245,19 @@ table.dataTable thead th:first-child {
 		            });
 		        }
 		    });
+		    
+		    $(".checkbox").change(function () {
+				 if(this.checked == false){ //if this item is unchecked
+				        $("#checkall")[0].checked = false; 
+				        $(this).parent().parent().removeClass('selected');
+				    }
+				 
+				 if ( $('input[type="checkbox"]:checked').length == table.profilesJson.length ){
+				        $("#checkall").prop('checked', true);
+				        $(this).parent().parent().addClass('selected');
+				    }
+				 
+			 });
 		    
 		    $("[data-toggle=tooltip]").tooltip();
 		    

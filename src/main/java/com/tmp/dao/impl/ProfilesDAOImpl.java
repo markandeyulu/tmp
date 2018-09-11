@@ -473,7 +473,14 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setInt(13, profile.getExpectedCTC());
 		ps.setInt(14, profile.getNoticePeriod());
 		ps.setDate(15, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
-		ps.setString(16, profile.getInitialEvaluationResultAdd());
+		
+		if(StringUtils.isBlank(profile.getInitialEvaluationResultAdd()))
+		{
+			ps.setString(16, null);
+		}else {
+			ps.setString(16, profile.getInitialEvaluationResultAdd());
+		}
+		
 		ps.setString(17, profile.getProfileSharedCustomer());
 		
 		ps.setDate(18, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));

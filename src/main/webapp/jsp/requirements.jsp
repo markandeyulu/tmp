@@ -76,7 +76,6 @@ var table=${requirementtableJson};
 var locationJson=${locationJson};
 var accountValues = ${accountValuesJson};
 var projectValues = ${projectValuesJson};
-/* var accountListJson=${accountListJson};  */
 
 function validate(evt) {
 	  var theEvent = evt || window.event;
@@ -165,6 +164,20 @@ $(document).ready(function () {
 	            });
 	        }
 	    });
+	
+	 $(".checkbox").change(function () {
+		 if(this.checked == false){ //if this item is unchecked
+		        $("#checkall")[0].checked = false; 
+		        $(this).parent().parent().removeClass('selected');
+		    }
+		 
+		 if ( $('input[type="checkbox"]:checked').length == table.requirementtableJson.length ){
+		        $("#checkall").prop('checked', true);
+		        $(this).parent().parent().addClass('selected');
+		    }
+		 
+	 });
+	 
 	  $("[data-toggle=tooltip]").tooltip();
 	   
 	    var updateMessage = ${updateMessage};	    
@@ -227,7 +240,7 @@ function adminRoleCheck() {
 {{#each requirementtableJson}}
 
 		<tr>
-		<td> <input type="checkbox" name="" value=""></td>
+		<td> <input type="checkbox" class="checkbox" name="" value=""></td>
        
 		<td href="#" data-toggle="modal" data-target="#squarespaceModal1" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
         
