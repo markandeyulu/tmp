@@ -182,7 +182,17 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	}
 	
 	public Profile getProfile(String profileId) {
-		StringBuffer sql = new StringBuffer("SELECT * FROM PROFILE WHERE ID = ?");
+		//StringBuffer sql = new StringBuffer("SELECT * FROM PROFILE WHERE ID = ?");
+		StringBuffer sql = new StringBuffer("SELECT p.ID, p.NAME, p.EMAIL_ID, p.CONTACT_NO, p.CURRENT_COMPANY," + 
+				" p.LOCATION, p.PRIMARY_SKILL, p.PROFILE_SHARED_DATE, p.PROFILE_SHARED_BY, " + 
+				" p.YEARS_OF_EXPERIENCE, p.RELEVANT_EXPERIENCE, p.NOTICE_PERIOD, " + 
+				" p.CURRENT_CTC, p.EXPECTED_CTC, p.IS_ALLOCATED," + 
+				" p.ALLOCATION_START_DATE, p.ALLOCATION_END_DATE, p.CREATED_ON, " + 
+				" p.CREATED_BY, p.UPDATED_ON, p.UPDATED_BY, p.PROFILE_SOURCE, " + 
+				" p.INTERNAL_EVALUATION_RESULT_DATE, p.INITIAL_EVALUATION_RESULT, " + 
+				" p.PROFILE_SHARED_CUSTOMER, p.PROFILE_SHARED_CUSTOMER_DATE, p.REMARKS, " + 
+				" p.CUSTOMER_INTERVIEW_STATUS, p.REQUIREMENT_ID,r.ACCOUNT,r.PROJECT " + 
+				"FROM PROFILE p inner join REQUIREMENT r ON p.REQUIREMENT_ID = r.ID WHERE p.ID = ?");
 
 		Connection conn = null;
 

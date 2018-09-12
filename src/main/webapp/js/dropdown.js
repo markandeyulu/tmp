@@ -15,10 +15,10 @@ $(document).ready(function(){
 		g_item.push(accountData[index].userAccount.accountId);
 		g_accountArray.push(g_item);
 	});
-	 $("#accountNew,#accountProfile").append('<option value="">Select Account</option>'); 
+	 $("#accountProfile").append('<option value="">Select Account</option>'); 
 	$.each(g_accountArray, function(i) {
 		var g_proItem = g_accountArray[i];
-		$("#framework1,#accountNew,#accountProfile").append('<option id="' + g_proItem[1] + '" value="' + g_proItem[1] + '">' + g_proItem[0] + '</option>');
+		$("#framework1,#accountProfile").append('<option id="' + g_proItem[1] + '" value="' + g_proItem[1] + '">' + g_proItem[0] + '</option>');
 	});
 	
 	var primarySkillData=primarySkillJson.locationJson;
@@ -55,11 +55,11 @@ $(document).ready(function(){
 	    	             	});
 
 	    	             	//console.log("g_projectArray --> "+g_projectArray);
-	    	             	$("#projectNew,#projectProfile").append('<option value="">Select Project</option>'); 
+	    	             /*	$("#projectProfile").append('<option value="">Select Project</option>'); 
 	    	             	$.each(g_projectArray, function(i) {
 	    	             		var g_projectItem = g_projectArray[i];
-	    	             		$("#projectNew,#projectProfile").append('<option id="' + g_projectItem[1] + '" value="' + g_projectItem[1] + '">' + g_projectItem[0] + '</option>');
-	    	             	});	
+	    	             		$("#projectProfile").append('<option id="' + g_projectItem[1] + '" value="' + g_projectItem[1] + '">' + g_projectItem[0] + '</option>');
+	    	             	});	*/
 	    	             	var criticalityData=criticalJson.locationJson;
 	
 	             	var g_criticalityArray = [];	             	
@@ -101,10 +101,10 @@ var requirementTypeData=requirementTypeJson.locationJson;
        g_item.push(accountListData[index].accountName);
        g_accountListArray.push(g_item);	             		
      });
-      $("#account1").append('<option value="">Select Account</option>');  
+      $("#account1,#accountNew").append('<option value="">Select Account</option>');  
   	$.each(g_accountListArray, function(i) {
   		var g_accountListItem = g_accountListArray[i];
-  		$("#account1").append('<option id="' + g_accountListItem[0] + '" value="' + g_accountListItem[0] + '">' + g_accountListItem[1] + '</option>');
+  		$("#account1,#accountNew").append('<option id="' + g_accountListItem[0] + '" value="' + g_accountListItem[0] + '">' + g_accountListItem[1] + '</option>');
   	}); 
       
 
@@ -117,10 +117,10 @@ var projectListData=projectListJson.projectListJson;
        g_item.push(projectListData[index].projectName);
        g_projectListArray.push(g_item);	             		
      });
-      $("#projectAdd").append('<option value="">Select Project</option>');  
+      $("#projectProfile,#projectAdd,#projectNew").append('<option value="">Select Project</option>');  
   	$.each(g_projectListArray, function(i) {
   		var g_projectListItem = g_projectListArray[i];
-  		$("#projectAdd").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
+  		$("#projectProfile,#projectAdd,#projectNew").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
   	}); 
       
 	var skillCategoryData=skillCategoryJson.locationJson;

@@ -91,9 +91,17 @@ $(document).ready(function() {
 			 $('#pid_crmid_soNew').val(data.pid_crmid_so);
 			 $('#yearExperienceNew').val(data.yearExperience);
 			 $('#updatedByNew').val(data.updatedBy.name);
-			 $('#createdByNew').val(data.createdBy.name);			 			
-			 $("#accountNew option:contains(" + data.account.account.adminInfoValue.value + ")").attr('selected', 'selected');
-			 $("#projectNew option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');
+			 $('#createdByNew').val(data.createdBy.name);		
+			
+			 if(data.account.account.adminInfoValue.value!=null && data.account.account.adminInfoValue.value!=""){
+				 $("#accountNew").append('<option value="">Select Account</option>');
+				 $("#accountNew option:contains(" + data.account.account.adminInfoValue.value + ")").attr('selected', 'selected');
+			 }
+			 if(data.account.account.adminInfoValue.value!=null && data.account.account.adminInfoValue.value!=""){
+				 $("projectNew").append('<option value="">Select Account</option>');
+				 $("#projectNew option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');
+			 }
+				
 			 if(data.status.configValue.value!=null && data.status.configValue.value!=""){
 				 $("#statusNew option:contains(" + data.status.configValue.value + ")").attr('selected', 'selected');
 				 }
