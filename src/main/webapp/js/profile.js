@@ -26,13 +26,24 @@ $(document).ready(function(){
 			
 		});
 	   
-	   $( "#name,#profileSharedBy,#currentCompany" ).keypress(function(e) {
+	   $( "#name,#profileSharedBy,#currentCompany,#location" ).keypress(function(e) {
                var key = e.keyCode;
                if (key >= 48 && key <= 57) {
                    e.preventDefault();
                }
            });
-	  
+	   $( "#nameProfile,#locationProfile,#currentCompanyProfile,#primarySkillProfile,#profileSharedBy,#createdByProfile,#updatedByProfile,#remarksProfile" ).keypress(function(e) {
+           var key = e.keyCode;
+           if (key >= 48 && key <= 57) {
+               e.preventDefault();
+           }
+       });
+	   $("#currentCTC,#expectedCTC,#currentCTCProfile,#expectedCTCProfile").keypress(function(e) {
+           var key = e.keyCode;
+           if (!((key >= 48 && key <= 57) || (e.key>= 96 && e.key <= 105))) { 
+        	 e.preventDefault();
+        }
+       });
 })
  
 
@@ -91,11 +102,11 @@ function loadDetail(id){
 				 $("#profileSharedCustomerDateProfile").removeAttr('disabled');
 				 $("#customerInterviewStatusProfile").removeAttr('disabled');
 			 }
-			 if(null!=data.account && null!=data.account.account){
-				 $("#accountProfile option:contains(" + data.account.account.adminInfoValue.value + ")").attr('selected', 'selected');	 
+			 if(null!=data.account && null!=data.account.account.adminInfoValue.value){
+				 $('#accountProfile').val(data.account.account.adminInfoValue.value);
 			 }
-			 if(null!=data.project && null != data.project.project){
-				 $("#projectProfile option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');	 
+			 if(null!=data.project && null != data.project.project.adminInfoValue.value){
+				 $('#projectProfile').val(data.project.project.adminInfoValue.value);	 
 			 }
 			
 		 },

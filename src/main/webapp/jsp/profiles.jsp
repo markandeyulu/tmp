@@ -95,7 +95,8 @@ var intimationModeJson=${intimationModeJson};
 var positionStatusJson=${positionStatusJson};
 var opportunityStatusJson=${opportunityStatusJson};
 var skillCategoryJson=${skillCategoryJson};
-
+var accountListJson=${accountListJson};
+var projectListJson=${projectListJson};
 function adminRoleCheck() {
     if ($('#userRoleId').val() == "Admin") {
     	 $('#hidProfile').show();
@@ -300,6 +301,33 @@ table.dataTable thead th:first-child {
 	            }
 	      }
 	      
+	      $('#accountProfile').change(function() {
+	  		var account_id=$('#accountProfile').val();
+	  		$('#projectProfile option').remove();
+	  		
+	  		var projectListData=projectListJson.projectListJson;
+	  		var g_projectListArray = [];	
+	  	      $.each(projectListData, function(index) {
+	  	      var g_item = [];
+	  	      if ($("#accountProfile").val() == (projectListData[index].accountId)) {
+	  	    	  g_item.push(projectListData[index].projectId);	 
+	  		      g_item.push(projectListData[index].projectName);	
+	  		      g_projectListArray.push(g_item);	
+	  	      }
+	  	       
+	  	                   		
+	  	     });
+	  	      $("#projectProfile").append('<option value="">Select Project</option>');  
+	  	      
+	  	  	$.each(g_projectListArray, function(i) {
+	  	  		var g_projectListItem = g_projectListArray[i];
+	  	  		$("#projectProfile").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
+	  	  	}); 
+	  	  	
+	  	  	
+	        
+	      });
+	      
 });
  
 
@@ -350,11 +378,11 @@ table.dataTable thead th:first-child {
 		}
  function validateEmail(event){
      var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-     alert(event.value);
      if (reg.test(event.value) == false) 
      {
          alert('Invalid Email Address');
          document.getElementById("email").focus();
+         document.getElementById("emailProfile").focus();
          return false;
          
      }
@@ -362,7 +390,7 @@ table.dataTable thead th:first-child {
      return true;
 
 }
- 
+
  
 </script>
 <script type="text/javascript">
@@ -646,7 +674,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input class="form-control" type="text" oninvalid="this.setCustomValidity('Total experience in years must not be empty')" 
-										 oninput="this.setCustomValidity('')" id="yearsOfExperience" path="yearsOfExperience" onkeypress='validate(event)' 
+										 oninput="this.setCustomValidity('')" id="yearsOfExperience" path="yearsOfExperience" onkeypress='validate(event)' maxlength="2"
 											placeholder="Enter Total Experience(in years).." required="required"/>
 									</div>
 								</div>
@@ -656,7 +684,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input type="text" id="relevantExperience" class="form-control" path="relevantExperience" oninvalid="this.setCustomValidity('Relevant experience in years must not be empty')" 
-										 oninput="this.setCustomValidity('')" placeholder="Enter Relevant Experience(in years).." onkeypress='validate(event)' required="required"	/>
+										 oninput="this.setCustomValidity('')" placeholder="Enter Relevant Experience(in years).." onkeypress='validate(event)' required="required" maxlength="2"	/>
 									</div>
 								</div>
 								<div class="row">
@@ -674,8 +702,8 @@ $('#logout').click(function () {
 										<spring:label path="currentCTC">Current CTC</spring:label>
 									</div>
 									<div class="col-75">
-										<spring:input type="text" class="form-control" id="currentCTC"  
-										  path="currentCTC" placeholder="Enter Current CTC(in Lakhs).." />
+										<spring:input type="text" class="form-control" id="currentCTC"  maxlength="6"
+										  path="currentCTC" onChange="validateNumber(this);" placeholder="Enter Current CTC(in Lakhs).." />
 									</div>
 								</div>
 								<div class="row">
@@ -684,8 +712,8 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input type="text" class="form-control" 
-										   id="expectedCTC" path="expectedCTC" 
-											placeholder="Enter Excepted CTC(in Lakhs)..." />
+										   id="expectedCTC" path="expectedCTC" maxlength="6"
+											placeholder="Enter Excepted CTC(in Lakhs)..." onChange="validateNumber(this);" />
 									</div>
 								</div>
 								<!-- </div> -->
@@ -953,7 +981,7 @@ $('#logout').click(function () {
 													path="yearsOfExperience" id="yearsOfExperienceProfile"
 													type="text" value=""
 													oninvalid="this.setCustomValidity('Years of experience must not be empty')"
-													required="required" oninput="this.setCustomValidity('')" /></td>
+													required="required" maxlength="2" oninput="this.setCustomValidity('')" /></td>
 
 										</tr>
 										<tr>
@@ -966,7 +994,7 @@ $('#logout').click(function () {
 													path="relevantExperience" id="relevantExperienceProfile"
 													type="text"
 													oninvalid="this.setCustomValidity('Relevant experience must not be empty')"
-													required="required" oninput="this.setCustomValidity('')" /></td>
+													required="required" maxlength="2"  oninput="this.setCustomValidity('')" /></td>
 										</tr>
 										<tr>
 											<td><spring:label path="currentCTC">CurrentCTC
@@ -974,7 +1002,7 @@ $('#logout').click(function () {
 
 
 											<td><spring:input class="form-control" path="currentCTC"
-													id="currentCTCProfile" type="text" /></td>
+													id="currentCTCProfile" type="text" maxlength="6" onChange="validateNumber(this);" /></td>
 										</tr>
 										
 										<tr>
@@ -991,7 +1019,7 @@ $('#logout').click(function () {
 
 
 											<td><spring:input class="form-control"
-													path="expectedCTC" id="expectedCTCProfile" type="text" /></td>
+													path="expectedCTC" id="expectedCTCProfile" maxlength="6" type="text" onChange="validateNumber(this);" /></td>
 										</tr>
 										
 									<!-- </div> -->
@@ -1002,19 +1030,22 @@ $('#logout').click(function () {
 									<table>
 									<tr>
 										<td><spring:label path="account">Account</spring:label></td>
-									
-									
+									<%-- 									
 										<td><spring:select id="accountProfile" multiple="false" path="account.id" 
 										class="form-control dropdown-toggle text-left " >
-						            </spring:select></td>
+						            </spring:select></td> --%>
+						            <td><spring:input class="form-control" path="account.id"
+											id="accountProfile" type="text" value=""  readonly="true"/></td>
+						           
 									</tr>
 									<tr>
 										<td><spring:label path="project">Project</spring:label></td>
+									 <td><spring:input class="form-control" path="project.id"
+											id="projectProfile" type="text" value=""  readonly="true"/></td>
 									
-									
-										<td>
+										<%-- <td>
 											<spring:select id="projectProfile" multiple="false" path="project.id"   class="form-control dropdown-toggle text-left " >
-						            </spring:select></td>
+						            </spring:select></td> --%>
 									</tr>
 									
 									<tr>

@@ -30,6 +30,18 @@
 			$('.multiselect-ui').multiselect({
 				includeSelectAllOption: true
 			});
+			 $( "#location1,#city,#primarySkill1,#skillCategoryAdd1,#jobDescription,#ibg_cdg,#ibu_cdu,#intimatedBy" ).keypress(function(e) {
+	               var key = e.keyCode;
+	               if (key >= 48 && key <= 57) {
+	                   e.preventDefault();
+	               }
+	           });
+			 $( "#skillCategoryNew,#jobDescriptionNew,#cityNew,#primarySkillNew,#locationNew,#intimatedByNew,#ibu_cduNew,#ibg_cdgNew,#remarks" ).keypress(function(e) {
+	               var key = e.keyCode;
+	               if (key >= 48 && key <= 57) {
+	                   e.preventDefault();
+	               }
+	           });
 		});
 		$(document).ready(function(){
 			$('#framework').multiselect({
@@ -48,7 +60,7 @@
 				enableCaseInsensitiveFiltering: false,
 				buttonWidth:''
 			});
-
+			
 
 		});
 		$(function() {

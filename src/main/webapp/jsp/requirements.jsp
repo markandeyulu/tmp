@@ -117,7 +117,32 @@ $(document).ready(function () {
       
     });
 	
-	
+	$('#accountNew').change(function() {
+		var account_id=$('#accountNew').val();
+		$('#projectNew option').remove();
+		
+		var projectListData=projectListJson.projectListJson;
+		var g_projectListArray = [];	
+	      $.each(projectListData, function(index) {
+	      var g_item = [];
+	      if ($("#accountNew").val() == (projectListData[index].accountId)) {
+	    	  g_item.push(projectListData[index].projectId);	 
+		      g_item.push(projectListData[index].projectName);	
+		      g_projectListArray.push(g_item);	
+	      }
+	       
+	                   		
+	     });
+	      $("#projectNew").append('<option value="">Select Project</option>');  
+	      
+	  	$.each(g_projectListArray, function(i) {
+	  		var g_projectListItem = g_projectListArray[i];
+	  		$("#projectNew").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
+	  	}); 
+	  	
+	  	
+      
+    });
 	 $('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
     	 var row = $(this).closest('tr');
 		row.addClass('selected');
@@ -202,7 +227,9 @@ $(document).ready(function () {
 		} else if (addMessage == 0) {
 			$("#reqMsg").text('Failure!! the requirement has not been created!!');
 			$("#reqMsg").fadeOut(10000);
+			
 		}
+	
 	}
 	
 	
@@ -231,6 +258,21 @@ function adminRoleCheck() {
     	$('#assignProfile').hide();
     }
  }
+function validateEmail(event){
+    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    alert(event.value);
+    if (reg.test(event.value) == false) 
+    {
+        alert('Invalid Email Address');
+        document.getElementById("intimatorEmail").focus();
+        document.getElementById("intimatorEmailNew").focus();
+        return false;
+        
+    }
+
+    return true;
+
+}
 
 </script>
 
@@ -531,7 +573,7 @@ $('#logout').click(function () {
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
 							<button type="button" class="close" data-dismiss="modal"
-								style="background-color: white;">
+								style="background-color: white;" onClick="window.location.reload();">
 								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 							</button>
 							<h3 class="modal-title" id="lineModalLabel" style="color: white;">Add
@@ -846,7 +888,7 @@ $('#logout').click(function () {
 									<div class="col-75">
 										<spring:input type="text" class="form-control"
 											id="intimatorEmail" path="intimatorEmail" oninvalid="this.setCustomValidity('Initimater email id must not be empty')" 
-										oninput="this.setCustomValidity('')"
+										oninput="this.setCustomValidity('')" onChange="validateEmail(this);"
 											placeholder="Enter EmailId of Intimator.." required="required"/>
 									</div>
 								</div>
@@ -935,7 +977,7 @@ $('#logout').click(function () {
                           <td><spring:label path="intimatorEmail">Intimator Email<span style="color:red">*</span></spring:label></td>
                           <td><spring:input class="form-control" id="intimatorEmailNew" path="intimatorEmail" type="text" 
                           oninvalid="this.setCustomValidity('Initimater email id must not be empty')" 
-						required="required"			oninput="this.setCustomValidity('')"/></td>
+						required="required"		onChange="validateEmail(this);"	oninput="this.setCustomValidity('')"/></td>
                     </tr>
                     <tr>
                           <td><spring:label path="requirementType">Requirement Type<span style="color:red">*</span></spring:label> </td>
@@ -1037,7 +1079,7 @@ $('#logout').click(function () {
               <tr>
                   <td><spring:label path="billingRate">Billing Rate<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="billingRateNew" path="billingRate" type="text" oninvalid="this.setCustomValidity('Billing rate must not be empty')" 
-							required="required"				oninput="this.setCustomValidity('')"/></td>
+							required="required"		maxlength="6"		oninput="this.setCustomValidity('')"/></td>
               </tr>
               <tr>
                   <td><spring:label path="intimatedBy">Intimated By<span style="color:red">*</span></spring:label></td>
