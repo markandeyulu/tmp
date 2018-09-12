@@ -266,12 +266,9 @@ function validateEmail(event){
         alert('Invalid Email Address');
         document.getElementById("intimatorEmail").focus();
         document.getElementById("intimatorEmailNew").focus();
-        return false;
-        
+        return false;        
     }
-
     return true;
-
 }
 
 </script>
