@@ -117,7 +117,32 @@ $(document).ready(function () {
       
     });
 	
-	
+	$('#accountNew').change(function() {
+		var account_id=$('#accountNew').val();
+		$('#projectNew option').remove();
+		
+		var projectListData=projectListJson.projectListJson;
+		var g_projectListArray = [];	
+	      $.each(projectListData, function(index) {
+	      var g_item = [];
+	      if ($("#accountNew").val() == (projectListData[index].accountId)) {
+	    	  g_item.push(projectListData[index].projectId);	 
+		      g_item.push(projectListData[index].projectName);	
+		      g_projectListArray.push(g_item);	
+	      }
+	       
+	                   		
+	     });
+	      $("#projectNew").append('<option value="">Select Project</option>');  
+	      
+	  	$.each(g_projectListArray, function(i) {
+	  		var g_projectListItem = g_projectListArray[i];
+	  		$("#projectNew").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
+	  	}); 
+	  	
+	  	
+      
+    });
 	 $('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
     	 var row = $(this).closest('tr');
 		row.addClass('selected');
@@ -202,7 +227,9 @@ $(document).ready(function () {
 		} else if (addMessage == 0) {
 			$("#reqMsg").text('Failure!! the requirement has not been created!!');
 			$("#reqMsg").fadeOut(10000);
+			
 		}
+	
 	}
 	
 	
@@ -531,7 +558,7 @@ $('#logout').click(function () {
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
 							<button type="button" class="close" data-dismiss="modal"
-								style="background-color: white;">
+								style="background-color: white;" onClick="window.location.reload();">
 								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 							</button>
 							<h3 class="modal-title" id="lineModalLabel" style="color: white;">Add

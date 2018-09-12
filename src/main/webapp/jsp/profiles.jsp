@@ -95,7 +95,8 @@ var intimationModeJson=${intimationModeJson};
 var positionStatusJson=${positionStatusJson};
 var opportunityStatusJson=${opportunityStatusJson};
 var skillCategoryJson=${skillCategoryJson};
-
+var accountListJson=${accountListJson};
+var projectListJson=${projectListJson};
 function adminRoleCheck() {
     if ($('#userRoleId').val() == "Admin") {
     	 $('#hidProfile').show();
@@ -300,6 +301,33 @@ table.dataTable thead th:first-child {
 	            }
 	      }
 	      
+	      $('#accountProfile').change(function() {
+	  		var account_id=$('#accountProfile').val();
+	  		$('#projectProfile option').remove();
+	  		
+	  		var projectListData=projectListJson.projectListJson;
+	  		var g_projectListArray = [];	
+	  	      $.each(projectListData, function(index) {
+	  	      var g_item = [];
+	  	      if ($("#accountProfile").val() == (projectListData[index].accountId)) {
+	  	    	  g_item.push(projectListData[index].projectId);	 
+	  		      g_item.push(projectListData[index].projectName);	
+	  		      g_projectListArray.push(g_item);	
+	  	      }
+	  	       
+	  	                   		
+	  	     });
+	  	      $("#projectProfile").append('<option value="">Select Project</option>');  
+	  	      
+	  	  	$.each(g_projectListArray, function(i) {
+	  	  		var g_projectListItem = g_projectListArray[i];
+	  	  		$("#projectProfile").append('<option id="' + g_projectListItem[0] + '" value="' + g_projectListItem[0] + '">' + g_projectListItem[1] + '</option>');
+	  	  	}); 
+	  	  	
+	  	  	
+	        
+	      });
+	      
 });
  
 
@@ -350,7 +378,6 @@ table.dataTable thead th:first-child {
 		}
  function validateEmail(event){
      var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-     alert(event.value);
      if (reg.test(event.value) == false) 
      {
          alert('Invalid Email Address');
@@ -1002,19 +1029,22 @@ $('#logout').click(function () {
 									<table>
 									<tr>
 										<td><spring:label path="account">Account</spring:label></td>
-									
-									
+									<%-- 									
 										<td><spring:select id="accountProfile" multiple="false" path="account.id" 
 										class="form-control dropdown-toggle text-left " >
-						            </spring:select></td>
+						            </spring:select></td> --%>
+						            <td><spring:input class="form-control" path="account.id"
+											id="accountProfile" type="text" value=""  readonly="true"/></td>
+						           
 									</tr>
 									<tr>
 										<td><spring:label path="project">Project</spring:label></td>
+									 <td><spring:input class="form-control" path="project.id"
+											id="projectProfile" type="text" value=""  readonly="true"/></td>
 									
-									
-										<td>
+										<%-- <td>
 											<spring:select id="projectProfile" multiple="false" path="project.id"   class="form-control dropdown-toggle text-left " >
-						            </spring:select></td>
+						            </spring:select></td> --%>
 									</tr>
 									
 									<tr>

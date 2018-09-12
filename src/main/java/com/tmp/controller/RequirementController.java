@@ -161,6 +161,8 @@ public class RequirementController {
 		model.addObject("updateMessage", 3);
 		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
 		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
+		model.addObject("accountListJson", tmpUtil.getAccountList());
+		model.addObject("projectListJson", tmpUtil.getProjectList());
 		return model;
 	}
 	
