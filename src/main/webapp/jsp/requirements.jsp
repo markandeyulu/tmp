@@ -906,12 +906,12 @@ $('#logout').click(function () {
 								</div>
 									<div class="row">
 									<div class="col-25">
-										<spring:label path="actualClosureDate">Projected Closure Date<span style="color:red">*</span></spring:label>
+										<spring:label path="actualClosureDate">Projected Closure Date</spring:label>
 									</div>
 									<div class="col-75">
 										<spring:input type="text" class="form-control"
 											id="actualClosureDate" path="actualClosureDate"
-											placeholder="Enter Actual/Projected Closure Date.." required="required"/>
+											placeholder="Enter Actual/Projected Closure Date.."/>
 									</div>
 								</div>
 								

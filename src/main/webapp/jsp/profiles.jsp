@@ -341,7 +341,15 @@ table.dataTable thead th:first-child {
  	    if(theEvent.preventDefault) theEvent.preventDefault();
  	  }
  	}
-
+function disableTextBox(){
+	var d = document.getElementById("initialEvaluationResultProfile");
+	var dropdown = d.options[d.selectedIndex].value;
+	if(dropdown!="23"){
+		document.getElementById("profileSharedCustomerProfile").disabled=true;
+	}else{
+		document.getElementById("profileSharedCustomerProfile").disabled=false;
+	}
+}
  function changeTextBoxUpdate(){
 		var e = document.getElementById("profileSharedCustomerProfile");
      
@@ -376,6 +384,7 @@ table.dataTable thead th:first-child {
 			document.getElementById("customerInterviewStatusAdd").disabled=false;
 		}
 		}
+
  function validateEmail(event){
      var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
      if (reg.test(event.value) == false) 
@@ -503,7 +512,7 @@ $('#logout').click(function () {
 	<button
 					style="margin-left: 0%; background-color: #b30000; color: white;"
 					type="button" class="btn btn-md button1" data-toggle="modal"
-					data-target="#uploadModal">Upload Profile</button>
+					data-target="#uploadModal">Bulk Upload</button>
 	<!-- <div id="addProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
 					</div>
 	<div id="deleteProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
@@ -759,10 +768,10 @@ $('#logout').click(function () {
 									<div class="col-75">
 										<spring:select class="form-control" onchange="changeTextBoxAdd();" id="profileSharedCustomer" path="profileSharedCustomer"
 										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')">
+											required="required" oninput="this.setCustomValidity('')" >
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
-											<option value="No">No</option>
+											<option selected="selected" value="No">No</option>
 										</spring:select>
 									</div>
 								</div>
@@ -774,8 +783,7 @@ $('#logout').click(function () {
 										<spring:input class="form-control" path="profileSharedCustomerDate" 
 											id="datepicker"  type="text" placeholder="Enter Profile Shared with Customer Date.." 
 											oninvalid="this.setCustomValidity('Profile Shared Customer Date must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')"
-											/>
+											required="required" oninput="this.setCustomValidity('')" disabled="true"/>
 									</div>
 								</div>
 								<div class="row">
@@ -785,7 +793,7 @@ $('#logout').click(function () {
 									<div class="col-75">
 										<spring:select class="form-control" id="customerInterviewStatusAdd" path="customerInterviewStatusAdd"
 										 oninvalid="this.setCustomValidity('Customer Interview Status must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')">
+											required="required" oninput="this.setCustomValidity('')" disabled="true">
 											<!-- <option value="">Select Customer Interview Status</option>
 											<option value="selected">Selected</option>
 											<option value="rejected">Rejected</option>
@@ -1121,7 +1129,8 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											<spring:select id="initialEvaluationResultProfile" multiple="false" path="initialEvaluationResult.id"   class="form-control dropdown-toggle text-left " 
+											<spring:select id="initialEvaluationResultProfile" multiple="false" path="initialEvaluationResult.id"   
+											class="form-control dropdown-toggle text-left " onchange="disableTextBox();"
 											oninvalid="this.setCustomValidity('Initial Evaluation Result must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')" >
 						            </spring:select></td>
@@ -1131,7 +1140,7 @@ $('#logout').click(function () {
 									
 										<td><spring:select class="form-control" onchange="changeTextBoxUpdate();" id="profileSharedCustomerProfile" path="profileSharedCustomer"
 										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')" >
+											required="required" oninput="this.setCustomValidity('')" disabled="true">
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
