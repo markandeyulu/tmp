@@ -18,11 +18,11 @@ CREATE TABLE `projects` (
   `ACC_ID` int(4),
    PRIMARY KEY (`PROJECT_ID`));
        
-INSERT INTO `account_master` VALUES (1,'Ford'),(2,'Ford Direct'),(3,'Mazda'),(4,'TRW'),(5,'Rivian');
+INSERT INTO `account_master` VALUES (1,'Ford'),(2,'Ford Direct'),(3,'Mazda'),(4,'TRW');
    
 INSERT INTO `projects` VALUES (1,'OWS',1),(2,'GPIRS',1),(3,'HROGC',1),(4,'NVO',2),(5,'NGP',2),(6,'AEM',2),
-   (7,'Mazda NA',3),(8,'Mazda US',3),(9,'Mazda UK',3),(10,'EPort',3),(11,'ETS',3),(12,'TRW UK',4),(13,'TRW US',4),
-    (14,'SAP',5);
+   (7,'Mazda NA',3),(8,'Mazda US',3),(9,'Mazda UK',3),(10,'EPort',3),(11,'ETS',3),(12,'TRW UK',4),(13,'TRW US',4);
+   
    
 UPDATE tmp.admin_info_value
 SET VALUE = 'HROGC'
@@ -85,3 +85,68 @@ INSERT INTO `user_role_account_mapping` VALUES
 		(22,5,2,'2018-05-11 18:30:00',1,'0000-00-00 00:00:00',NULL),
 		(23,5,3,'2018-05-11 18:30:00',1,'0000-00-00 00:00:00',NULL),
 		(24,5,4,'2018-05-11 18:30:00',1,'0000-00-00 00:00:00',NULL);
+		
+
+ALTER TABLE user
+ADD DISPLAY_NAME varchar(30);
+
+
+UPDATE user
+SET DISPLAY_NAME = 'Sangeetha'
+WHERE NAME = 'Sangeetha Selvakumar' AND EMAIL='ss00474123@techmahindra.com'
+
+UPDATE user
+SET DISPLAY_NAME = 'Agalya'
+WHERE NAME = 'Agalya Sivasubramanian' AND EMAIL='as00490953@TechMahindra.com'
+
+UPDATE user
+SET DISPLAY_NAME = 'Saranya'
+WHERE NAME = 'Saranya Palanisamy' AND EMAIL='ss00425154@Techmahindra.com'
+
+UPDATE user
+SET DISPLAY_NAME = 'Siva'
+WHERE NAME = 'Siva Subramanian' AND EMAIL='Siva.Subramanian@TechMahindra.com'
+
+UPDATE user
+SET DISPLAY_NAME = 'Ram'
+WHERE NAME = 'Ramkrishna Rao' AND EMAIL='Ramkrishna.Rao@TechMahindra.com'
+
+UPDATE user
+SET DISPLAY_NAME = 'Kannan'
+WHERE NAME = 'Kannan Kasthurirajan' AND EMAIL='KK00539399@TechMahindra.com'
+
+UPDATE user
+SET DISPLAY_NAME = 'Sukumar'
+WHERE NAME = 'Sukumar Natesan' AND EMAIL='Sukumar.Natesan@TechMahindra.com'
+
+UPDATE user
+SET NAME = 'Sangeetha', DISPLAY_NAME='Sangeetha Selvakumar'
+WHERE EMAIL='ss00474123@techmahindra.com'
+
+UPDATE user
+SET NAME = 'Agalya', DISPLAY_NAME='Agalya Sivasubramanian'
+WHERE EMAIL='as00490953@techmahindra.com'
+
+UPDATE user
+SET NAME = 'Saranya', DISPLAY_NAME='Saranya Palanisamy'
+WHERE EMAIL='ss00425154@Techmahindra.com'
+
+UPDATE user
+SET NAME = 'Siva', DISPLAY_NAME='Siva Subramanian'
+WHERE EMAIL='Siva.Subramanian@TechMahindra.com'
+
+UPDATE user
+SET NAME = 'Ram', DISPLAY_NAME='Ramkrishna Rao'
+WHERE EMAIL='Ramkrishna.Rao@TechMahindra.com'
+
+UPDATE user
+SET NAME = 'Kannan', DISPLAY_NAME='Kannan Kasthurirajan'
+WHERE EMAIL='KK00539399@TechMahindra.com'
+
+UPDATE user
+SET NAME = 'Sukumar', DISPLAY_NAME='Sukumar Natesan'
+WHERE EMAIL='Sukumar.Natesan@TechMahindra.com'
+
+
+update projects 
+set PROJECT_NAME='Eport' Where PROJECT_ID='5'

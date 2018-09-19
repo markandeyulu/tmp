@@ -245,6 +245,13 @@ $(document).ready(function () {
 		 
 		  form.requirementProfile.action.value="/requirementProfile";
 		});
+	 
+	 $("#btnReset").bind("click", function () {
+	            $("#projectNew")[0].selectedIndex = 0;
+	            $("#accountNew")[0].selectedIndex = 0;
+	            location.reload(true);
+	        });
+	   
 });
 
 function adminRoleCheck() {
@@ -326,7 +333,7 @@ $('#logout').click(function () {
 				<div class="btn-group btn-group-primary">
 					<button
 						style="display: inline-block; background-color: #b30000; color: white;"
-						class="btn btn-md button1 but3">Welcome ${userName}</button>
+						class="btn btn-md button1 but3">Welcome ${displayName}</button>
 					<button id="logout"
 						style="display: inline-block; background-color: #b30000; color: white"
 						class="btn btn-md button1 but3" type="submit">Logout</button>
@@ -931,7 +938,7 @@ $('#logout').click(function () {
 				<div class="modal-dialog" style="width: 90%;">
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
-						<button type="button" id="reload" class="close" data-dismiss="modal"
+						<button type="button" id="btnReset" class="close" data-dismiss="modal"
 							style="background-color: white;">
 							<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 						</button>

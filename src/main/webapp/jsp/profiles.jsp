@@ -436,7 +436,7 @@ $('#logout').click(function () {
   <div class="btn-group btn-group-primary">
 					<button
 						style="display: inline-block; background-color: #b30000; color: white;"
-						class="btn btn-md button1 but3">Welcome ${userName}</button>
+						class="btn btn-md button1 but3">Welcome ${displayName}</button>
 					<button id="logout"
 						style="display: inline-block; background-color: #b30000; color: white"
 						class="btn btn-md button1 but3" type="submit">Logout</button>
@@ -711,7 +711,7 @@ $('#logout').click(function () {
 										<spring:label path="currentCTC">Current CTC</spring:label>
 									</div>
 									<div class="col-75">
-										<spring:input type="text" class="form-control" id="currentCTC"  maxlength="6"
+										<spring:input type="text" class="form-control" id="currentCTC"  
 										  path="currentCTC" onChange="validateNumber(this);" placeholder="Enter Current CTC(in Lakhs).." />
 									</div>
 								</div>
@@ -721,7 +721,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input type="text" class="form-control" 
-										   id="expectedCTC" path="expectedCTC" maxlength="6"
+										   id="expectedCTC" path="expectedCTC" 
 											placeholder="Enter Excepted CTC(in Lakhs)..." onChange="validateNumber(this);" />
 									</div>
 								</div>
@@ -1010,7 +1010,7 @@ $('#logout').click(function () {
 
 
 											<td><spring:input class="form-control" path="currentCTC"
-													id="currentCTCProfile" type="text" maxlength="6" onChange="validateNumber(this);" /></td>
+													id="currentCTCProfile" type="text" onChange="validateNumber(this);"/></td>
 										</tr>
 										
 										<tr>
@@ -1027,7 +1027,7 @@ $('#logout').click(function () {
 
 
 											<td><spring:input class="form-control"
-													path="expectedCTC" id="expectedCTCProfile" maxlength="6" type="text" onChange="validateNumber(this);" /></td>
+													path="expectedCTC" id="expectedCTCProfile" type="text" /></td>
 										</tr>
 										
 									<!-- </div> -->

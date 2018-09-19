@@ -23,6 +23,7 @@ public class User implements Serializable {
 	private int createdBy;
 	private java.util.Date updatedOn;
 	private int updatedBy;
+	private String displayName;
 
 	public String getName() {
 		return name;
@@ -95,5 +96,15 @@ public class User implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
+	
 
 }

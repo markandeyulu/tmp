@@ -116,6 +116,8 @@ public class LoginController {
 			//system.out.println("User Login Successful");
 			session.setAttribute("user", isValidUser.getId());
 			session.setAttribute("userName", isValidUser.getName()); 
+			session.setAttribute("displayName", isValidUser.getDisplayName()); 
+			
 			mav = new ModelAndView("dashboard");
 			String userId = session.getAttribute("user").toString();
 			mav.addObject("dashboardRequirementsJson", tmpUtil.getRequirementJson(userId));

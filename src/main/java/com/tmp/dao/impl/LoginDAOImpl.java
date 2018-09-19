@@ -38,7 +38,7 @@ public class LoginDAOImpl implements LoginDAO{
 
 	public User getAuthenticateUser(String username, String password) {
 
-		StringBuffer sql = new StringBuffer("SELECT NAME, ID, PASSWORD FROM USER WHERE NAME=? AND PASSWORD=? ");
+		StringBuffer sql = new StringBuffer("SELECT NAME, ID, DISPLAY_NAME, PASSWORD FROM USER WHERE NAME=? AND PASSWORD=? ");
 
 		Connection conn = null;
 		PreparedStatement ps =null;
@@ -55,6 +55,7 @@ public class LoginDAOImpl implements LoginDAO{
 			if (rs.next()) {
 				userInfo.setId(rs.getInt("ID"));
 				userInfo.setName(rs.getString("NAME"));
+				userInfo.setDisplayName(rs.getString("DISPLAY_NAME"));
 			}
 
 		}catch (SQLException sqlException) {

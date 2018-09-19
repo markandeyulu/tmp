@@ -144,8 +144,10 @@ public class RequirementController {
 		HttpSession session = request.getSession();
 		String userId = session.getAttribute("user").toString();
 		String userName = session.getAttribute("userName").toString();
+		String displayName=session.getAttribute("displayName").toString();
 		
-		model.addObject("addMessage", tmpUtil.createRequirement(requirement,userId,userName));
+		
+		model.addObject("addMessage", tmpUtil.createRequirement(requirement,userId,displayName));
 		model.addObject("description", "user page !");
 		model.addObject("requirements", new Requirement());
 		model.addObject("requirementtableJson",tmpUtil.getRequirementTableJson(userId));
