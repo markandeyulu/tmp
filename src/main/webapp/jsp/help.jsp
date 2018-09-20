@@ -68,7 +68,7 @@ body {
 			<div class="btn-group btn-group-primary">
 				<button
 					style="display: inline-block; background-color: #b30000; color: white;"
-					class="btn btn-md button1 but3">Welcome ${userName}</button>
+					class="btn btn-md button1 but3">Welcome ${displayName}</button>
 				<button id="logout"
 					style="display: inline-block; background-color: #b30000; color: white"
 					class="btn btn-md button1 but3" type="submit">Logout</button>
