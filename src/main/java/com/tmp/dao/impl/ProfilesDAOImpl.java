@@ -304,7 +304,21 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		.append("PROFILE_SHARED_CUSTOMER=?, PROFILE_SHARED_CUSTOMER_DATE=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?,UPDATED_BY=?") ;
 		
 		StringBuffer sql1 = new StringBuffer("UPDATE REQUIREMENT_PROFILE_MAPPING SET INTERNAL_EVALUATION_RESULT=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?, REQUIREMENT_ID=? WHERE PROFILE_ID=?");
-		
+		StringBuffer sql2=new StringBuffer();
+		if(profile.getInitialEvaluationResult().getId()==26) { //26-->Did not process
+			sql2.append("UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?"); //15-->Profile Sourcing
+		}else if(profile.getInitialEvaluationResult().getId()==60) { //60-->In progress
+			sql2.append("UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?"); //16-->Technical Evaluation
+		}else if(profile.getInitialEvaluationResult().getId()==25) { //25-->Hold
+			sql2.append("UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?");
+		}
+		else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==61) {//23-->Shortlisted 61-->Yet to process
+			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?"); //17-->Customer Evaluation
+		}else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==27) { //27-->Shortlisted
+			sql2.append("UPDATE REQUIREMENT SET STATUS=18 WHERE ID=?"); //18-->Offer Processing
+		}else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==29) { //29-->Hold
+			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?");
+		}
 		Connection conn = null;
 
 		try {
@@ -320,9 +334,12 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 					
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
+			PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
 			populateProfileForUpdate(ps, profile, userId);
 			populateProfileForUpdateForMapping(ps1, profile, userId);
+			populateProfileForUpdateReq(ps2,profile);
 			ps.executeUpdate();
+			ps2.executeUpdate();
 			int result=ps1.executeUpdate();
 			ps.close();
 			return result;
@@ -576,7 +593,12 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps1.setInt(i++, profile.getId());
 	}
 	
-	
+	private void populateProfileForUpdateReq(PreparedStatement ps2, Profile profile) throws SQLException {
+		if(ps2 == null) {
+			return;
+		}
+		ps2.setString(1, profile.getReqRefNo());
+	}
 	public int deleteProfile(ArrayList<String> profileId) {
 		StringBuffer sql = new StringBuffer("DELETE FROM REQUIREMENT_PROFILE_MAPPING WHERE PROFILE_ID=?");
 		StringBuffer sql1 = new StringBuffer("DELETE FROM PROFILE WHERE ID=?");
