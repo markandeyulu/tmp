@@ -140,7 +140,7 @@ table.dataTable thead th:first-child {
 
   <tr>
 		<td> <input type="checkbox" class="checkbox" name="" value=""></td>
-		<td href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
+		<td id="profileCustomerID" href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
 		<td>{{reqRefNo}}</td>
 		<td>{{location}}</td>
 		<td>{{primarySkill.configValue.value}}</td>
@@ -327,6 +327,9 @@ table.dataTable thead th:first-child {
 	  	  	
 	        
 	      });
+	      $("#profileCustomerID").bind("click", function () {
+	            $("#initialEvaluationResultProfile")[0].selectedIndex = 0;
+	       });
 	      
 });
  
@@ -344,10 +347,14 @@ table.dataTable thead th:first-child {
 function disableTextBox(){
 	var d = document.getElementById("initialEvaluationResultProfile");
 	var dropdown = d.options[d.selectedIndex].value;
-	if(dropdown!="23"){
-		document.getElementById("profileSharedCustomerProfile").disabled=true;
+	if(dropdown=="23"){
+		document.getElementById("profileSharedCustomerProfile").value="Yes";
+		document.getElementById("profileSharedCustomerDateProfile").disabled=false;
+		document.getElementById("customerInterviewStatusProfile").disabled=false;
 	}else{
-		document.getElementById("profileSharedCustomerProfile").disabled=false;
+		document.getElementById("profileSharedCustomerProfile").value="No";
+		document.getElementById("profileSharedCustomerDateProfile").disabled=true;
+		document.getElementById("customerInterviewStatusProfile").disabled=true;
 	}
 }
  function changeTextBoxUpdate(){
@@ -1140,7 +1147,7 @@ $('#logout').click(function () {
 									
 										<td><spring:select class="form-control" onchange="changeTextBoxUpdate();" id="profileSharedCustomerProfile" path="profileSharedCustomer"
 										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')" disabled="true">
+											required="required" oninput="this.setCustomValidity('')">
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
