@@ -1,3 +1,5 @@
+use tmp; 
+
 ALTER TABLE REQUIREMENT MODIFY COLUMN ID varchar(20);
 
 ALTER TABLE requirement_profile_mapping MODIFY COLUMN REQUIREMENT_ID varchar(20);
@@ -85,7 +87,6 @@ INSERT INTO `user_role_account_mapping` VALUES
 		(22,5,2,'2018-05-11 18:30:00',1,'0000-00-00 00:00:00',NULL),
 		(23,5,3,'2018-05-11 18:30:00',1,'0000-00-00 00:00:00',NULL),
 		(24,5,4,'2018-05-11 18:30:00',1,'0000-00-00 00:00:00',NULL);
-		
 
 ALTER TABLE user
 ADD DISPLAY_NAME varchar(30);
@@ -93,63 +94,63 @@ ADD DISPLAY_NAME varchar(30);
 
 UPDATE user
 SET DISPLAY_NAME = 'Sangeetha'
-WHERE NAME = 'Sangeetha Selvakumar' AND EMAIL='ss00474123@techmahindra.com'
+WHERE NAME = 'Sangeetha Selvakumar' AND EMAIL='ss00474123@techmahindra.com';
 
 UPDATE user
 SET DISPLAY_NAME = 'Agalya'
-WHERE NAME = 'Agalya Sivasubramanian' AND EMAIL='as00490953@TechMahindra.com'
+WHERE NAME = 'Agalya Sivasubramanian' AND EMAIL='as00490953@TechMahindra.com';
 
 UPDATE user
 SET DISPLAY_NAME = 'Saranya'
-WHERE NAME = 'Saranya Palanisamy' AND EMAIL='ss00425154@Techmahindra.com'
+WHERE NAME = 'Saranya Palanisamy' AND EMAIL='ss00425154@Techmahindra.com';
 
 UPDATE user
 SET DISPLAY_NAME = 'Siva'
-WHERE NAME = 'Siva Subramanian' AND EMAIL='Siva.Subramanian@TechMahindra.com'
+WHERE NAME = 'Siva Subramanian' AND EMAIL='Siva.Subramanian@TechMahindra.com';
 
 UPDATE user
 SET DISPLAY_NAME = 'Ram'
-WHERE NAME = 'Ramkrishna Rao' AND EMAIL='Ramkrishna.Rao@TechMahindra.com'
+WHERE NAME = 'Ramkrishna Rao' AND EMAIL='Ramkrishna.Rao@TechMahindra.com';
 
 UPDATE user
 SET DISPLAY_NAME = 'Kannan'
-WHERE NAME = 'Kannan Kasthurirajan' AND EMAIL='KK00539399@TechMahindra.com'
+WHERE NAME = 'Kannan Kasthurirajan' AND EMAIL='KK00539399@TechMahindra.com';
 
 UPDATE user
 SET DISPLAY_NAME = 'Sukumar'
-WHERE NAME = 'Sukumar Natesan' AND EMAIL='Sukumar.Natesan@TechMahindra.com'
+WHERE NAME = 'Sukumar Natesan' AND EMAIL='Sukumar.Natesan@TechMahindra.com';
 
 UPDATE user
 SET NAME = 'Sangeetha', DISPLAY_NAME='Sangeetha Selvakumar'
-WHERE EMAIL='ss00474123@techmahindra.com'
+WHERE EMAIL='ss00474123@techmahindra.com';
 
 UPDATE user
 SET NAME = 'Agalya', DISPLAY_NAME='Agalya Sivasubramanian'
-WHERE EMAIL='as00490953@techmahindra.com'
+WHERE EMAIL='as00490953@techmahindra.com';
 
 UPDATE user
 SET NAME = 'Saranya', DISPLAY_NAME='Saranya Palanisamy'
-WHERE EMAIL='ss00425154@Techmahindra.com'
+WHERE EMAIL='ss00425154@Techmahindra.com';
 
 UPDATE user
 SET NAME = 'Siva', DISPLAY_NAME='Siva Subramanian'
-WHERE EMAIL='Siva.Subramanian@TechMahindra.com'
+WHERE EMAIL='Siva.Subramanian@TechMahindra.com';
 
 UPDATE user
 SET NAME = 'Ram', DISPLAY_NAME='Ramkrishna Rao'
-WHERE EMAIL='Ramkrishna.Rao@TechMahindra.com'
+WHERE EMAIL='Ramkrishna.Rao@TechMahindra.com';
 
 UPDATE user
 SET NAME = 'Kannan', DISPLAY_NAME='Kannan Kasthurirajan'
-WHERE EMAIL='KK00539399@TechMahindra.com'
+WHERE EMAIL='KK00539399@TechMahindra.com';
 
 UPDATE user
 SET NAME = 'Sukumar', DISPLAY_NAME='Sukumar Natesan'
-WHERE EMAIL='Sukumar.Natesan@TechMahindra.com'
+WHERE EMAIL='Sukumar.Natesan@TechMahindra.com';
 
 
 update projects 
-set PROJECT_NAME='Eport' Where PROJECT_ID='5'
+set PROJECT_NAME='Eport' Where PROJECT_ID='5';
 
 CREATE TABLE `user_account_mapping` (
 	`ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -253,7 +254,7 @@ INSERT INTO `projects` (PROJECT_NAME,ACC_ID) VALUES ('Bosch Limited,IND',1),
 
 UPDATE user
 SET ROLE = '1'
-WHERE NAME = 'Sangeetha' AND EMAIL='ss00474123@techmahindra.com'
+WHERE NAME = 'Sangeetha' AND EMAIL='ss00474123@techmahindra.com';
 
 UPDATE user
 SET ROLE = '1'
@@ -261,22 +262,22 @@ WHERE NAME = 'Agalya' AND EMAIL='as00490953@TechMahindra.com';
 
 UPDATE user
 SET ROLE = '1'
-WHERE NAME = 'Saranya Palanisamy' AND EMAIL='ss00425154@Techmahindra.com';
+WHERE NAME = 'Saranya' AND EMAIL='ss00425154@Techmahindra.com';
 
 UPDATE user
 SET ROLE = '1'
-WHERE NAME = 'Siva Subramanian' AND EMAIL='Siva.Subramanian@TechMahindra.com';
+WHERE NAME = 'Siva' AND EMAIL='Siva.Subramanian@TechMahindra.com';
 
 UPDATE user
 SET ROLE = '2'
-WHERE NAME = 'Ramkrishna Rao' AND EMAIL='Ramkrishna.Rao@TechMahindra.com';
+WHERE NAME = 'Ram' AND EMAIL='Ramkrishna.Rao@TechMahindra.com';
 
 UPDATE user
 SET ROLE = '3'
-WHERE NAME = 'Kannan Kasthurirajan' AND EMAIL='KK00539399@TechMahindra.com';
+WHERE NAME = 'Kannan' AND EMAIL='KK00539399@TechMahindra.com';
 
 UPDATE user
 SET ROLE = '4'
-WHERE NAME = 'Sukumar Natesan' AND EMAIL='Sukumar.Natesan@TechMahindra.com';
+WHERE NAME = 'Sukumar' AND EMAIL='Sukumar.Natesan@TechMahindra.com';
 
 INSERT INTO `user_account_mapping` (USER_ID,ACCOUNT_ID) VALUES (4,1),(4,2),(4,3),(4,4),(4,5),(4,6),(4,7),(4,8),(4,9),(4,10),(4,11),(4,12),(4,13),(4,14),(4,15);

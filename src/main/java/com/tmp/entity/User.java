@@ -1,8 +1,10 @@
 package com.tmp.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class User implements Serializable {
 
@@ -25,6 +27,9 @@ public class User implements Serializable {
 	private int updatedBy;
 	private String displayName;
 
+	private Role role;
+	private List<Integer> accounts;
+	
 	public String getName() {
 		return name;
 	}
@@ -103,6 +108,22 @@ public class User implements Serializable {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public List<Integer> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Integer> accounts) {
+		this.accounts = accounts;
 	}
 	
 	
