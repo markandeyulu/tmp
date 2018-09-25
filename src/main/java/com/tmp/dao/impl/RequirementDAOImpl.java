@@ -434,23 +434,27 @@ public class RequirementDAOImpl implements RequirementDAO {
 	private String getRequirementId(Requirement requirement, String userName, String userId) { 
 		String requirementId = null;
 		try {
-			requirementId = getLatestRequirementId();
-			String[] requirementIdParts = requirementId.split("_");
-			String incrementor=null;
-			String dbDate=null;
-			if(requirementIdParts.length==6){
-				incrementor = requirementIdParts[5];
-				dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
-			}
 			
 			String accountName = null, projectName = null;
-			
 			int accountId = Integer.parseInt(requirement.getAccount1());
 			accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
-			
+			accountName = tmpDAOUtil.getAccount(accountId);
 			int projectId = Integer.parseInt(requirement.getProjectAdd());
-			projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
+			String incrementor=null;
+			String dbDate=null;
+			//projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
+			projectName = tmpDAOUtil.getProject(projectId);
 			
+			requirementId = getLatestRequirementId();
+			
+			if(StringUtils.isNotBlank(requirementId)) {
+				String[] requirementIdParts = requirementId.split("_");
+				
+				if(requirementIdParts.length==6){
+					incrementor = requirementIdParts[5];
+					dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
+				}				
+			}			
 			requirementId = getRandomString(dbDate, incrementor, accountName, projectName, userName);
 			System.out.println(" New Req ID : "+requirementId);
 			
