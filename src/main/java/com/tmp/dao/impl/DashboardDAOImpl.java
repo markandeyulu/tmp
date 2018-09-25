@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.DashboardDAO;
+import com.tmp.entity.Account;
 import com.tmp.entity.DashboardRequirement;
-import com.tmp.entity.LoginRoleAccounts;
-import com.tmp.entity.Requirement;
+import com.tmp.entity.Project;
 
 @Qualifier("dashboardDAO")
 public class DashboardDAOImpl implements DashboardDAO{
@@ -438,35 +438,35 @@ public class DashboardDAOImpl implements DashboardDAO{
 		}
 	}
 
-	public LoginRoleAccounts getAccountDetails(String userId){
-		StringBuffer sql = new StringBuffer("SELECT A.NAME, B.ROLE, F.KEY, G.VALUE, D.ACCOUNT, D.ID FROM USER A INNER JOIN USER_ROLE_MAPPING B ON A.ID = B.USER_ID \r\n")
-							.append("INNER JOIN USER_ROLE_ACCOUNT_MAPPING C ON C.USER_ROLE_ID = B.ID INNER JOIN ACCOUNT_MAPPING D ON D.ID = C.ACCOUNT_ID  \r\n")
-							.append("INNER JOIN ADMIN_INFO_KEY_VALUE_MAPPING E ON E.ID = D.ACCOUNT INNER JOIN ADMIN_INFO_KEY F ON F.ID = E.ADMIN_INFO_KEY_ID  \r\n")
-							.append("INNER JOIN ADMIN_INFO_VALUE G ON G.ID =E.ADMIN_INFO_VALUE_ID WHERE A.ID = ?");
-
+	public List<Account> getAccountDetails(String userId){
+		StringBuffer sql = new StringBuffer
+				("SELECT C.ACCOUNT_ID, C.ACCOUNT_NAME \r\n" + 
+				"FROM USER A \r\n" + 
+				"INNER JOIN USER_ACCOUNT_MAPPING B ON B.USER_ID = A.ID \r\n" + 
+				"INNER JOIN ACCOUNT_MASTER C ON C.ACCOUNT_ID = B.ACCOUNT_ID \r\n" + 
+				"WHERE A.ID = ?");
 
 		Connection conn = null;
-
+		
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			List<DashboardRequirement> loginAccountsList = null;
-			LoginRoleAccounts requirementsAcc = null;
+			
 			ps.setString(1, userId);
 			ResultSet rs = ps.executeQuery();
+			List<Account> accounts = new ArrayList<Account>();
 			if (rs != null) {
-				requirementsAcc = new LoginRoleAccounts();
-				loginAccountsList = new ArrayList<DashboardRequirement>();
 				while (rs.next()) {
-					int accountId = rs.getInt(5);
-					loginAccountsList.add(populateAccounts(accountId));
+					Account account = new Account();
+					account.setAccountId(rs.getInt("ACCOUNT_ID"));
+					account.setAccountName(rs.getString("ACCOUNT_NAME"));
+					accounts.add(account);
 				}
-				requirementsAcc.setListAccount(loginAccountsList);
 				
 			}
 			rs.close();
 			ps.close();
-			return requirementsAcc;
+			return accounts;
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
@@ -477,14 +477,13 @@ public class DashboardDAOImpl implements DashboardDAO{
 				}
 			}
 		}
-		
 	}
-	public LoginRoleAccounts getProjectDetails(String userId){
-		StringBuffer sql = new StringBuffer("SELECT A.NAME, B.ROLE, F.KEY, G.VALUE, D.ACCOUNT, D.ID, H.PROJECT FROM USER A INNER JOIN USER_ROLE_MAPPING B ON A.ID = B.USER_ID \r\n")
-							.append("INNER JOIN USER_ROLE_ACCOUNT_MAPPING C ON C.USER_ROLE_ID = B.ID INNER JOIN ACCOUNT_MAPPING D ON D.ID = C.ACCOUNT_ID  \r\n")
-							.append("INNER JOIN PROJECT_MAPPING H ON H.ACCOUNT_MAPPING_ID = D.ID \r\n")
-							.append("INNER JOIN ADMIN_INFO_KEY_VALUE_MAPPING E ON E.ID = D.ACCOUNT INNER JOIN ADMIN_INFO_KEY F ON F.ID = E.ADMIN_INFO_KEY_ID  \r\n")
-							.append("INNER JOIN ADMIN_INFO_VALUE G ON G.ID =E.ADMIN_INFO_VALUE_ID WHERE A.ID = ?");
+	public List<Project> getProjectDetails(String userId){
+		StringBuffer sql = new StringBuffer
+				("SELECT A.PROJECT_ID, A.PROJECT_NAME, A.ACC_ID FROM PROJECTS A \r\n" + 
+						"INNER JOIN USER_ACCOUNT_MAPPING B ON B.ACCOUNT_ID = A.ACC_ID \r\n" + 
+						"INNER JOIN USER C ON B.USER_ID = C.ID \r\n" + 
+						"WHERE C.ID = ?");
 
 
 		Connection conn = null;
@@ -492,24 +491,23 @@ public class DashboardDAOImpl implements DashboardDAO{
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			List<DashboardRequirement> loginProjectsList = null;
-			LoginRoleAccounts projsList = null;
-
+			List<Project> projects = new ArrayList<Project>();
 			ps.setString(1, userId);
 			ResultSet rs = ps.executeQuery();
 			if (rs != null) {
-				projsList = new LoginRoleAccounts();
-				loginProjectsList = new ArrayList<DashboardRequirement>();
 				while (rs.next()) {
-					int accountId = rs.getInt(6);
-					int projectId = rs.getInt(7);
-					loginProjectsList.add(populateProjects(accountId,projectId));
+					
+					Project project = new Project();
+					project.setAccountId(rs.getInt("ACC_ID"));
+					project.setProjectId(rs.getInt("PROJECT_ID"));
+					project.setProjectName(rs.getString("PROJECT_NAME"));
+					
+					projects.add(project);
 				}
-				projsList.setListProject(loginProjectsList);
 			}
 			rs.close();
 			ps.close();
-			return projsList;
+			return projects;
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {

@@ -24,7 +24,6 @@ import com.tmp.entity.Account;
 import com.tmp.entity.AdminInfoKeyValueMapping;
 import com.tmp.entity.ConfigKeyValueMapping;
 import com.tmp.entity.DashboardRequirement;
-import com.tmp.entity.LoginRoleAccounts;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
 import com.tmp.entity.Project;
@@ -102,10 +101,10 @@ public class TMPUtil {
 		return null;
 	}
 	public String getAccountDetails(String userId) {
-		LoginRoleAccounts userAccounts = dashboardDAO.getAccountDetails(userId);
+		List<Account> userAccounts = dashboardDAO.getAccountDetails(userId);
 		try {
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("accountsJson", userAccounts.getListAccount());
+			jsonObj.put("accountsJson", userAccounts);
 			String jsonAccounts = jsonObj.toString();
 			//system.out.println("jsonAccounts : "+jsonAccounts);
 			return jsonAccounts;
@@ -116,10 +115,10 @@ public class TMPUtil {
 	}
 	
 	public String getProjectDetails(String userId) {
-		LoginRoleAccounts userProjects = dashboardDAO.getProjectDetails(userId);
+		List<Project> userProjects = dashboardDAO.getProjectDetails(userId);
 		try {
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("projectsJson", userProjects.getListProject());
+			jsonObj.put("projectsJson", userProjects);
 			String jsonProjects = jsonObj.toString();
 			//system.out.println("jsonProjects : "+jsonProjects);
 			return jsonProjects;

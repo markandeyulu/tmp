@@ -28,7 +28,8 @@ public class User implements Serializable {
 	private String displayName;
 
 	private Role role;
-	private List<Integer> accounts;
+	private List<Account> accounts;
+	private List<Project> projects;
 	
 	public String getName() {
 		return name;
@@ -118,13 +119,23 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-	public List<Integer> getAccounts() {
+	public List<Account> getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(List<Integer> accounts) {
+	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
+
+	public List<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
+	}
+
+	
 	
 	
 

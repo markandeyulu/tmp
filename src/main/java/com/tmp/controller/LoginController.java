@@ -100,38 +100,31 @@ public class LoginController {
 	
 	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.POST)
 	public ModelAndView performLogin(HttpServletRequest request,
-			HttpServletResponse response,HttpSession  session, 
-			@ModelAttribute("login") @Valid User userlogin) {
+			HttpServletResponse response, @ModelAttribute("login") @Valid User userlogin) {
 		ModelAndView mav = null;
 		String username = userlogin.getName();
 		String password = userlogin.getPassword();
 
-		User isValidUser = tmpUtil.getLoginDetails(username, password);
-		int userMapId = isValidUser.getId();
-		UserRoleMapping userRole = tmpUtil.getUserRole(userMapId);
-		session.setAttribute("userRole", userRole.getRole().getAdminInfoKey().getKey());
-		//system.out.println("userRole==> "+userRole.getRole().getAdminInfoKey().getKey());
+		User dbUser = tmpUtil.getLoginDetails(username, password);
 		
-		if (isValidUser.getId()>0) {
-			//system.out.println("User Login Successful");
-			session.setAttribute("user", isValidUser.getId());
-			session.setAttribute("userName", isValidUser.getName()); 
-			session.setAttribute("displayName", isValidUser.getDisplayName()); 
+		if (dbUser.getId()>0) {//Valid user
 			
+			System.out.println("User Login Successful");
+			
+			HttpSession session = request.getSession(false);
+			session.setAttribute("user", dbUser.getId());
+			session.setAttribute("userName", dbUser.getName()); 
+			session.setAttribute("displayName", dbUser.getDisplayName());
+			session.setAttribute("userRole", dbUser.getRole().getDisplay());
 			mav = new ModelAndView("dashboard");
+			
 			String userId = session.getAttribute("user").toString();
 			mav.addObject("dashboardRequirementsJson", tmpUtil.getRequirementJson(userId));
 			mav.addObject("dashboardRequirement", new DashboardRequirement());
 			mav.addObject("dashboardblockJson", tmpUtil.getDashboardJson(userId));
 			
-			if(session != null && !session.isNew()) {
-				   //do something here
-				} else {
-				    mav.setViewName("login");
-				}
-			String userId1 = session.getAttribute("user").toString();
-			mav.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId1));
-			mav.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId1));
+			mav.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
+			mav.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
 			mav.addObject("locationJson", tmpUtil.getConfigKeyValues(2));
 			mav.addObject("primarySkillJson", tmpUtil.getConfigKeyValues(11));
 			mav.addObject("profileSourceJson",tmpUtil.getConfigKeyValues(7));
@@ -144,6 +137,7 @@ public class LoginController {
 			mav.addObject("positionStatusJson",tmpUtil.getConfigKeyValues(5));
 			mav.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
 			mav.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
+			
 		} else {
 			mav = new ModelAndView("login");
 			mav.addObject("errorMsg", true);

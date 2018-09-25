@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.LoginDAO;
 import com.tmp.entity.Requirement;
+import com.tmp.entity.Role;
 import com.tmp.entity.User;
 import com.tmp.entity.UserRoleMapping;
 
@@ -38,7 +39,7 @@ public class LoginDAOImpl implements LoginDAO{
 
 	public User getAuthenticateUser(String username, String password) {
 
-		StringBuffer sql = new StringBuffer("SELECT NAME, ID, DISPLAY_NAME, PASSWORD FROM USER WHERE NAME=? AND PASSWORD=? ");
+		StringBuffer sql = new StringBuffer("SELECT NAME, ID, DISPLAY_NAME, PASSWORD, ROLE FROM USER WHERE NAME=? AND PASSWORD=? ");
 
 		Connection conn = null;
 		PreparedStatement ps =null;
@@ -56,6 +57,7 @@ public class LoginDAOImpl implements LoginDAO{
 				userInfo.setId(rs.getInt("ID"));
 				userInfo.setName(rs.getString("NAME"));
 				userInfo.setDisplayName(rs.getString("DISPLAY_NAME"));
+				userInfo.setRole(Role.fromInt(rs.getInt("ROLE")));
 			}
 
 		}catch (SQLException sqlException) {

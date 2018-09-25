@@ -11,8 +11,8 @@ $(document).ready(function(){
 	var g_accountArray = [];
 	$.each(accountData, function(index) {
 		var g_item = [];
-		g_item.push(accountData[index].userAccountName.adminInfoValue.value);
-		g_item.push(accountData[index].userAccount.accountId);
+		g_item.push(accountData[index].accountName);
+		g_item.push(accountData[index].accountId);
 		g_accountArray.push(g_item);
 	});
 	 $("#accountProfile").append('<option value="">Select Account</option>'); 
@@ -42,13 +42,13 @@ $(document).ready(function(){
 	    	             	{"name":"GPIRS","id":"3"},
 	    	             	{"name":"NGP","id":"4"}
 	    	             	]*/
-    	var projectData = projectValues.projectsJson;
+    	var projectData = projectValues;
 	    	             	var g_projectArray = [];
 	    	             	
 	    	             	$.each(projectData, function(index) {
 	    	             		var g_item = [];
-	    	             		g_item.push(projectData[index].userProjectName.adminInfoValue.value);
-	    	             		g_item.push(projectData[index].userProject.id);
+	    	             		g_item.push(projectData[index].projectName);
+	    	             		g_item.push(projectData[index].projectId);
 	    	             		//if ($.inArray(g_LocationItem, g_LocationArray) == -1) {
 	    	             		g_projectArray.push(g_item);
 	    	             		//}
@@ -92,7 +92,7 @@ var requirementTypeData=requirementTypeJson.locationJson;
 	});
 	
 	
-	var accountListData=accountListJson.accountListJson;
+	var accountListData=accountValues.accountsJson;
 	
     var g_accountListArray = [];	
       $.each(accountListData, function(index) {
@@ -104,11 +104,12 @@ var requirementTypeData=requirementTypeJson.locationJson;
       $("#account1,#accountNew").append('<option value="">Select Account</option>');  
   	$.each(g_accountListArray, function(i) {
   		var g_accountListItem = g_accountListArray[i];
+  		console.log(g_accountListItem[1]);
   		$("#account1,#accountNew").append('<option id="' + g_accountListItem[0] + '" value="' + g_accountListItem[0] + '">' + g_accountListItem[1] + '</option>');
   	}); 
       
 
-var projectListData=projectListJson.projectListJson;
+var projectListData=projectValues.projectsJson;
 	
     var g_projectListArray = [];	
       $.each(projectListData, function(index) {
