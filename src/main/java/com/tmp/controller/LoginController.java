@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tmp.entity.DashboardRequirement;
 import com.tmp.entity.User;
-import com.tmp.entity.UserRoleMapping;
 import com.tmp.util.TMPUtil;
 
 @Controller
@@ -112,6 +111,10 @@ public class LoginController {
 			System.out.println("User Login Successful");
 			
 			HttpSession session = request.getSession(false);
+			if(null == session || session.isNew()) {
+				mav = new ModelAndView("login");
+				return mav;
+			}
 			session.setAttribute("user", dbUser.getId());
 			session.setAttribute("userName", dbUser.getName()); 
 			session.setAttribute("displayName", dbUser.getDisplayName());

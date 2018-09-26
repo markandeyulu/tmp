@@ -12,6 +12,9 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.tmp.entity.Account;
+import com.tmp.entity.Project;
+
 @Qualifier("tmpDAOUtil")
 public class TMPDAOUtil {
 	private DataSource dataSource;
@@ -20,24 +23,24 @@ public class TMPDAOUtil {
 		this.dataSource = dataSource;
 	}
 	
-	public String getAccount(int accountId) {
-		StringBuffer sql = new StringBuffer("SELECT ACCOUNT_NAME FROM tmp.account_master WHERE ACCOUNT_ID=? ");
+	public Account getAccount(int accountId) {
+		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.account_master WHERE ACCOUNT_ID=? ");
 		
 			
 		Connection conn = null;
-		String accName=null;
+		Account account = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			ps.setInt(1, accountId);
 			ResultSet rs = ps.executeQuery();
 			
-			
 			if (rs != null) {
-					if (rs.next()) {
-						 accName=rs.getString("ACCOUNT_NAME");
-						
-					}
+				if (rs.next()) {
+					account = new Account();
+					account.setAccountId(rs.getInt("ACCOUNT_ID"));
+					account.setAccountName(rs.getString("ACCOUNT_NAME"));
+				}
 			}
 			rs.close();
 			ps.close();
@@ -52,29 +55,31 @@ public class TMPDAOUtil {
 				}
 			}
 		}
-		return accName;
+		return account;
 
 		
 		
 	}
-	public String getProject(int projectId) {
-		StringBuffer sql = new StringBuffer("SELECT PROJECT_NAME FROM tmp.projects WHERE PROJECT_ID=? ");
+	public Project getProject(int projectId) {
+		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.projects WHERE PROJECT_ID=? ");
 		
 			
 		Connection conn = null;
-		String prjtName=null;
+		Project project =null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			ps.setInt(1, projectId);
 			ResultSet rs = ps.executeQuery();
 			
-			
 			if (rs != null) {
-					if (rs.next()) {
-						prjtName=rs.getString("PROJECT_NAME");
-						
-					}
+				if (rs.next()) {
+					project = new Project();
+					project.setAccountId(rs.getInt("ACC_ID"));
+					project.setProjectId(rs.getInt("PROJECT_ID"));
+					project.setProjectName(rs.getString("PROJECT_NAME"));
+
+				}
 			}
 			rs.close();
 			ps.close();
@@ -89,10 +94,7 @@ public class TMPDAOUtil {
 				}
 			}
 		}
-		return prjtName;
-
-		
-		
+		return project;
 	}
 	
 

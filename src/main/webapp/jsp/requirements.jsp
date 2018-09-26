@@ -1123,7 +1123,7 @@ $('#logout').click(function () {
                 <tr>
                    <td><spring:label path="account">Account<span style="color:red">*</span></spring:label> </td>
                    <td>
-                   <spring:select id="accountNew" multiple="false" path="account.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                   <spring:select id="accountNew" multiple="false" path="account.accountId" class="form-control dropdown-toggle text-left " Style="width:100%"
                    	oninvalid="this.setCustomValidity('Account name must not be empty')" 
 					required="required"				oninput="this.setCustomValidity('')">
 				   </spring:select>
@@ -1132,7 +1132,7 @@ $('#logout').click(function () {
                 <tr>
                     <td><spring:label path="project">Project<span style="color:red">*</span></spring:label> </td>
                     <td>
-                    <spring:select id="projectNew" multiple="false" path="project.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                    <spring:select id="projectNew" multiple="false" path="project.projectId" class="form-control dropdown-toggle text-left " Style="width:100%"
                     oninvalid="this.setCustomValidity('Project name must not be empty')" 
 								required="required"			oninput="this.setCustomValidity('')">
 						</spring:select></td>

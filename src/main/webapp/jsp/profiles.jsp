@@ -1049,13 +1049,13 @@ $('#logout').click(function () {
 										<td><spring:select id="accountProfile" multiple="false" path="account.id" 
 										class="form-control dropdown-toggle text-left " >
 						            </spring:select></td> --%>
-						            <td><spring:input class="form-control" path="account.id"
+						            <td><spring:input class="form-control" path="account.accountId"
 											id="accountProfile" type="text" value=""  readonly="true"/></td>
 						           
 									</tr>
 									<tr>
 										<td><spring:label path="project">Project</spring:label></td>
-									 <td><spring:input class="form-control" path="project.id"
+									 <td><spring:input class="form-control" path="project.projectId"
 											id="projectProfile" type="text" value=""  readonly="true"/></td>
 									
 										<%-- <td>

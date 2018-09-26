@@ -38,8 +38,8 @@ public class Requirement implements Serializable {
 	private String actualOwnerEmail;
 	private String remarks;
 	private String customerName;
-	private AccountMapping account;
-	private ProjectMapping project;
+	private Account account;
+	private Project project;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date createdOn;
 	private User createdBy;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date updatedOn;
@@ -487,19 +487,19 @@ public class Requirement implements Serializable {
 		this.customerName = customerName;
 	}
 
-	public AccountMapping getAccount() {
+	public Account getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountMapping account) {
+	public void setAccount(Account account) {
 		this.account = account;
 	}
 
-	public ProjectMapping getProject() {
+	public Project getProject() {
 		return project;
 	}
 
-	public void setProject(ProjectMapping project) {
+	public void setProject(Project project) {
 		this.project = project;
 	}
 

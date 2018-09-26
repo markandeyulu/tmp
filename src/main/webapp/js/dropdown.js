@@ -104,7 +104,6 @@ var requirementTypeData=requirementTypeJson.locationJson;
       $("#account1,#accountNew").append('<option value="">Select Account</option>');  
   	$.each(g_accountListArray, function(i) {
   		var g_accountListItem = g_accountListArray[i];
-  		console.log(g_accountListItem[1]);
   		$("#account1,#accountNew").append('<option id="' + g_accountListItem[0] + '" value="' + g_accountListItem[0] + '">' + g_accountListItem[1] + '</option>');
   	}); 
       

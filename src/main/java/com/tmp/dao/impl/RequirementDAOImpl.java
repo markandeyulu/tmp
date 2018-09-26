@@ -154,8 +154,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setRequirementType(configDAO.getConfigKeyValueMapping(rs.getInt("REQUIREMENT_TYPE")));
 		requirement.setSkillCategory(configDAO.getConfigKeyValueMapping(rs.getInt("SKILL_CATEGORY")));
 		requirement.setStatus(configDAO.getConfigKeyValueMapping(rs.getInt("STATUS")));
-		requirement.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
-		requirement.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));
+		requirement.setAccount(tmpDAOUtil.getAccount(rs.getInt("ACCOUNT")));
+		requirement.setProject(tmpDAOUtil.getProject(rs.getInt("PROJECT")));
 		requirement.setBand(rs.getString("BAND"));
 		requirement.setYearExperience(rs.getString("YEAR_EXPERIENCE"));
 		requirement.setQuantity(rs.getString("QUANTITY"));
@@ -369,8 +369,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setInt(29,configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
 		ps.setString(30,requirement.getPid_crmid_so());
 		ps.setString(31, userId);
-		ps.setInt(32, requirement.getAccount().getId());
-		ps.setInt(33, requirement.getProject().getId());
+		ps.setInt(32, requirement.getAccount().getAccountId());
+		ps.setInt(33, requirement.getProject().getProjectId());
 		ps.setInt(34, requirement.getOppurtunityStatus().getId());
 		ps.setString(35, requirement.getId());
 	}
@@ -438,12 +438,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 			String accountName = null, projectName = null;
 			int accountId = Integer.parseInt(requirement.getAccount1());
 			accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
-			accountName = tmpDAOUtil.getAccount(accountId);
+			accountName = tmpDAOUtil.getAccount(accountId).getAccountName();
 			int projectId = Integer.parseInt(requirement.getProjectAdd());
 			String incrementor=null;
 			String dbDate=null;
 			//projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
-			projectName = tmpDAOUtil.getProject(projectId);
+			projectName = tmpDAOUtil.getProject(projectId).getProjectName();
 			
 			requirementId = getLatestRequirementId();
 			
