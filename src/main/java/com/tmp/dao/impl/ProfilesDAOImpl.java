@@ -233,10 +233,9 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		StringBuffer sql = new StringBuffer(
 				"INSERT INTO PROFILE (ID, NAME, CONTACT_NO, CURRENT_COMPANY, LOCATION, PRIMARY_SKILL, PROFILE_SHARED_DATE, \r\n")
 		.append("PROFILE_SOURCE, PROFILE_SHARED_BY, YEARS_OF_EXPERIENCE, RELEVANT_EXPERIENCE, CURRENT_CTC, EXPECTED_CTC, NOTICE_PERIOD, \r\n")
-		.append("INTERNAL_EVALUATION_RESULT_DATE, INITIAL_EVALUATION_RESULT, PROFILE_SHARED_CUSTOMER, \r\n")
-		.append("PROFILE_SHARED_CUSTOMER_DATE, CUSTOMER_INTERVIEW_STATUS, REMARKS, CREATED_ON,\r\n")
+		.append("REMARKS, CREATED_ON,\r\n")
 		.append("CREATED_BY, EMAIL_ID, REQUIREMENT_ID) \r\n")
-		.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		Connection conn = null;
 		
@@ -485,45 +484,27 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		if (ps == null) {
 			return;
 		}
-		ps.setInt(1, profile.getId());
-		ps.setString(2, profile.getName());
-		ps.setString(3, profile.getContactNo());
-		ps.setString(4, profile.getCurrentCompany());
-		ps.setString(5, profile.getLocation());
+		int i=1;
+		ps.setInt(i++, profile.getId());
+		ps.setString(i++, profile.getName());
+		ps.setString(i++, profile.getContactNo());
+		ps.setString(i++, profile.getCurrentCompany());
+		ps.setString(i++, profile.getLocation());
 		adminDAO.getRequirementMappingValue(profile.getPrimarySkillAdd(), 11, strUserId);
-		ps.setInt(6, configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
-		ps.setDate(7, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
-		ps.setString(8, profile.getProfileSourceAdd());
-		ps.setString(9, profile.getProfileSharedBy());
-		ps.setInt(10, profile.getYearsOfExperience());
-		ps.setInt(11, profile.getRelevantExperience());
-		ps.setInt(12, profile.getCurrentCTC());
-		ps.setInt(13, profile.getExpectedCTC());
-		ps.setInt(14, profile.getNoticePeriod());
-		ps.setDate(15, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
-		
-		if(StringUtils.isBlank(profile.getInitialEvaluationResultAdd()))
-		{
-			ps.setString(16, null);
-		}else {
-			ps.setString(16, profile.getInitialEvaluationResultAdd());
-		}
-		
-		ps.setString(17, profile.getProfileSharedCustomer());
-		
-		ps.setDate(18, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
-		//ps.setString(19, profile.getCustomerInterviewStatusAdd());
-		
-		if(null!=profile.getCustomerInterviewStatusAdd())
-			ps.setString(19, profile.getCustomerInterviewStatusAdd());
-		else
-			ps.setString(19,"61");
-		
-		ps.setString(20, profile.getRemarks());
-		ps.setTimestamp(21,tmpDAOUtil.getCurrentTimestamp());
-		ps.setString(22,strUserId);
-		ps.setString(23,profile.getEmail());
-		ps.setString(24,profile.getReqRefNo());
+		ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
+		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
+		ps.setString(i++, profile.getProfileSourceAdd());
+		ps.setString(i++, profile.getProfileSharedBy());
+		ps.setInt(i++, profile.getYearsOfExperience());
+		ps.setInt(i++, profile.getRelevantExperience());
+		ps.setInt(i++, profile.getCurrentCTC());
+		ps.setInt(i++, profile.getExpectedCTC());
+		ps.setInt(i++, profile.getNoticePeriod());
+		ps.setString(i++, profile.getRemarks());
+		ps.setTimestamp(i++,tmpDAOUtil.getCurrentTimestamp());
+		ps.setString(i++,strUserId);
+		ps.setString(i++,profile.getEmail());
+		ps.setString(i++,profile.getReqRefNo());
 	}
 
 	private void populateProfileForUpdate(PreparedStatement ps, Profile profile, String userId) throws SQLException {
@@ -908,7 +889,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	}
 	
 	public int insertProfileMapping(Profile profile, String refNo, String userId){
-		StringBuffer sql = new StringBuffer("INSERT INTO REQUIREMENT_PROFILE_MAPPING(REQUIREMENT_ID,PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,REMARKS,CREATED_ON,CREATED_BY)VALUES(?,?,?,?,?,?,?)");
+		StringBuffer sql = new StringBuffer("INSERT INTO REQUIREMENT_PROFILE_MAPPING(REQUIREMENT_ID,PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,"
+				+ "REMARKS,CREATED_ON,CREATED_BY, INTERNAL_EVALUATION_RESULT_DATE,PROFILE_SHARED_CUSTOMER,PROFILE_SHARED_CUSTOMER_DATE)VALUES(?,?,?,?,?,?,?,?,?,?)");
 		Connection conn = null;
 		int value;
 		try {
@@ -963,6 +945,11 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		
 		ps.setTimestamp(6,tmpDAOUtil.getCurrentTimestamp());
 		ps.setString(7,userId);
+		ps.setDate(8, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
+				
+		ps.setString(9, profile.getProfileSharedCustomer());
+		
+		ps.setDate(10, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
 	}
 
 }

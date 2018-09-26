@@ -604,7 +604,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 	}
 	
 	public Requirement getRequirementValues(String userId) {
-		StringBuffer sql = new StringBuffer("SELECT COUNT(STATUS) AS COUNT, CV.VALUE FROM REQUIREMENT R "
+		StringBuffer sql = new StringBuffer("SELECT COUNT(distinct R.ID) AS COUNT, CV.VALUE FROM REQUIREMENT R "
 				+ "INNER JOIN CONFIG_KEY_VALUE_MAPPING C ON R.STATUS = C.ID "
 				+ "INNER JOIN CONFIG_VALUE CV ON C.CONFIG_VALUE_ID = CV.ID "
 				//+ "LEFT JOIN USER_ROLE_ACCOUNT_MAPPING E ON E.ACCOUNT_ID = R.ACCOUNT "

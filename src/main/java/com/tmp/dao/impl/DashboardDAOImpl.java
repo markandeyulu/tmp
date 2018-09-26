@@ -91,7 +91,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 
 
 	public ArrayList<DashboardRequirement> getRequirementJson(String userId) {
-		StringBuilder queryString = new StringBuilder("SELECT COUNT(STATUS) AS COUNT, m.ACCOUNT_NAME AS CUSTOMER_NAME, STATUS, "+
+		StringBuilder queryString = new StringBuilder("SELECT COUNT(distinct STATUS) AS COUNT, m.ACCOUNT_NAME AS CUSTOMER_NAME, STATUS, "+
 				"(SELECT VALUE FROM CONFIG_VALUE WHERE ID=C.CONFIG_VALUE_ID) AS VALUE \r\n" + 
 				"FROM REQUIREMENT R \r\n" + 
 				"INNER JOIN TMP.account_master M on M.ACCOUNT_ID = R.ACCOUNT\r\n" + 
