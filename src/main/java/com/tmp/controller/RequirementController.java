@@ -203,6 +203,8 @@ public class RequirementController {
 		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
 		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
 		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
+		model.addObject("accountListJson", tmpUtil.getAccountList());
+		model.addObject("projectListJson", tmpUtil.getProjectList());
 		model.addObject("addMessage", 3);
 		
 		return model;

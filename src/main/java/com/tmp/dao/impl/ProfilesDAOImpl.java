@@ -112,9 +112,10 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	
 	public Profiles getRequirementRefNum(String userId) {
 
-		StringBuffer sql = new StringBuffer("SELECT D.ACCOUNT, R.ID FROM USER A INNER JOIN USER_ROLE_MAPPING B ON A.ID = B.USER_ID \r\n") 
-				.append("INNER JOIN USER_ROLE_ACCOUNT_MAPPING C ON C.USER_ROLE_ID = B.ID INNER JOIN ACCOUNT_MAPPING D ON D.ID = C.ACCOUNT_ID \r\n")
-				.append("INNER JOIN REQUIREMENT R ON R.ACCOUNT =D.ID WHERE A.ID = ?");
+		StringBuffer sql = new StringBuffer("SELECT R.ACCOUNT, R.ID FROM USER A\r\n" + 
+				"INNER JOIN USER_ACCOUNT_MAPPING C ON C.USER_ID = A.ID \r\n" + 
+				"INNER JOIN REQUIREMENT R ON R.ACCOUNT =C.ACCOUNT_ID WHERE A.ID = ? \r\n" + 
+				"GROUP BY R.ACCOUNT");
 
 		Connection conn = null;
 
@@ -385,22 +386,22 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
-		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));
+		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));/*
 		profile.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
-		profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));
+		profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));*/
 		profile.setAllocationStartDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_START_DATE")));
 		profile.setAllocationEndDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_END_DATE")));		
 		profile.setCreatedBy(configDAO.getUserId(rs.getInt("CREATED_BY")));
 		profile.setUpdatedBy(configDAO.getUserId(rs.getInt("UPDATED_BY")));
-		profile.setInternalEvaluationResultDate(rs.getDate("INTERNAL_EVALUATION_RESULT_DATE"));
+		//profile.setInternalEvaluationResultDate(rs.getDate("INTERNAL_EVALUATION_RESULT_DATE"));
 		//profile.setInitialEvaluationResult(rs.getString("INITIAL_EVALUATION_RESULT"));
-		profile.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
-		profile.setProfileSharedCustomerDate(rs.getDate("PROFILE_SHARED_CUSTOMER_DATE"));
+		//profile.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
+		//profile.setProfileSharedCustomerDate(rs.getDate("PROFILE_SHARED_CUSTOMER_DATE"));
 		//profile.setCustomerInterviewStatus(rs.getString("CUSTOMER_INTERVIEW_STATUS"));
 		profile.setRemarks(rs.getString("REMARKS"));
 		profile.setCreatedOn(rs.getDate("CREATED_ON"));
 		profile.setUpdatedOn(rs.getDate("UPDATED_ON"));
-		int iniEvalResult = rs.getInt("INITIAL_EVALUATION_RESULT");
+		/*int iniEvalResult = rs.getInt("INITIAL_EVALUATION_RESULT");
 		if(iniEvalResult>0){
 			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
 		}else{
@@ -416,7 +417,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		Date sqldate=rs.getDate("PROFILE_SHARED_DATE");
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
 		String DateToStr = simpleDateFormat.format(sqldate);
-		profile.setProfileSharedDatestr(DateToStr);
+		profile.setProfileSharedDatestr(DateToStr);*/
 		return profile;
 	}
 	
