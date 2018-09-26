@@ -169,7 +169,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 
 	@Override
 	public DashboardRequirement getDashboardRequirement(String userId) {
-		StringBuffer sql = new StringBuffer("SELECT COUNT(STATUS) AS COUNT, CV.VALUE FROM REQUIREMENT R \r\n" + 
+		StringBuffer sql = new StringBuffer("SELECT count(distinct R.ID) AS COUNT, CV.VALUE FROM REQUIREMENT R \r\n" + 
 				"INNER JOIN CONFIG_KEY_VALUE_MAPPING C ON R.STATUS = C.ID \r\n" + 
 				"INNER JOIN CONFIG_VALUE CV ON C.CONFIG_VALUE_ID = CV.ID \r\n" + 
 				"INNER JOIN USER_ACCOUNT_MAPPING E ON E.ACCOUNT_ID = R.ACCOUNT \r\n" + 
