@@ -94,7 +94,7 @@ $(document).ready(function () {
 		var account_id=$('#account1').val();
 		$('#projectAdd option').remove();
 		
-		var projectListData=projectListJson.projectListJson;
+		var projectListData=projectValues.projectsJson;
 		var g_projectListArray = [];	
 	      $.each(projectListData, function(index) {
 	      var g_item = [];
@@ -121,7 +121,7 @@ $(document).ready(function () {
 		var account_id=$('#accountNew').val();
 		$('#projectNew option').remove();
 		
-		var projectListData=projectListJson.projectListJson;
+		var projectListData=projectValues.projectsJson;
 		var g_projectListArray = [];	
 	      $.each(projectListData, function(index) {
 	      var g_item = [];
@@ -1254,7 +1254,7 @@ $('#logout').click(function () {
 		<script>
 		 var table=${requirementtableJson};
 		    var locationJson=${locationJson};
-		    var accountValues = ${accountValuesJson};
+		    /* var accountValues = ${accountValuesJson}; */
 		    var criticalJson=${criticalJson};
 		    var intimationModeJson=${intimationModeJson};
 		    var requirementTypeJson=${requirementTypeJson};
@@ -1262,8 +1262,6 @@ $('#logout').click(function () {
 		    var opportunityStatusJson=${opportunityStatusJson};
 		    var skillCategoryJson=${skillCategoryJson};
 		    var primarySkillJson=${primarySkillJson};
-		    var accountListJson=${accountListJson};
-		    var projectListJson=${projectListJson};
 		    
 </script>
 

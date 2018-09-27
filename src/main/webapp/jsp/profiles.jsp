@@ -95,8 +95,6 @@ var intimationModeJson=${intimationModeJson};
 var positionStatusJson=${positionStatusJson};
 var opportunityStatusJson=${opportunityStatusJson};
 var skillCategoryJson=${skillCategoryJson};
-var accountListJson=${accountListJson};
-var projectListJson=${projectListJson};
 function adminRoleCheck() {
     if ($('#userRoleId').val() == "Admin") {
     	 $('#hidProfile').show();
@@ -305,7 +303,7 @@ table.dataTable thead th:first-child {
 	  		var account_id=$('#accountProfile').val();
 	  		$('#projectProfile option').remove();
 	  		
-	  		var projectListData=projectListJson.projectListJson;
+	  		var projectListData=projectValues.projectsJson;
 	  		var g_projectListArray = [];	
 	  	      $.each(projectListData, function(index) {
 	  	      var g_item = [];

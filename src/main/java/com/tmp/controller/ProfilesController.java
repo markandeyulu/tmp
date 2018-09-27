@@ -78,8 +78,8 @@ public class ProfilesController {
 		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
 		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
 		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
-		model.addObject("accountListJson", tmpUtil.getAccountList());
-		model.addObject("projectListJson", tmpUtil.getProjectList());
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		model.addObject("addMessage", 3);
 		model.addObject("deleteMessage",4);
 		model.addObject("updateMessage", 4);
@@ -115,8 +115,8 @@ public class ProfilesController {
 		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
 		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
 		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
-		model.addObject("accountListJson", tmpUtil.getAccountList());
-		model.addObject("projectListJson", tmpUtil.getProjectList());
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		return model;
 	}
 	
@@ -147,8 +147,8 @@ public class ProfilesController {
 		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
 		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
 		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
-		model.addObject("accountListJson", tmpUtil.getAccountList());
-		model.addObject("projectListJson", tmpUtil.getProjectList());
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		model.addObject("addMessage", 3);
 		model.addObject("deleteMessage", 4);
 		return model;

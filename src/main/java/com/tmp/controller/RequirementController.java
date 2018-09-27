@@ -63,8 +63,8 @@ public class RequirementController {
 		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
 		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
 		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
-		model.addObject("accountListJson", tmpUtil.getAccountList());
-		model.addObject("projectListJson", tmpUtil.getProjectList());
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		
 		
 		if(session != null && !session.isNew()) {
@@ -131,8 +131,8 @@ public class RequirementController {
 			} else {
 			    model.setViewName("login");
 			}
-		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
-		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		model.addObject("addMessage", 3);
 		model.addObject("updateMessage", 3);
 		return model;
@@ -163,8 +163,8 @@ public class RequirementController {
 		model.addObject("updateMessage", 3);
 		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
 		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
-		model.addObject("accountListJson", tmpUtil.getAccountList());
-		model.addObject("projectListJson", tmpUtil.getProjectList());
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		return model;
 	}
 	
@@ -203,8 +203,8 @@ public class RequirementController {
 		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
 		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
 		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
-		model.addObject("accountListJson", tmpUtil.getAccountList());
-		model.addObject("projectListJson", tmpUtil.getProjectList());
+		model.addObject("accountValuesJson", tmpUtil.getAccountList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		model.addObject("addMessage", 3);
 		
 		return model;

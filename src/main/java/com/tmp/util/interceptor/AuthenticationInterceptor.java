@@ -3,26 +3,28 @@ package com.tmp.util.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-		////system.out.println("Pre-Handle");
-		// Avoid a redirect loop for some urls
 		
-		if( !request.getRequestURI().equals("/ResourceManagementApp/") && 
-			!request.getRequestURI().equals("/ResourceManagementApp/login") && 
-			!request.getRequestURI().startsWith("/ResourceManagementApp/js/") &&
-			!request.getRequestURI().startsWith("/ResourceManagementApp/css/") )
-		{
-			//system.out.println("preHandle inside");
-			System.out.println(request.getRequestURI());
+		// Avoid a redirect loop for some urls
+		if(request.getRequestURI().equals("/ResourceManagementApp/") ||  
+			request.getRequestURI().equals("/ResourceManagementApp/login") ) {
 			String userData = (String)request.getSession().getAttribute("userName");
-			if(userData == null)
-			{
-				//system.out.println("preHandle inside session null");
+			if(StringUtils.isNotBlank(userData)){
+				response.sendRedirect("/ResourceManagementApp/dashboard.html");
+				return true;
+			}
+		} else if(!request.getRequestURI().startsWith("/ResourceManagementApp/js/") &&
+				!request.getRequestURI().startsWith("/ResourceManagementApp/css/") && 
+				!request.getRequestURI().startsWith("/ResourceManagementApp/img/")){
+			System.out.println("Redirecting to --> "+request.getRequestURI());
+			String userData = (String)request.getSession().getAttribute("userName");
+			if(StringUtils.isBlank(userData)){
 				response.sendRedirect("/ResourceManagementApp/");
 				return false;
 			}
