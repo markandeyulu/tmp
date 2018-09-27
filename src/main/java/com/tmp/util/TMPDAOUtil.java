@@ -25,7 +25,6 @@ public class TMPDAOUtil {
 	
 	public Account getAccount(int accountId) {
 		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.account_master WHERE ACCOUNT_ID=? ");
-		
 			
 		Connection conn = null;
 		Account account = null;
@@ -51,18 +50,13 @@ public class TMPDAOUtil {
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException sqlException) {
-				}
+				} catch (SQLException sqlException) {}
 			}
 		}
 		return account;
-
-		
-		
 	}
 	public Project getProject(int projectId) {
 		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.projects WHERE PROJECT_ID=? ");
-		
 			
 		Connection conn = null;
 		Project project =null;
@@ -78,7 +72,6 @@ public class TMPDAOUtil {
 					project.setAccountId(rs.getInt("ACC_ID"));
 					project.setProjectId(rs.getInt("PROJECT_ID"));
 					project.setProjectName(rs.getString("PROJECT_NAME"));
-
 				}
 			}
 			rs.close();
@@ -90,14 +83,12 @@ public class TMPDAOUtil {
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException sqlException) {
-				}
+				} catch (SQLException sqlException) {}
 			}
 		}
 		return project;
 	}
 	
-
 	public java.sql.Date convertUtilDatetoSQLDate(Date utilDate) {
 		java.sql.Date sqlDate = null;
 		if (utilDate != null) {
@@ -111,7 +102,6 @@ public class TMPDAOUtil {
 	
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 		String DateToStr = simpleDateFormat.format(sqlDate);
-		////system.out.println("DateToStr==> "+DateToStr);
 		
 		return DateToStr;
 	}
@@ -119,7 +109,6 @@ public class TMPDAOUtil {
 		Date utilDate = null;
 		if (sqlDate != null) {
 			utilDate = new Date(sqlDate.getTime());
-			////system.out.println("utilDate==> "+utilDate);
 		}
 		return utilDate;
 	}
@@ -127,6 +116,38 @@ public class TMPDAOUtil {
 	public Timestamp getCurrentTimestamp() {
 		return new Timestamp(System.currentTimeMillis());
 	}
-	
+
+	public Account getAccountFromName(String accountName) {
+		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.account_master WHERE ACCOUNT_NAME=? ");
+			
+		Connection conn = null;
+		Account account = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps.setString(1, accountName);
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs != null) {
+				if (rs.next()) {
+					account = new Account();
+					account.setAccountId(rs.getInt("ACCOUNT_ID"));
+					account.setAccountName(rs.getString("ACCOUNT_NAME"));
+				}
+			}
+			rs.close();
+			ps.close();
+			
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {}
+			}
+		}
+		return account;
+	}
 	
 }

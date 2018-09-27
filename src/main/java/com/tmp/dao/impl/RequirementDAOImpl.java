@@ -437,7 +437,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 			
 			String accountName = null, projectName = null;
 			int accountId = Integer.parseInt(requirement.getAccount1());
-			//accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
+			accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
 			accountName = tmpDAOUtil.getAccount(accountId).getAccountName();
 			int projectId = Integer.parseInt(requirement.getProjectAdd());
 			String incrementor=null;
@@ -1041,10 +1041,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		return tmp ;
 	}
 	
-	public ArrayList<Requirement> getRequirementCustomerTable(String name){
+	public ArrayList<Requirement> getRequirementCustomerTable(String accountName){
 
-		int accId = configDAO.getAdminInfoKeyValueMapping(name).getId();
-		int acctnameId = configDAO.getAccountMappingId(accId).getAccountId();
 		StringBuffer sql = new StringBuffer("SELECT R.ID, C1.VALUE, C2.VALUE, C3.VALUE, INTIMATION_DATE, EXPECTED_DOJ, "
 				+ "C4.VALUE, C6.VALUE, COUNT(R1.REQUIREMENT_ID),R.SHORTLISTED_PROFILE_ID, COUNT(R1.INTERNAL_EVALUATION_RESULT) "
 				+ "FROM REQUIREMENT R LEFT JOIN CONFIG_VALUE C1 ON C1.ID=(SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID=R.CRITICALITY) "
@@ -1060,9 +1058,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			ps.setInt(1, acctnameId);
+			ps.setInt(1, tmpDAOUtil.getAccountFromName(accountName).getAccountId());
 			ArrayList<Requirement> requirement = null;
-			
 			
 			ResultSet rs = ps.executeQuery();
 
