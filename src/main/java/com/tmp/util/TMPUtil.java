@@ -415,7 +415,12 @@ public class TMPUtil {
 	}
 
 	public int updateProfile(Profile profile,String userId) {
-		return profilesDAO.updateProfile(profile,userId);
+		int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
+		ArrayList<RequirementProfileMapping> profiles = null;
+		if(reqStatus == 16 || reqStatus == 17) {
+			profiles = requirementDAO.getRequirementProfile(profile.getReqRefNo());
+		}
+		return profilesDAO.updateProfile(profile,userId,reqStatus,profiles);
 	}
 
 	public int deleteProfile(ArrayList<String> profileId) {

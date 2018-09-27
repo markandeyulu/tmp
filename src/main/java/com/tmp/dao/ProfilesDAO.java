@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
+import com.tmp.entity.RequirementProfileMapping;
 
 public interface ProfilesDAO {
 
@@ -20,7 +21,7 @@ public interface ProfilesDAO {
 
 	public Profiles updateProfiles(List<Profile> profiles);
 
-	public int updateProfile(Profile profile,String userId);
+	public int updateProfile(Profile profile,String userId, int reqStatus, ArrayList<RequirementProfileMapping> profiles);
 
 	public int deleteProfile(ArrayList<String>  profileId);
 	

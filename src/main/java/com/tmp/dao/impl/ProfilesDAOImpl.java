@@ -22,7 +22,9 @@ import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.ProfilesDAO;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
+import com.tmp.entity.RequirementProfileMapping;
 import com.tmp.util.TMPDAOUtil;
+import com.tmp.util.TMPUtil;
 
 @Repository
 @Qualifier("profilesDAO")
@@ -40,6 +42,10 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	@Qualifier("tmpDAOUtil")
 	TMPDAOUtil tmpDAOUtil;
 
+	@Autowired(required = true)
+	@Qualifier("tmpUtil")
+	TMPUtil tmpUtil;
+	
 	private DataSource dataSource;
 
 	public void setDataSource(DataSource dataSource) {
@@ -298,7 +304,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		return null;
 	}
 
-	public int updateProfile(Profile profile,String userId) {
+	public int updateProfile(Profile profile,String userId, int reqStatus, ArrayList<RequirementProfileMapping> profiles) {
 		
 		StringBuffer sql = new StringBuffer(
 				"UPDATE PROFILE SET NAME=?, EMAIL_ID =?, CONTACT_NO=?, CURRENT_COMPANY=?, \r\n")
@@ -307,22 +313,64 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		.append(" UPDATED_ON=?, PROFILE_SOURCE=?,REMARKS=?,UPDATED_BY=?") ;
 		
 		StringBuffer sql1 = new StringBuffer("UPDATE REQUIREMENT_PROFILE_MAPPING SET INTERNAL_EVALUATION_RESULT=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?, REQUIREMENT_ID=?, INTERNAL_EVALUATION_RESULT_DATE=?,PROFILE_SHARED_CUSTOMER=?, PROFILE_SHARED_CUSTOMER_DATE=? WHERE PROFILE_ID=?");
-		StringBuffer sql2=new StringBuffer();
-		if(profile.getInitialEvaluationResult().getId()==26) { //26-->Did not process
-			sql2.append("UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?"); //15-->Profile Sourcing
-		}else if(profile.getInitialEvaluationResult().getId()==60) { //60-->In progress
-			sql2.append("UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?"); //16-->Technical Evaluation
-		}else if(profile.getInitialEvaluationResult().getId()==25) { //25-->Hold
-			sql2.append("UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?");
-		}else if(profile.getInitialEvaluationResult().getId()==23 && null ==profile.getCustomerInterviewStatus()){
-			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?");
-		}
-		else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==61) {//23-->Shortlisted 61-->Yet to process
-			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?"); //17-->Customer Evaluation
-		}else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==27) { //27-->Shortlisted
-			sql2.append("UPDATE REQUIREMENT SET STATUS=18 WHERE ID=?"); //18-->Offer Processing
-		}else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==29) { //29-->Hold
-			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?");
+		String sql2=null;
+		switch(profile.getInitialEvaluationResult().getId()) {
+		case 26:
+			sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
+			break;
+		case 60:
+			sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+			break;
+		case 25:
+			sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+			break;
+		case 23:
+			switch(profile.getCustomerInterviewStatus().getId()) {
+			case 61:
+				sql2="UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?";
+				break;
+			case 27:
+				sql2="UPDATE REQUIREMENT SET STATUS=18 WHERE ID=?";
+				break;
+			case 29:
+				sql2="UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?";
+				break;
+			case 28:
+				if(reqStatus==17){
+					for (RequirementProfileMapping requirementProfileMapping : profiles) {
+						if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
+							if(profile.getCustomerInterviewStatus().getId()==61 || profile.getCustomerInterviewStatus().getId()==29) {
+								//CIS : 61-InProgress, 29-Hold
+								sql2 = null;
+							} else {
+								sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+								break;
+							}
+						}
+					}
+				}else {
+					sql2=null;
+				}
+				break;
+			}
+			break;
+		case 24: //IES Rejected
+			if(reqStatus==16) {
+				for (RequirementProfileMapping requirementProfileMapping : profiles) {
+					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
+						if(profile.getInitialEvaluationResult().getId()==60 || profile.getInitialEvaluationResult().getId()==25
+								|| profile.getInitialEvaluationResult().getId()==26) {//IES : 26-DidNotProcess, 60-InProgress, 25-Hold
+							sql2 = null;
+						} else {
+							sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
+							break;
+						}
+					}
+				}
+			}else {
+				sql2=null;
+			} 
+			break;
 		}
 		Connection conn = null;
 
@@ -339,12 +387,17 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 					
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
-			PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
 			populateProfileForUpdate(ps, profile, userId);
 			populateProfileForUpdateForMapping(ps1, profile, userId);
-			populateProfileForUpdateReq(ps2,profile);
+			if(sql2!=null) {
+				System.out.println("sql2-->"+sql2);
+				PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
+				ps2.setString(1, profile.getReqRefNo());
+				//ps2.setInt(2, profile.getId());
+				//populateProfileForUpdateReq(ps2,profile);
+				ps2.executeUpdate();
+				}
 			ps.executeUpdate();
-			ps2.executeUpdate();
 			int result=ps1.executeUpdate();
 			ps.close();
 			return result;
@@ -577,12 +630,12 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		
 	}
 	
-	private void populateProfileForUpdateReq(PreparedStatement ps2, Profile profile) throws SQLException {
+	/*private void populateProfileForUpdateReq(PreparedStatement ps2, Profile profile) throws SQLException {
 		if(ps2 == null) {
 			return;
 		}
 		ps2.setString(1, profile.getReqRefNo());
-	}
+	}*/
 	public int deleteProfile(ArrayList<String> profileId) {
 		StringBuffer sql = new StringBuffer("DELETE FROM REQUIREMENT_PROFILE_MAPPING WHERE PROFILE_ID=?");
 		StringBuffer sql1 = new StringBuffer("DELETE FROM PROFILE WHERE ID=?");
