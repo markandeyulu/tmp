@@ -314,6 +314,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			sql2.append("UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?"); //16-->Technical Evaluation
 		}else if(profile.getInitialEvaluationResult().getId()==25) { //25-->Hold
 			sql2.append("UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?");
+		}else if(profile.getInitialEvaluationResult().getId()==23 && null ==profile.getCustomerInterviewStatus()){
+			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?");
 		}
 		else if(profile.getInitialEvaluationResult().getId()==23 && profile.getCustomerInterviewStatus().getId()==61) {//23-->Shortlisted 61-->Yet to process
 			sql2.append("UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?"); //17-->Customer Evaluation
