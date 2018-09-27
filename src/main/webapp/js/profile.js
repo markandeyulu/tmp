@@ -102,11 +102,11 @@ function loadDetail(id){
 				 $("#profileSharedCustomerDateProfile").removeAttr('disabled');
 				 $("#customerInterviewStatusProfile").removeAttr('disabled');
 			 }
-			 if(null!=data.account && null!=data.account.account.adminInfoValue.value){
-				 $('#accountProfile').val(data.account.account.adminInfoValue.value);
+			 if(null!=data.account2.accountName){
+				 $('#accountProfile').val(data.account2.accountName);
 			 }
-			 if(null!=data.project && null != data.project.project.adminInfoValue.value){
-				 $('#projectProfile').val(data.project.project.adminInfoValue.value);	 
+			 if(null!=data.project2.projectName){
+				 $('#projectProfile').val(data.project2.projectName);	 
 			 }
 			
 		 },

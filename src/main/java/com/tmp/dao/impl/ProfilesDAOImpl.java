@@ -184,16 +184,20 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	
 	public Profile getProfile(String profileId) {
 		//StringBuffer sql = new StringBuffer("SELECT * FROM PROFILE WHERE ID = ?");
-		StringBuffer sql = new StringBuffer("SELECT p.ID, p.NAME, p.EMAIL_ID, p.CONTACT_NO, p.CURRENT_COMPANY," + 
-				" p.LOCATION, p.PRIMARY_SKILL, p.PROFILE_SHARED_DATE, p.PROFILE_SHARED_BY, " + 
-				" p.YEARS_OF_EXPERIENCE, p.RELEVANT_EXPERIENCE, p.NOTICE_PERIOD, " + 
-				" p.CURRENT_CTC, p.EXPECTED_CTC, p.IS_ALLOCATED," + 
-				" p.ALLOCATION_START_DATE, p.ALLOCATION_END_DATE, p.CREATED_ON, " + 
-				" p.CREATED_BY, p.UPDATED_ON, p.UPDATED_BY, p.PROFILE_SOURCE, " + 
-				" p.INTERNAL_EVALUATION_RESULT_DATE, p.INITIAL_EVALUATION_RESULT, " + 
-				" p.PROFILE_SHARED_CUSTOMER, p.PROFILE_SHARED_CUSTOMER_DATE, p.REMARKS, " + 
-				" p.CUSTOMER_INTERVIEW_STATUS, p.REQUIREMENT_ID,r.ACCOUNT,r.PROJECT " + 
-				"FROM PROFILE p inner join REQUIREMENT r ON p.REQUIREMENT_ID = r.ID WHERE p.ID = ?");
+		StringBuffer sql = new StringBuffer("SELECT p.ID,r.ID AS REQUIREMENT_ID, p.NAME, p.EMAIL_ID, p.CONTACT_NO, p.CURRENT_COMPANY, p.LOCATION, \r\n" + 
+				"p.PRIMARY_SKILL,p.PROFILE_SOURCE, p.PROFILE_SHARED_BY,  p.YEARS_OF_EXPERIENCE, \r\n" + 
+				"p.RELEVANT_EXPERIENCE, p.NOTICE_PERIOD,  p.CURRENT_CTC, p.EXPECTED_CTC,\r\n" + 
+				" p.IS_ALLOCATED, r.ACCOUNT,r.PROJECT,\r\n" + 
+				"p.ALLOCATION_START_DATE, p.ALLOCATION_END_DATE,\r\n" + 
+				" p.CREATED_BY, p.UPDATED_BY,\r\n" + 
+				" m.INTERNAL_EVALUATION_RESULT_DATE,m.PROFILE_SHARED_CUSTOMER,\r\n" + 
+				" m.PROFILE_SHARED_CUSTOMER_DATE,m.REMARKS,\r\n" + 
+				" p.CREATED_ON,  p.UPDATED_ON, \r\n" + 
+				" m.INTERNAL_EVALUATION_RESULT,m.CUSTOMER_INTERVIEW_STATUS,\r\n" + 
+				" p.PROFILE_SHARED_DATE FROM PROFILE p \r\n" + 
+				"inner join REQUIREMENT r ON p.REQUIREMENT_ID = r.ID \r\n" + 
+				"inner join REQUIREMENT_PROFILE_MAPPING m ON p.ID= m.PROFILE_ID\r\n" + 
+				"WHERE p.ID = ?");
 
 		Connection conn = null;
 
@@ -442,8 +446,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
 		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));
-		profile.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
-		profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));
+		profile.setAccount2(tmpDAOUtil.getAccount(rs.getInt("ACCOUNT")));
+		profile.setProject2(tmpDAOUtil.getProject(rs.getInt("PROJECT")));
 		profile.setAllocationStartDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_START_DATE")));
 		profile.setAllocationEndDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_END_DATE")));		
 		profile.setCreatedBy(configDAO.getUserId(rs.getInt("CREATED_BY")));
@@ -456,7 +460,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setRemarks(rs.getString("REMARKS"));
 		profile.setCreatedOn(rs.getDate("CREATED_ON"));
 		profile.setUpdatedOn(rs.getDate("UPDATED_ON"));
-		int iniEvalResult = rs.getInt("INITIAL_EVALUATION_RESULT");
+		int iniEvalResult = rs.getInt("INTERNAL_EVALUATION_RESULT");
 		if(iniEvalResult>0){
 			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
 		}else{

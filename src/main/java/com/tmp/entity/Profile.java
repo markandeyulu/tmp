@@ -38,7 +38,25 @@ public class Profile implements Serializable {
 	private int expectedCTC;
 	private ConfigKeyValueMapping isAllocated;
 	private String isAllocated1;
+	private Account account2;
+	private Project project2;
 	
+	public Account getAccount2() {
+		return account2;
+	}
+
+	public void setAccount2(Account account2) {
+		this.account2 = account2;
+	}
+
+	public Project getProject2() {
+		return project2;
+	}
+
+	public void setProject2(Project project2) {
+		this.project2 = project2;
+	}
+
 	public String getIsAllocated1() {
 		return isAllocated1;
 	}
