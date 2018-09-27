@@ -1092,7 +1092,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 			conn = dataSource.getConnection();
 			PreparedStatement ps1 = conn.prepareStatement(sql.toString());
 			int accId = configDAO.getAdminInfoKeyValueMapping(name).getId();
-			int acctnameId = configDAO.getAccountMappingId(accId).getAccountId();
+			int acctnameId = tmpDAOUtil.getAccountFromName(name).getAccountId();
+			//int acctnameId = configDAO.getAccountMappingId(accId).getAccountId();
 			ps1.setInt(1, acctnameId);
 			Requirement requirement = null;
 			ResultSet rs1 = ps1.executeQuery();

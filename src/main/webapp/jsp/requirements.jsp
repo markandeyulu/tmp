@@ -246,11 +246,11 @@ $(document).ready(function () {
 		  form.requirementProfile.action.value="/requirementProfile";
 		});
 	 
-	 $("#btnReset").bind("click", function () {
+	 /* $("#btnReset").bind("click", function () {
 	            $("#projectNew")[0].selectedIndex = 0;
 	            $("#accountNew")[0].selectedIndex = 0;
 	            location.reload(true);
-	        });
+	        }); */
 	   
 });
 
