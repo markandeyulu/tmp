@@ -300,10 +300,9 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				"UPDATE PROFILE SET NAME=?, EMAIL_ID =?, CONTACT_NO=?, CURRENT_COMPANY=?, \r\n")
 		.append("LOCATION=?, PRIMARY_SKILL=?, PROFILE_SHARED_DATE=?, PROFILE_SHARED_BY=?, YEARS_OF_EXPERIENCE=?, RELEVANT_EXPERIENCE=?, NOTICE_PERIOD=?, \r\n")
 		.append("CURRENT_CTC=?, EXPECTED_CTC=?, IS_ALLOCATED=?, ALLOCATION_START_DATE=?, ALLOCATION_END_DATE=?, CREATED_ON=?, \r\n")
-		.append(" UPDATED_ON=?, PROFILE_SOURCE=?, INTERNAL_EVALUATION_RESULT_DATE=?, INITIAL_EVALUATION_RESULT=?,  \r\n")
-		.append("PROFILE_SHARED_CUSTOMER=?, PROFILE_SHARED_CUSTOMER_DATE=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?,UPDATED_BY=?") ;
+		.append(" UPDATED_ON=?, PROFILE_SOURCE=?,REMARKS=?,UPDATED_BY=?") ;
 		
-		StringBuffer sql1 = new StringBuffer("UPDATE REQUIREMENT_PROFILE_MAPPING SET INTERNAL_EVALUATION_RESULT=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?, REQUIREMENT_ID=? WHERE PROFILE_ID=?");
+		StringBuffer sql1 = new StringBuffer("UPDATE REQUIREMENT_PROFILE_MAPPING SET INTERNAL_EVALUATION_RESULT=?, CUSTOMER_INTERVIEW_STATUS=?, REMARKS=?, REQUIREMENT_ID=?, INTERNAL_EVALUATION_RESULT_DATE=?,PROFILE_SHARED_CUSTOMER=?, PROFILE_SHARED_CUSTOMER_DATE=? WHERE PROFILE_ID=?");
 		StringBuffer sql2=new StringBuffer();
 		if(profile.getInitialEvaluationResult().getId()==26) { //26-->Did not process
 			sql2.append("UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?"); //15-->Profile Sourcing
@@ -532,14 +531,6 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setDate(i++,tmpDAOUtil.convertUtilDatetoSQLDate(profile.getCreatedOn()));
 		ps.setTimestamp(i++,tmpDAOUtil.getCurrentTimestamp());
 		ps.setInt(i++,profile.getProfileSource().getId());
-		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
-		ps.setInt(i++, profile.getInitialEvaluationResult().getId());
-		ps.setString(i++, profile.getProfileSharedCustomer());
-		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
-		if(null!=profile.getCustomerInterviewStatus())
-			ps.setInt(i++, profile.getCustomerInterviewStatus().getId());
-		else
-			ps.setInt(i++,61);
 		ps.setString(i++, profile.getRemarks());
 		ps.setString(i++, userId);
 		if(null != profile.getAccount() && profile.getAccount().getId()!=0){
@@ -572,7 +563,12 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		//ps1.setInt(i++, profile.getCustomerInterviewStatus().getId());
 		ps1.setString(i++, profile.getRemarks());
 		ps1.setString(i++, profile.getReqRefNo());
+		ps1.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
+		ps1.setString(i++, profile.getProfileSharedCustomer());
+		ps1.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
+		
 		ps1.setInt(i++, profile.getId());
+		
 	}
 	
 	private void populateProfileForUpdateReq(PreparedStatement ps2, Profile profile) throws SQLException {

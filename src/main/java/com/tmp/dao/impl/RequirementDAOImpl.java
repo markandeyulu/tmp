@@ -437,7 +437,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 			
 			String accountName = null, projectName = null;
 			int accountId = Integer.parseInt(requirement.getAccount1());
-			accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
+			//accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
 			accountName = tmpDAOUtil.getAccount(accountId).getAccountName();
 			int projectId = Integer.parseInt(requirement.getProjectAdd());
 			String incrementor=null;
