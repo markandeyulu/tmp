@@ -1121,21 +1121,16 @@ $('#logout').click(function () {
                     <td><spring:input class="form-control" id="actualOwnerEmail" path="actualOwnerEmail" type="text" /></td>
                 </tr>      
                 <tr>
-                   <td><spring:label path="account">Account<span style="color:red">*</span></spring:label> </td>
+                   <td><spring:label path="account">Account</spring:label> </td>
                    <td>
-                   <spring:select id="accountNew" multiple="false" path="account.accountId" class="form-control dropdown-toggle text-left " Style="width:100%"
-                   	oninvalid="this.setCustomValidity('Account name must not be empty')" 
-					required="required"				oninput="this.setCustomValidity('')">
-				   </spring:select>
-				   </td>
+                     <spring:input class="form-control" id="accountNew" path="account.accountId" type="text" readonly="true"/>
+                   </td>
                 </tr> 
                 <tr>
-                    <td><spring:label path="project">Project<span style="color:red">*</span></spring:label> </td>
+                    <td><spring:label path="project">Project</spring:label> </td>
                     <td>
-                    <spring:select id="projectNew" multiple="false" path="project.projectId" class="form-control dropdown-toggle text-left " Style="width:100%"
-                    oninvalid="this.setCustomValidity('Project name must not be empty')" 
-								required="required"			oninput="this.setCustomValidity('')">
-						</spring:select></td>
+                     <spring:input class="form-control" id="projectNew" path="project.projectId" type="text" readonly="true"/>
+                   </td>
                 </tr>      
                 <tr>
                     <td><spring:label path="updatedOn">Updated On</spring:label></td>

@@ -138,11 +138,12 @@ function loadDetail(id){
 			$('#yearExperienceNew').val(data.yearExperience);
 			$('#updatedByNew').val(data.updatedBy.name);
 			$('#createdByNew').val(data.createdBy.name);		
-
-			$("#accountNew").append('<option value="">Select Account</option>');
-			$("#accountNew option:contains(" + data.account.accountName + ")").attr('selected', 'selected');
-			$("projectNew").append('<option value="">Select Account</option>');
-			$("#projectNew option:contains(" + data.project.projectName + ")").attr('selected', 'selected');
+			 if(null!=data.account.accountName){
+				 $('#accountNew').val(data.account.accountName);
+			 }
+			 if(null!=data.project.projectName){
+				 $('#projectNew').val(data.project.projectName);	 
+			 }
 			
 			if(data.status.configValue.value!=null && data.status.configValue.value!=""){
 				$("#statusNew option:contains(" + data.status.configValue.value + ")").attr('selected', 'selected');

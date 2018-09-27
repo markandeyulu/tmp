@@ -757,10 +757,9 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		StringBuffer sql = new StringBuffer(
 				"INSERT INTO PROFILE ( NAME, CONTACT_NO, CURRENT_COMPANY, LOCATION, PRIMARY_SKILL, PROFILE_SHARED_DATE, \r\n")
 		.append("PROFILE_SOURCE, PROFILE_SHARED_BY, YEARS_OF_EXPERIENCE, RELEVANT_EXPERIENCE, CURRENT_CTC, EXPECTED_CTC, NOTICE_PERIOD, \r\n")
-		.append("INTERNAL_EVALUATION_RESULT_DATE, INITIAL_EVALUATION_RESULT, PROFILE_SHARED_CUSTOMER, \r\n")
-		.append("PROFILE_SHARED_CUSTOMER_DATE, CUSTOMER_INTERVIEW_STATUS, REMARKS, CREATED_ON,\r\n")
-		.append("CREATED_BY, EMAIL_ID, ALLOCATION_START_DATE, ALLOCATION_END_DATE, IS_ALLOCATED, ACCOUNT, PROJECT, REQUIREMENT_ID ) \r\n")
-		.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		.append(" REMARKS, CREATED_ON,\r\n")
+		.append("CREATED_BY, EMAIL_ID, ALLOCATION_START_DATE, ALLOCATION_END_DATE, IS_ALLOCATED, REQUIREMENT_ID ) \r\n")
+		.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		Connection conn = null;
 		int value;
 		int profileId;
@@ -868,65 +867,37 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			ps.setString(13, "");
 		}
 		
-		if(profile.getInternalEvaluationResultDate()!=null){
-			ps.setDate(14, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
-			}else{
-			ps.setString(14, "0000-00-00");
-		}
-		
-		if((profile.getInitialEvaluationResultAdd()!=null) && !(profile.getInitialEvaluationResultAdd().isEmpty())){
-			ps.setInt(15, configDAO.getConfigKeyValueMapping(profile.getInitialEvaluationResultAdd()).getId());
-			}else{
-			ps.setInt(15, configDAO.getConfigKeyValueMapping("0").getId());
-		}
-		
-		if(profile.getProfileSharedCustomer()!=null){
-			ps.setString(16, profile.getProfileSharedCustomer());
-			}else{
-			ps.setString(16, "");
-		}
-		
-		if(profile.getProfileSharedCustomerDate()!=null){
-			ps.setDate(17, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
-			}else{
-			ps.setString(17, "0000-00-00");
-		}
-		
-		if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
-			ps.setInt(18, configDAO.getConfigKeyValueMapping(profile.getCustomerInterviewStatusAdd()).getId());
-			}else{
-			ps.setInt(18, configDAO.getConfigKeyValueMapping("0").getId());
-		}
 		
 		if(profile.getRemarks()!=null){
-			ps.setString(19, profile.getRemarks());
+			ps.setString(14, profile.getRemarks());
 			}else{
-			ps.setString(19, "");
+			ps.setString(14, "");
 		}
-		ps.setTimestamp(20,tmpDAOUtil.getCurrentTimestamp());
-		ps.setString(21,userId);
-		ps.setString(22,profile.getEmail());
+		ps.setTimestamp(15,tmpDAOUtil.getCurrentTimestamp());
+		ps.setString(16,userId);
+		ps.setString(17,profile.getEmail());
 		
 		if(profile.getAllocationStartDate()!=null){
-			ps.setDate(23, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getAllocationStartDate()));
+			ps.setDate(18, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getAllocationStartDate()));
 			}else{
-			ps.setString(23, "0000-00-00");
+			ps.setString(18, "0000-00-00");
 		}
 		
 		if(profile.getAllocationEndDate()!=null){
-			ps.setDate(24, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getAllocationEndDate()));
+			ps.setDate(19, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getAllocationEndDate()));
 			}else{
-			ps.setString(24, "0000-00-00");
+			ps.setString(19, "0000-00-00");
 		}
 		
 		if((profile.getIsAllocated1()!=null) && !(profile.getIsAllocated1().isEmpty())){
-			ps.setInt(25, configDAO.getConfigKeyValueMapping(profile.getIsAllocated1()).getId());
+			ps.setInt(20, configDAO.getConfigKeyValueMapping(profile.getIsAllocated1()).getId());
 			}else{
-			ps.setInt(25, 0);
+			ps.setInt(20, 0);
 		}
-		int accNewMappingId = adminDAO.getRequirementAdminAccountMapping(profile.getAccount1(), 6, userId, 8,  9);
-		int accId = configDAO.getAdminInfoKeyValueMapping(profile.getAccount1()).getId();
-		int accountId = configDAO.getAccountMappingId(accId).getAccountId();
+		/*int accNewMappingId = adminDAO.getRequirementAdminAccountMapping(profile.getAccount1(), 6, userId, 8,  9);
+		//int accId = configDAO.getAdminInfoKeyValueMapping(profile.getAccount1()).getId();
+			/	int accountId = configDAO.getAccountMappingId(accId).getAccountId();
+		int accountId = tmpDAOUtil.getAccount(accID);
 		if(profile.getAccount1()!=null){
 			ps.setInt(26, accountId);
 			}else{
@@ -939,8 +910,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			ps.setInt(27, configDAO.getProjectMappingId(accountId,projectId).getId());
 			}else{
 			ps.setInt(27, configDAO.getConfigKeyValueMapping("0").getId());
-		}
-		ps.setString(28, profile.getReqRefNo());
+		}*/
+		ps.setString(21, profile.getReqRefNo());
 	}
 	
 	public int insertProfileMapping(Profile profile, String refNo, String userId){

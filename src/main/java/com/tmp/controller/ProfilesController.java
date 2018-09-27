@@ -304,20 +304,7 @@ public class ProfilesController {
 									}else{
 									profile.setIsAllocated1("No");	
 								}
-								
-								String account = ((XSSFCell) cells.next()).toString().trim();
-								if((account!=null) && (!account.isEmpty())){
-									profile.setAccount1(account);
-									}else{
-									profile.setAccount1("");	
-								}
-								String project = ((XSSFCell) cells.next()).toString().trim();
-								if((project!=null) && (!project.isEmpty())){
-									profile.setProject1(project);
-									}else{
-									profile.setProject1("");	
-								}
-								
+																							
 								String allocStartDate = ((XSSFCell) cells.next()).toString().trim();
 								if((allocStartDate!=null) && (!allocStartDate.equals(""))){
 									Date allocationStartDate = formatter.parse(allocStartDate);
@@ -341,46 +328,7 @@ public class ProfilesController {
 									}else{
 									profile.setProfileSourceAdd("");	
 								}
-								
-								String internalEvalResultDate = ((XSSFCell) cells.next()).toString().trim();
-								if((internalEvalResultDate!=null) && (!internalEvalResultDate.equals(""))){
-									Date internalEvaluationResultDate = formatter.parse(internalEvalResultDate);
-									profile.setInternalEvaluationResultDate(internalEvaluationResultDate);
-									}else{
-									Date internalEvaluationResultDate = null;
-									profile.setInternalEvaluationResultDate(internalEvaluationResultDate);	
-								}
-								
-								String initialEvaluationResultAdd = ((XSSFCell) cells.next()).toString().trim();
-								if((initialEvaluationResultAdd!=null) && (!initialEvaluationResultAdd.isEmpty())){
-									profile.setInitialEvaluationResultAdd(initialEvaluationResultAdd);
-									}else{
-									profile.setInitialEvaluationResultAdd("");	
-								}
-								
-								String profileSharedCustomer = ((XSSFCell) cells.next()).toString().trim();
-								if((profileSharedCustomer!=null) && (!profileSharedCustomer.isEmpty())){
-									profile.setProfileSharedCustomer(profileSharedCustomer);
-									}else{
-									profile.setProfileSharedCustomer("No");	
-								}
-								
-								String profileSharedCustDate = ((XSSFCell) cells.next()).toString().trim();
-								if((profileSharedCustDate!=null) && (!profileSharedCustDate.equals(""))){
-									Date profileSharedCustomerDate = formatter.parse(profileSharedCustDate);
-									profile.setProfileSharedCustomerDate(profileSharedCustomerDate);
-									}else{
-									Date profileSharedCustomerDate = null;
-									profile.setProfileSharedCustomerDate(profileSharedCustomerDate);	
-								}
-								
-								String customerInterviewStatusAdd = ((XSSFCell) cells.next()).toString().trim();
-								if((customerInterviewStatusAdd!=null) && (!customerInterviewStatusAdd.isEmpty())){
-									profile.setCustomerInterviewStatusAdd(customerInterviewStatusAdd);
-									}else{
-									profile.setCustomerInterviewStatusAdd("");	
-								}
-								
+															
 								String remarks = ((XSSFCell) cells.next()).toString();
 								if((remarks!=null) && (!remarks.isEmpty())){
 									profile.setRemarks(remarks);
