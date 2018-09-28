@@ -307,7 +307,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 				"UPDATE REQUIREMENT SET CRITICALITY=?, SKILL_CATEGORY =?, PRIMARY_SKILL=?, JOB_DESCRIPTION=?, \r\n")
 		.append("LOCATION=?, CITY=?, BILLING_RATE=?, INTIMATION_DATE=?, INTIMATED_BY=?, INTIMATOR_EMAIL=?, INTIMATION_MODE=?, \r\n")
 		.append("REQUIREMENT_TYPE=?, EXPECTED_DOJ=?, ACTUAL_CLOSURE_DATE=?, SO=?, JO=?, STATUS=?, ACTIVITY_OWNER=?, ACTIVITY_OWNER_EMAIL=?,\r\n")
-		.append("ACTUAL_OWNER=?, ACTUAL_OWNER_EMAIL=?, REMARKS=?, UPDATED_ON=?, BAND=?, YEAR_EXPERIENCE=?, QUANTITY=?, PROJECT_DURATION=?, IBG_CDG=?, IBU_CDU=?, PID_CRMID_SO=?, UPDATED_BY=?, ACCOUNT=?, PROJECT=?, OPPORTUNITY_STATUS=?  WHERE ID=?");
+		.append("ACTUAL_OWNER=?, ACTUAL_OWNER_EMAIL=?, REMARKS=?, UPDATED_ON=?, BAND=?, YEAR_EXPERIENCE=?, QUANTITY=?, PROJECT_DURATION=?, IBG_CDG=?, IBU_CDU=?, PID_CRMID_SO=?, UPDATED_BY=?,OPPORTUNITY_STATUS=?  WHERE ID=?");
 
 		Connection conn = null;
 
@@ -369,10 +369,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setInt(29,configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
 		ps.setString(30,requirement.getPid_crmid_so());
 		ps.setString(31, userId);
-		ps.setInt(32, requirement.getAccount().getAccountId());
-		ps.setInt(33, requirement.getProject().getProjectId());
-		ps.setInt(34, requirement.getOppurtunityStatus().getId());
-		ps.setString(35, requirement.getId());
+		ps.setInt(32, requirement.getOppurtunityStatus().getId());
+		ps.setString(33, requirement.getId());
 	}
 
 	public int deleteRequirement(ArrayList<String> requirementId) {
