@@ -224,10 +224,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 			PreparedStatement ps = conn.prepareStatement(sql.toString());
 			requirement.setId(getRequirementId(requirement, userName, userId));
 			populateRequirementForInsert(ps, requirement, userId);
-			 value = ps.executeUpdate();
+			value = ps.executeUpdate();
 			ps.close();
+			System.out.println("Successfully the requirement has been created!! "+requirement.getId());
 		} catch (SQLException sqlException) {
-			sqlException.getMessage();
+			sqlException.printStackTrace();
+			System.out.println("Failure!! the requirement has not been created!! "+requirement.getId());
 			return 0;
 		} finally {
 			if (conn != null) {

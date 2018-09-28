@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -46,7 +47,7 @@ public class RequirementController {
 	}
 	
 	@RequestMapping(value = "/requirements", method = RequestMethod.GET)
-	public ModelAndView requirement(HttpServletRequest request) {
+	public ModelAndView requirement(HttpServletRequest request,@RequestParam(value = "fromCreate", required=false) String fromCreate) {
 		ModelAndView model=new ModelAndView("requirements");
 		model.addObject("description", "user page !");
 		model.addObject("requirements", new Requirement());
@@ -74,7 +75,11 @@ public class RequirementController {
 			}
 		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
 		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
-		model.addObject("addMessage", 3);
+		if(StringUtils.isNotBlank(fromCreate)) {
+			model.addObject("addMessage", fromCreate);
+		}else {
+			model.addObject("addMessage", 3);	
+		}
 		model.addObject("updateMessage", 3);
 		return model;
 	}
@@ -140,31 +145,12 @@ public class RequirementController {
 	
 	@RequestMapping(value = "/addrequirement", method = RequestMethod.POST)
 	public ModelAndView createRequirement(ModelAndView model,HttpServletRequest request, @ModelAttribute("requirements") Requirement requirement,BindingResult bindingResult) {
-		model = new ModelAndView("requirements");
 		HttpSession session = request.getSession();
 		String userId = session.getAttribute("user").toString();
-		String userName = session.getAttribute("userName").toString();
 		String displayName=session.getAttribute("displayName").toString();
 		
-		
-		model.addObject("addMessage", tmpUtil.createRequirement(requirement,userId,displayName));
-		model.addObject("description", "user page !");
-		model.addObject("requirements", new Requirement());
-		model.addObject("requirementtableJson",tmpUtil.getRequirementTableJson(userId));
-		model.addObject("requirementblockJson",tmpUtil.getRequirementBlockJson(userId));
-		model.addObject("locationJson",tmpUtil.getConfigKeyValues(2));
-		model.addObject("criticalJson",tmpUtil.getConfigKeyValues(1));
-		model.addObject("intimationModeJson",tmpUtil.getConfigKeyValues(3));
-		model.addObject("requirementTypeJson",tmpUtil.getConfigKeyValues(4));
-		model.addObject("positionStatusJson",tmpUtil.getConfigKeyValues(5));
-		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
-		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
-		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
-		model.addObject("updateMessage", 3);
-		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
-		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
-		model.addObject("accountValuesJson", tmpUtil.getAccountList());
-		model.addObject("projectValuesJson", tmpUtil.getProjectList());
+		int addMessage = tmpUtil.createRequirement(requirement,userId,displayName);
+		model.setViewName("redirect:requirements?fromCreate="+addMessage);
 		return model;
 	}
 	
