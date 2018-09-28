@@ -349,6 +349,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 						}
 						
 						if(!foundProfile) {
+							System.out.println("No other Profile forund for the CES status : 17");
 							sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
 						}
 					}
@@ -369,6 +370,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 						}
 					}
 					if(!foundProfile) {
+						System.out.println("No other Profile forund for the IES status : 16");
 						sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
 					}
 				} 
@@ -391,14 +393,12 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
 			populateProfileForUpdate(ps, profile, userId);
 			populateProfileForUpdateForMapping(ps1, profile, userId);
-			if(sql2!=null) {
+			if(StringUtils.isNotBlank(sql2)) {
 				System.out.println("sql2-->"+sql2);
 				PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
 				ps2.setString(1, profile.getReqRefNo());
-				//ps2.setInt(2, profile.getId());
-				//populateProfileForUpdateReq(ps2,profile);
 				ps2.executeUpdate();
-				}
+			}
 			ps.executeUpdate();
 			int result=ps1.executeUpdate();
 			ps.close();
