@@ -14,7 +14,7 @@ var g_sourceOfProfileArray = [];
 	         var g_sourceOfProfileItem = g_sourceOfProfileArray[i];
 	             $("#profileSourceProfile,#profileSource").append('<option id="' + g_sourceOfProfileItem[1] + '" value="' + g_sourceOfProfileItem[1] + '">' + g_sourceOfProfileItem[0] + '</option>');
 	            });	
-var initialEvaluationResultData=initialEvaluationResultJson.locationJson;	            	   
+/*var initialEvaluationResultData=initialEvaluationResultJson.locationJson;	            	   
 	 var g_initialEvaluationResultArray = [];	
 	  $.each(initialEvaluationResultData, function(index) {
 	   var g_item = [];
@@ -26,7 +26,7 @@ var initialEvaluationResultData=initialEvaluationResultJson.locationJson;
 	      $.each(g_initialEvaluationResultArray, function(i) {
 	          var g_initialEvaluationResultItem = g_initialEvaluationResultArray[i];
 	          $("#initialEvaluationResultProfile,#initialEvaluationResultAdd").append('<option id="' + g_initialEvaluationResultItem[1] + '" value="' + g_initialEvaluationResultItem[1] + '">' + g_initialEvaluationResultItem[0] + '</option>');
-	            });	    
+	            });	*/    
 var customerEvaluationResultData=customerInterviewStatusJson.locationJson;	             	 	    	    		
 var g_customerEvaluationResultArray = [];	
 	 $.each(customerEvaluationResultData, function(index) {

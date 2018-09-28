@@ -758,11 +758,12 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:select class="form-control" id="initialEvaluationResultAdd" path="initialEvaluationResultAdd">
-											<!-- <option value="">Select Initial Evaluation Result</option>
-											<option value="shortlisted">Shortlisted</option>
-											<option value="rejected">Rejected</option>
-											<option value="hold">Hold</option>
-											<option value="didnotprocess">Did not process</option> -->
+											 <option value="">Select Initial Evaluation Result</option>
+											<option value="23">Shortlisted</option>
+											<option value="24">Rejected</option>
+											<option value="25">Hold</option>
+											<option selected="selected"  value="26">Did not process</option> 
+											<option value="60">In Progress</option> 
 										</spring:select>
 									</div>
 								</div>
@@ -1134,11 +1135,16 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											<spring:select id="initialEvaluationResultProfile" multiple="false" path="initialEvaluationResult.id"   
-											class="form-control dropdown-toggle text-left " onchange="disableTextBox();"
-											oninvalid="this.setCustomValidity('Initial Evaluation Result must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')" >
-						            </spring:select></td>
+										<spring:select class="form-control dropdown-toggle text-left " onchange="disableTextBox();" id="initialEvaluationResultProfile" path="initialEvaluationResult.id"  
+										oninvalid="this.setCustomValidity('Initial Evaluation Result must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')">
+											<option value="">Select Initial Evaluation Result</option>
+											<option value="23">Shortlisted</option>
+											<option value="24">Rejected</option>
+											<option value="25">Hold</option>
+											<option value="26">Did not process</option> 
+										</spring:select>
+										</td>
 									</tr>
 									<tr>
 										<td><spring:label path="profileSharedCustomer">Profile Shared Customer<span style="color:red">*</span></spring:label></td>
