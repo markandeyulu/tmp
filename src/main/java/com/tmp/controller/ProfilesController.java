@@ -13,6 +13,7 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -53,7 +54,7 @@ public class ProfilesController {
 	}
 
 	@RequestMapping(value = "/profiles", method = RequestMethod.GET)
-	public ModelAndView getProfiles(HttpServletRequest request) throws IOException {
+	public ModelAndView getProfiles(HttpServletRequest request,@RequestParam(value = "fromCreateProfile", required=false) String fromCreateProfile) throws IOException {
 		HttpSession httpSession = request.getSession();
 		String userId = httpSession.getAttribute("user").toString();
 		ModelAndView model = new ModelAndView("profiles");
@@ -80,7 +81,11 @@ public class ProfilesController {
 		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
 		model.addObject("accountValuesJson", tmpUtil.getAccountList());
 		model.addObject("projectValuesJson", tmpUtil.getProjectList());
-		model.addObject("addMessage", 3);
+		if(StringUtils.isNotBlank(fromCreateProfile)) {
+			model.addObject("addMessage", fromCreateProfile);
+		}else {
+			model.addObject("addMessage", 3);
+		}
 		model.addObject("deleteMessage",4);
 		model.addObject("updateMessage", 4);
 		return model;
@@ -90,8 +95,11 @@ public class ProfilesController {
 	public ModelAndView createProfile(ModelAndView model,HttpServletRequest request, @ModelAttribute("profiles") Profile profile, BindingResult bindingResult) {
 		HttpSession session = request.getSession();
 		String userId = session.getAttribute("user").toString();
-		model = new ModelAndView("profiles");
-		if(session != null && !session.isNew()) {
+		//model = new ModelAndView("profiles");
+		
+		int addMessage = tmpUtil.createProfile(profile, userId);
+		model.setViewName("redirect:profiles?fromCreateProfile="+addMessage);
+		/*if(session != null && !session.isNew()) {
 			   //do something here
 			} else {
 			    model.setViewName("login");
@@ -116,7 +124,7 @@ public class ProfilesController {
 		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
 		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
 		model.addObject("accountValuesJson", tmpUtil.getAccountList());
-		model.addObject("projectValuesJson", tmpUtil.getProjectList());
+		model.addObject("projectValuesJson", tmpUtil.getProjectList());*/
 		return model;
 	}
 	
