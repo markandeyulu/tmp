@@ -321,13 +321,51 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		
 			switch(profile.getInitialEvaluationResult().getId()) {
 			case 26:
-				sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
+				for (RequirementProfileMapping requirementProfileMapping : profiles) {
+					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
+						if(requirementProfileMapping.getInternalEvaluationResult().getId()==60 || requirementProfileMapping.getInternalEvaluationResult().getId()==25
+								|| requirementProfileMapping.getInternalEvaluationResult().getId()==23) {
+							//IES : 60-InProgress, 25-Hold, 23-Shortlisted
+							sql2 = null;
+							foundProfile = true;
+							break;
+						}
+					}
+				}
+				if(!foundProfile) {
+					System.out.println("No other Profile forund for the IES status : 16,17,18");
+					sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
+				}
 				break;
 			case 60:
-				sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+				for (RequirementProfileMapping requirementProfileMapping : profiles) {
+					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
+						if(requirementProfileMapping.getInternalEvaluationResult().getId()==23) {
+							sql2 = null;
+							foundProfile = true;
+							break;
+						}
+					}
+				}
+				if(!foundProfile) {
+					System.out.println("No other Profile forund for the IES status : 16,17,18");
+					sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+				}
 				break;
 			case 25:
-				sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+				for (RequirementProfileMapping requirementProfileMapping : profiles) {
+					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
+						if(requirementProfileMapping.getInternalEvaluationResult().getId()==23) {
+							sql2 = null;
+							foundProfile = true;
+							break;
+						}
+					}
+				}
+				if(!foundProfile) {
+					System.out.println("No other Profile forund for the IES status : 16,17,18");
+					sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
+				}
 				break;
 			case 23:
 				if(null == profile.getCustomerInterviewStatus()) { //IES Short-listed & CES is disabled or Not Needed
@@ -335,7 +373,6 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 						sql2="UPDATE REQUIREMENT SET STATUS=18 WHERE ID=?";
 					break;
 				}
-
 				switch(profile.getCustomerInterviewStatus().getId()) {
 				case 61:
 					sql2="UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?";
@@ -350,7 +387,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 					if(reqStatus==17){
 						for (RequirementProfileMapping requirementProfileMapping : profiles) {
 							if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-								if(profile.getCustomerInterviewStatus().getId()==61 || profile.getCustomerInterviewStatus().getId()==29) {
+								if(requirementProfileMapping.getCustomerInterviewStatus().getId()==61 || requirementProfileMapping.getCustomerInterviewStatus().getId()==29) {
 									//CIS : 61-InProgress, 29-Hold
 									sql2 = null;
 									foundProfile = true;
@@ -372,8 +409,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				if(reqStatus==16) {
 					for (RequirementProfileMapping requirementProfileMapping : profiles) {
 						if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-							if(profile.getInitialEvaluationResult().getId()==60 || profile.getInitialEvaluationResult().getId()==25
-									|| profile.getInitialEvaluationResult().getId()==26) {
+							if(requirementProfileMapping.getInternalEvaluationResult().getId()==60 || requirementProfileMapping.getInternalEvaluationResult().getId()==25
+									|| requirementProfileMapping.getInternalEvaluationResult().getId()==26) {
 								//IES : 26-DidNotProcess, 60-InProgress, 25-Hold
 								sql2 = null;
 								foundProfile = true;
