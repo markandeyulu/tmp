@@ -50,7 +50,7 @@ body {  background-image: url(img/02.png); }
   <tr>
 		
 		
-		<td ><a id="reqtab" href='requirement.html?name={{customerName}}'>{{customerName}}</a></td>
+		<td ><a id="reqtab">{{customerName}}</a></td>
 		
 
 		<td>{{leadGeneration}}</td>
@@ -84,6 +84,15 @@ $('#logout').click(function () {
     });
 
 });
+
+$("#reqtable tr").each(function() {
+	$(this).find('td').find("a").each (function( column, tag) {
+		var accountName = $(tag).text();
+		var newURL = "requirement.html?name="+encodeURIComponent(accountName);
+		$(tag).attr("href", newURL);
+	}); 
+});
+
 });
 </script>
 		<div class="header" style="padding-bottom: 0px;">
