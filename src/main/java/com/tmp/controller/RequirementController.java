@@ -151,6 +151,7 @@ public class RequirementController {
 		
 		int addMessage = tmpUtil.createRequirement(requirement,userId,displayName);
 		model.setViewName("redirect:requirements?fromCreate="+addMessage);
+		model.addObject("addMessage",addMessage);
 		return model;
 	}
 	

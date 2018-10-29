@@ -514,8 +514,7 @@ $('#logout').click(function () {
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#squarespaceModal">Add Profile</button>
 	<Button name="submit" id="deleteProfile" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="submit">Delete</Button>
-	<button
-					style="margin-left: 0%; background-color: #b30000; color: white;"
+	<button	style="margin-left: 0%; background-color: #b30000; color: white;"
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#uploadModal">Bulk Upload</button>
 	<!-- <div id="addProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
@@ -762,8 +761,8 @@ $('#logout').click(function () {
 											<option value="23">Shortlisted</option>
 											<option value="24">Rejected</option>
 											<option value="25">Hold</option>
-											<option value="26">Did not process</option> 
-											<option selected="selected" value="60">In Progress</option> 
+											<option selected="selected"  value="26">Did not process</option> 
+											<option value="60">In Progress</option> 
 										</spring:select>
 									</div>
 								</div>
