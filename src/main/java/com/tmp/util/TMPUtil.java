@@ -417,7 +417,7 @@ public class TMPUtil {
 	public int updateProfile(Profile profile,String userId) {
 		int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
 		ArrayList<RequirementProfileMapping> profiles = null;
-		if(reqStatus == 16 || reqStatus == 17) {
+		if(reqStatus == 15 || reqStatus == 16 || reqStatus == 17 || reqStatus == 18) {
 			profiles = requirementDAO.getRequirementProfile(profile.getReqRefNo());
 		}
 		return profilesDAO.updateProfile(profile,userId,reqStatus,profiles);
@@ -490,4 +490,6 @@ public class TMPUtil {
 	public ArrayList<Requirement> getShortlistedProfiles(String requirementId){
 		return requirementDAO.getShortlistedProfiles(requirementId);
 	}
+	
+	
 }

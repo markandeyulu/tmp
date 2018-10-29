@@ -762,8 +762,8 @@ $('#logout').click(function () {
 											<option value="23">Shortlisted</option>
 											<option value="24">Rejected</option>
 											<option value="25">Hold</option>
-											<option selected="selected"  value="26">Did not process</option> 
-											<option value="60">In Progress</option> 
+											<option value="26">Did not process</option> 
+											<option selected="selected" value="60">In Progress</option> 
 										</spring:select>
 									</div>
 								</div>
