@@ -378,20 +378,21 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 					initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
 				}
 				
-				if((requirementProfileMapping.getCustomerInterviewStatus()!=null)){
-						customerInterviewStatus = new Integer(requirementProfileMapping.getCustomerInterviewStatus().getId());
-						profileSharedCusomer="yes";
-					}else{
-						customerInterviewStatus=0;
-						profileSharedCusomer="no";
+				if((requirementProfileMapping.getProfileSharedCustomer().equals("yes"))){
+					customerInterviewStatus = new Integer(requirementProfileMapping.getCustomerInterviewStatus().getId());
+					profileSharedCusomer="yes";
+				}else {
+					profileSharedCusomer="no";
+					customerInterviewStatus=0;
 				}
+				
 				propReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profileSharedCusomer,customerInterviewStatus);
 				reqStatusList.add(propReqStatus);
-				
+				sortReqStatus.addAll(reqStatusList);
+				Collections.reverse(sortReqStatus);
+				  sortStatus = sortReqStatus.get(0);
 			}
-			sortReqStatus.addAll(reqStatusList);
-			Collections.reverse(sortReqStatus);
-			  sortStatus = sortReqStatus.get(0);
+			
 		}
 		return sortStatus;
 	}

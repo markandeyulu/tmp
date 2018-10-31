@@ -22,7 +22,17 @@ public class RequirementProfileMapping implements Serializable {
     private String customerInterviewStatusUpload;
 	private String requirementId1;
 	private String name;
+	private String profileSharedCustomer;
 	
+	
+	public String getProfileSharedCustomer() {
+		return profileSharedCustomer;
+	}
+
+	public void setProfileSharedCustomer(String profileSharedCustomer) {
+		this.profileSharedCustomer = profileSharedCustomer;
+	}
+
 	public String getName() {
 		return name;
 	}

@@ -79,6 +79,7 @@ function loadDetail(id){
 		data: { "id": id },
 
 		success: function (data) {
+			$("option:selected").removeAttr("selected");
 			$('#id').val(data.id);
 			$("#criticalityNew option:contains(" + data.criticality.configValue.value + ")").attr('selected', 'selected');
 			//$('#criticalityNew').val(data.criticality.configValue.value);

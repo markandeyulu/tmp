@@ -325,9 +325,9 @@ table.dataTable thead th:first-child {
 	  	  	
 	        
 	      });
-	      $("#profileCustomerID").bind("click", function () {
+	     /*  $("#profileCustomerID").bind("click", function () {
 	            $("#initialEvaluationResultProfile")[0].selectedIndex = 0;
-	       });
+	       }); */
 	      
 });
  

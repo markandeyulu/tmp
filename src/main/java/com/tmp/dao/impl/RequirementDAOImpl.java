@@ -1154,7 +1154,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 	
 	public ArrayList<RequirementProfileMapping> getRequirementProfile(String requirementId){
 		
-		StringBuffer sql = new StringBuffer("SELECT PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,"
+		StringBuffer sql = new StringBuffer("SELECT PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER,"
 				+ "REMARKS FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID = ?");
 
 		Connection conn = null;
@@ -1196,6 +1196,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setProfileId(configDAO.getProfileName(rs.getInt("PROFILE_ID")));
 		requirement.setInternalEvaluationResult(configDAO.getConfigKeyValueMapping(rs.getInt("INTERNAL_EVALUATION_RESULT")));
 		requirement.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(rs.getInt("CUSTOMER_INTERVIEW_STATUS")));
+		requirement.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
 		requirement.setRemarks(rs.getString("REMARKS"));
 		mapping.add(requirement);
 	   }

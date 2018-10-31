@@ -57,7 +57,8 @@ function loadDetail(id){
 		 url: '/ResourceManagementApp/profileById.action',
 		 data: { "id": id },
 		 success: function (data) {
-
+			 $("option:selected").removeAttr("selected");
+			 $("#initialEvaluationResultProfile option:selected").removeAttr("selected");
 			 $('#requirementId').val(data.reqRefNo);
 			 $('#idProfile').val(data.id);
 			 $('#emailProfile').val(data.email);
