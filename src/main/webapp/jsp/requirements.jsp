@@ -842,7 +842,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input type="text" class="form-control" oninvalid="this.setCustomValidity('PID/CRM ID must not be empty')" 
-										oninput="this.setCustomValidity('')"
+										oninput="this.setCustomValidity('')" maxlength="15"
 											id="pid_crmid_so" path="pid_crmid_so" 
 											placeholder="Enter PID / CRM ID to raise the SO.." required="required"/>
 									</div>
@@ -992,7 +992,7 @@ $('#logout').click(function () {
                         </tr>      
                        <tr>
                           <td><spring:label path="actualClosureDate">Actual Closure Date</spring:label></td>
-                          <td><spring:input class="form-control" id="actualClosureDateNew" path="actualClosureDate" type="text" required="required" /></td>
+                          <td><spring:input class="form-control" id="actualClosureDateNew" path="actualClosureDate" type="text"/></td>
                     </tr>
                      <tr>
                           <td><spring:label path="jo">JO<span style="color:red">*</span></spring:label> </td>
@@ -1018,8 +1018,20 @@ $('#logout').click(function () {
                     </tr>
                      <tr>
                           <td><spring:label path="band">Band<span style="color:red">*</span></spring:label></td>
-                          <td><spring:input class="form-control" id="bandNew" path="band" type="text" oninvalid="this.setCustomValidity('Band must not be empty')" 
-								required="required"				oninput="this.setCustomValidity('')" /></td>
+                          <td><spring:select required="required" multiple="false" path="band" id="bandNew" 
+											class="form-control" oninvalid="this.setCustomValidity('Please select band')" 
+										oninput="this.setCustomValidity('')" >
+											<option value="">Select Band</option>
+											<option value="U1">U1</option>
+											<option value="U2">U2</option>
+											<option value="U3">U3</option>
+											<option value="U4">U4</option>
+											<option value="P1">P1</option>
+											<option value="P2">P2</option>
+											<option value="E1">E1</option>
+										</spring:select>
+										</td>
+                          
                     </tr>
                      <tr>
                           <td><spring:label path="quantity">Quantity<span style="color:red">*</span></spring:label></td>
@@ -1148,9 +1160,14 @@ $('#logout').click(function () {
                 </tr>
                 <tr>
                     <td><spring:label path="pid_crmid_so">PID<span style="color:red">*</span></spring:label></td>
-                    <td><spring:input class="form-control" id="pid_crmid_soNew" path="pid_crmid_so" type="text" oninvalid="this.setCustomValidity('PID/CRM ID must not be empty')" 
-								required="required"			oninput="this.setCustomValidity('')"/></td>
+                    <td><spring:input class="form-control" id="pid_crmid_soNew" path="pid_crmid_so" type="text" 
+                    oninvalid="this.setCustomValidity('PID/CRM ID must not be empty')" maxlength="15" 
+								required="required"	oninput="this.setCustomValidity('')" /></td>
                 </tr>
+                
+               
+                
+                
                 <tr>
                     <td><spring:label path="yearExperience">Years Of Experience<span style="color:red">*</span></spring:label></td>
                     <td><spring:input class="form-control" id="yearExperienceNew" path="yearExperience" type="text" oninvalid="this.setCustomValidity('Years of experience must not be empty')" 
