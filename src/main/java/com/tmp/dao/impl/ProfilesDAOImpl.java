@@ -378,7 +378,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 					initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
 				}
 				
-				if((requirementProfileMapping.getProfileSharedCustomer().equals("yes"))){
+				if((requirementProfileMapping.getProfileSharedCustomer().equalsIgnoreCase("yes"))){
 					customerInterviewStatus = new Integer(requirementProfileMapping.getCustomerInterviewStatus().getId());
 					profileSharedCusomer="yes";
 				}else {
