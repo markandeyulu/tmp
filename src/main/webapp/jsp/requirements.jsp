@@ -1266,7 +1266,7 @@ $('#logout').click(function () {
 		<script>
 		 var table=${requirementtableJson};
 		    var locationJson=${locationJson};
-		    /* var accountValues = ${accountValuesJson}; */
+		     /* var accountValues = ${accountValuesJson}; */ 
 		    var criticalJson=${criticalJson};
 		    var intimationModeJson=${intimationModeJson};
 		    var requirementTypeJson=${requirementTypeJson};

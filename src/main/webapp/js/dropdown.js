@@ -8,6 +8,9 @@ $(document).ready(function(){
 	
 	
 	var accountData=accountValues.accountsJson;
+	if(accountData==undefined || accountData==""){
+		accountData = accountValues.accountListJson;
+	}
 	var g_accountArray = [];
 	$.each(accountData, function(index) {
 		var g_item = [];
