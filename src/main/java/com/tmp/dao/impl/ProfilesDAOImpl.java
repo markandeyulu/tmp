@@ -360,7 +360,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	}
 	private int getActualRequirementStatus(ArrayList<RequirementProfileMapping> profiles, int reqStatus, int proposedReqStatus, int profileId) {
 		int propReqStatus = 0;
-		if(reqStatus < proposedReqStatus || profiles.size()==1){
+		if(reqStatus <= proposedReqStatus || profiles.size()==1){
 			return proposedReqStatus;
 		}
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
@@ -388,9 +388,13 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				
 				propReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profileSharedCusomer,customerInterviewStatus);
 				reqStatusList.add(propReqStatus);
-				sortReqStatus.addAll(reqStatusList);
-				Collections.reverse(sortReqStatus);
-				  sortStatus = sortReqStatus.get(0);
+				
+			}
+			if(!reqStatusList.isEmpty() ){
+				
+			sortReqStatus.addAll(reqStatusList);
+			Collections.reverse(sortReqStatus);
+			  sortStatus = sortReqStatus.get(0);
 			}
 			
 		}
