@@ -360,8 +360,30 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 	}
 	private int getActualRequirementStatus(ArrayList<RequirementProfileMapping> profiles, int reqStatus, int proposedReqStatus, int profileId) {
 		int propReqStatus = 0;
-		if(reqStatus <= proposedReqStatus || profiles.size()==1){
+		if(reqStatus <= proposedReqStatus){
 			return proposedReqStatus;
+		}else if(profiles.size()==1){
+			RequirementProfileMapping requirementProfileMapping = profiles.get(0);
+
+			int initialEvalRes,customerInterviewStatus;
+			String profileSharedCusomer;
+			if(!requirementProfileMapping.getInternalEvaluationResult().equals("0")){
+				initialEvalRes = requirementProfileMapping.getInternalEvaluationResult().getId();
+			}else{
+				initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
+			}
+
+			if((requirementProfileMapping.getProfileSharedCustomer().equalsIgnoreCase("yes"))){
+				customerInterviewStatus = new Integer(requirementProfileMapping.getCustomerInterviewStatus().getId());
+				profileSharedCusomer="yes";
+			}else {
+				profileSharedCusomer="no";
+				customerInterviewStatus=0;
+			}
+
+			propReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profileSharedCusomer,customerInterviewStatus);
+
+			return propReqStatus;
 		}
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
 		Set<Integer> reqStatusList = new TreeSet<Integer>();
@@ -414,175 +436,6 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		boolean foundProfile = false;
 		
 		
-		
-		/*
-	switch(profile.getInitialEvaluationResult().getId()) {
-			case 26:
-<<<<<<< HEAD
-				if(reqStatus>=15){
-					for (RequirementProfileMapping requirementProfileMapping : profiles) {
-						if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-							if(requirementProfileMapping.getCustomerInterviewStatus().getId()==29|| requirementProfileMapping.getCustomerInterviewStatus().getId()==28) {
-								//CIS : 61-InProgress, 29-Hold
-								sql2 = null;
-								foundProfile = true;
-								break;
-							}
-						}
-					}
-
-					if(!foundProfile) {
-						System.out.println("No other Profile forund for the CES status : 17");
-						sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
-					}
-=======
-				for (RequirementProfileMapping requirementProfileMapping : profiles) {
-					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-						if(requirementProfileMapping.getInternalEvaluationResult().getId()==60 || requirementProfileMapping.getInternalEvaluationResult().getId()==25
-								|| requirementProfileMapping.getInternalEvaluationResult().getId()==23) {
-							//IES : 60-InProgress, 25-Hold, 23-Shortlisted
-							sql2 = null;
-							foundProfile = true;
-							break;
-						}
-					}
-				}
-				if(!foundProfile) {
-					System.out.println("No other Profile forund for the IES status : 16,17,18");
-					sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
->>>>>>> branch 'master' of https://github.com/markandeyulu/tmp.git
-				}
-				break;
-			case 60:
-<<<<<<< HEAD
-				if(reqStatus >=15){
-					for (RequirementProfileMapping requirementProfileMapping : profiles) {
-						if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-							if(requirementProfileMapping.getCustomerInterviewStatus().getId()==29|| requirementProfileMapping.getCustomerInterviewStatus().getId()==28) {
-								//CIS : 61-InProgress, 29-Hold
-								sql2 = null;
-								foundProfile = true;
-								break;
-							}
-						}
-					}
-
-					if(!foundProfile) {
-						System.out.println("No other Profile forund for the CES status : 17");
-						sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
-					}
-=======
-				for (RequirementProfileMapping requirementProfileMapping : profiles) {
-					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-						if(requirementProfileMapping.getInternalEvaluationResult().getId()==23) {
-							sql2 = null;
-							foundProfile = true;
-							break;
-						}
-					}
-				}
-				if(!foundProfile) {
-					System.out.println("No other Profile forund for the IES status : 16,17,18");
-					sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
->>>>>>> branch 'master' of https://github.com/markandeyulu/tmp.git
-				}
-				break;
-			case 25:
-<<<<<<< HEAD
-				if(reqStatus>=15){
-					for (RequirementProfileMapping requirementProfileMapping : profiles) {
-						if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-							if(requirementProfileMapping.getCustomerInterviewStatus().getId()==29|| requirementProfileMapping.getCustomerInterviewStatus().getId()==28) {
-								//CIS : 61-InProgress, 29-Hold
-								sql2 = null;
-								foundProfile = true;
-								break;
-							}
-						}
-					}
-
-					if(!foundProfile) {
-						System.out.println("No other Profile forund for the CES status : 17");
-						sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
-					}
-=======
-				for (RequirementProfileMapping requirementProfileMapping : profiles) {
-					if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-						if(requirementProfileMapping.getInternalEvaluationResult().getId()==23) {
-							sql2 = null;
-							foundProfile = true;
-							break;
-						}
-					}
-				}
-				if(!foundProfile) {
-					System.out.println("No other Profile forund for the IES status : 16,17,18");
-					sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
->>>>>>> branch 'master' of https://github.com/markandeyulu/tmp.git
-				}
-				break;
-			case 23:
-				if(null == profile.getCustomerInterviewStatus()) { //IES Short-listed & CES is disabled or Not Needed
-					if(reqStatus != 18 )// Marking req status as Offer Processing 
-						sql2="UPDATE REQUIREMENT SET STATUS=18 WHERE ID=?";
-					break;
-				}
-				switch(profile.getCustomerInterviewStatus().getId()) {
-				case 61:
-					sql2="UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?";
-					break;
-				case 27:
-					sql2="UPDATE REQUIREMENT SET STATUS=18 WHERE ID=?";
-					break;
-				case 29:
-					sql2="UPDATE REQUIREMENT SET STATUS=17 WHERE ID=?";
-					break;
-				case 28:
-					if(reqStatus>=16){
-						for (RequirementProfileMapping requirementProfileMapping : profiles) {
-							if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-<<<<<<< HEAD
-								if(requirementProfileMapping.getCustomerInterviewStatus().getId()==29|| requirementProfileMapping.getCustomerInterviewStatus().getId()==28) {
-=======
-								if(requirementProfileMapping.getCustomerInterviewStatus().getId()==61 || requirementProfileMapping.getCustomerInterviewStatus().getId()==29) {
->>>>>>> branch 'master' of https://github.com/markandeyulu/tmp.git
-									//CIS : 61-InProgress, 29-Hold
-									sql2 = null;
-									foundProfile = true;
-									break;
-								}
-							}
-						}
-
-						if(!foundProfile) {
-							System.out.println("No other Profile forund for the CES status : 17");
-							sql2="UPDATE REQUIREMENT SET STATUS=16 WHERE ID=?";
-						}
-					}
-					break;
-				}
-
-				break;
-			case 24: //IES Rejected
-				if(reqStatus>15) {
-					for (RequirementProfileMapping requirementProfileMapping : profiles) {
-						if(requirementProfileMapping.getProfileId().getId() != profile.getId() ) {
-							if(requirementProfileMapping.getInternalEvaluationResult().getId()==60 || requirementProfileMapping.getInternalEvaluationResult().getId()==25
-									|| requirementProfileMapping.getInternalEvaluationResult().getId()==26) {
-								//IES : 26-DidNotProcess, 60-InProgress, 25-Hold
-								sql2 = null;
-								foundProfile = true;
-								break;
-							}
-						}
-					}
-					if(!foundProfile) {
-						System.out.println("No other Profile forund for the IES status : 16");
-						sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
-					}
-				} 
-				break;
-			}*/
 		Connection conn = null;
 
 		try {
@@ -939,10 +792,37 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 							ps4.executeUpdate();
 							ps4.close();
 						}
+					}else {
+						ArrayList<RequirementProfileMapping> requirement = new ArrayList<RequirementProfileMapping>();
+						  sql4 = new StringBuffer("select PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
+						  ps3 = conn.prepareStatement(sql4.toString());
+							ps3.setString(1, reqId);
+							rs1 = ps3.executeQuery();
+							int profileId = 0,proposedReqStatus=15; 
+							if (rs1 != null ) {
+									while (rs1.next()) {
+										RequirementProfileMapping requirement1 =new RequirementProfileMapping() ;
+								requirement1.setProfileId(configDAO.getProfileName(rs1.getInt("PROFILE_ID")));
+								requirement1.setInternalEvaluationResult(configDAO.getConfigKeyValueMapping(rs1.getInt("INTERNAL_EVALUATION_RESULT")));
+								requirement1.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(rs1.getInt("CUSTOMER_INTERVIEW_STATUS")));
+								requirement1.setProfileSharedCustomer(rs1.getString("PROFILE_SHARED_CUSTOMER"));
+								requirement.add(requirement1);
+							   }
+								
 					}
+							String sql5 ="UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
+							System.out.println("sql5-->"+sql5);
+							PreparedStatement ps4 = conn.prepareStatement(sql5.toString());
+							int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();						
+							ps4.setInt(1, getActualRequirementStatus(requirement, reqStatus, proposedReqStatus, profileId));
+							ps4.setString(2, reqId);
+							ps4.executeUpdate();		
+							
+							
 				}
 				ps3.close();
 
+			}
 			}
 
 		} catch (SQLException sqlException) {
