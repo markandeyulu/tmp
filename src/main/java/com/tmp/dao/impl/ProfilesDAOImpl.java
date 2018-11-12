@@ -321,10 +321,11 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				}
 			} else {
 				profile.setId(profileId);
-				if (profile.getId() > 0) {
+				
+/*				if (profile.getId() > 0) {
 					result = insertProfileMapping(profile, "", strUserId);
 				}
-								
+*/								
 				int status= ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profile.getProfileSharedCustomer(),customerInterviewStatus);
 				
 				int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
