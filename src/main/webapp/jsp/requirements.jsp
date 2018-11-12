@@ -822,7 +822,7 @@ $('#logout').click(function () {
 										<spring:input type="text" class="form-control" oninvalid="this.setCustomValidity('Billing rate must not be empty')" 
 										oninput="this.setCustomValidity('')"
 											id="billingRate" path="billingRate" onkeypress='validate(event)'
-											placeholder="Enter Billing Rate in USD.." required="required"/>
+											placeholder="Enter Billing Rate in USD.." required="required" maxlength="3"/>
 									</div>
 								</div>
 								<div class="row">
@@ -997,15 +997,15 @@ $('#logout').click(function () {
                      <tr>
                           <td><spring:label path="jo">JO<span style="color:red">*</span></spring:label> </td>
                           <td><spring:input class="form-control" id="joNew" path="jo" type="text" oninvalid="this.setCustomValidity('JO must not be empty')" 
-								required="required"		oninput="this.setCustomValidity('')" /></td>
+								required="required"		oninput="this.setCustomValidity('')" onkeypress='validate(event)'/></td>
                         </tr>      
                        <tr>
                           <td><spring:label path="activityOwner">Activity Owner</spring:label></td>
-                          <td><spring:input class="form-control" id="activityOwner" path="activityOwner" type="text" /></td>
+                          <td><spring:input class="form-control" id="activityOwner" path="activityOwner" type="text" oninput="this.setCustomValidity('')"/></td>
                     </tr>
                     <tr>
                           <td><spring:label path="actualOwner">Actual Owner</spring:label> </td>
-                          <td><spring:input class="form-control" id="actualOwner" path="actualOwner" type="text" /></td>
+                          <td><spring:input class="form-control" id="actualOwner" path="actualOwner" type="text" oninput="this.setCustomValidity('')"/></td>
                         </tr>      
                        <tr>
                           <td><spring:label path="createdOn">Created On</spring:label></td>
@@ -1037,13 +1037,13 @@ $('#logout').click(function () {
                           <td><spring:label path="quantity">Quantity<span style="color:red">*</span></spring:label></td>
                           <td><spring:input class="form-control" id="quantityNew" path="quantity" type="text" 
                           oninvalid="this.setCustomValidity('Quantity must not be empty')"
-								required="required"			 oninput="this.setCustomValidity('')"/></td>
+								required="required"			 oninput="this.setCustomValidity('')" onkeypress='validate(event)'/></td>
                     </tr>
                      <tr>
                           <td><spring:label path="projectDuration">Project Duration<span style="color:red">*</span></spring:label></td>
                           <td><spring:input class="form-control" id="projectDurationNew" path="projectDuration" type="text" 
                           oninvalid="this.setCustomValidity('Project duration must not be empty')" 
-							required="required"			oninput="this.setCustomValidity('')"/></td>
+							required="required"			oninput="this.setCustomValidity('')" onkeypress='validate(event)'/></td>
                     </tr> 
                     <tr>
                           <td><spring:label path="updatedBy">Updated By</spring:label></td>
@@ -1116,7 +1116,7 @@ $('#logout').click(function () {
               <tr>
                   <td><spring:label path="so">SO<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="soNew" path="so" type="text" oninvalid="this.setCustomValidity('SO must not be empty')" 
-							required="required"				oninput="this.setCustomValidity('')"/></td>
+							required="required"				oninput="this.setCustomValidity('')" onkeypress='validate(event)'/></td>
               </tr>
                <tr>
                    <td><spring:label path="status">Status</spring:label> </td>
@@ -1126,11 +1126,11 @@ $('#logout').click(function () {
                </tr>      
                 <tr>
                     <td><spring:label path="activityOwnerEmail">Activity Owner Email</spring:label></td>
-                    <td><spring:input class="form-control" id="activityOwnerEmail" path="activityOwnerEmail" type="text" /></td>
+                    <td><spring:input class="form-control" id="activityOwnerEmail" path="activityOwnerEmail" type="text" onChange="validateEmail(this);"/></td>
                 </tr>
                 <tr>
                     <td><spring:label path="actualOwnerEmail">Actual Owner Email</spring:label> </td>
-                    <td><spring:input class="form-control" id="actualOwnerEmail" path="actualOwnerEmail" type="text" /></td>
+                    <td><spring:input class="form-control" id="actualOwnerEmail" path="actualOwnerEmail" type="text" onChange="validateEmail(this);"/></td>
                 </tr>      
                 <tr>
                    <td><spring:label path="account">Account</spring:label> </td>

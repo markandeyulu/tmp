@@ -36,7 +36,7 @@
 	                   e.preventDefault();
 	               }
 	           });
-			 $( "#skillCategoryNew,#jobDescriptionNew,#cityNew,#primarySkillNew,#locationNew,#intimatedByNew,#ibu_cduNew,#ibg_cdgNew,#remarks" ).keypress(function(e) {
+			 $( "#skillCategoryNew,#jobDescriptionNew,#cityNew,#primarySkillNew,#locationNew,#intimatedByNew,#ibu_cduNew,#ibg_cdgNew,#remarks,#activityOwner,#actualOwner" ).keypress(function(e) {
 	               var key = e.keyCode;
 	               if (key >= 48 && key <= 57) {
 	                   e.preventDefault();

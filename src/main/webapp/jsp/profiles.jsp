@@ -921,7 +921,7 @@ $('#logout').click(function () {
 									
 										<td><spring:input class="form-control" path="contactNo" id="contactNoProfile"
 											type="text" oninvalid="this.setCustomValidity('Contact number must not be empty and please enter 10 digit number')" 
-											required="required" maxlength="10" oninput="this.setCustomValidity('')" /></td>
+											required="required" maxlength="10" oninput="this.setCustomValidity('')" onkeypress='validate(event)' /></td>
 									</tr>
 									<tr>
 										<td><spring:label path="location">Current Location<span style="color:red">*</span></spring:label></td>
@@ -994,7 +994,7 @@ $('#logout').click(function () {
 													path="yearsOfExperience" id="yearsOfExperienceProfile"
 													type="text" value=""
 													oninvalid="this.setCustomValidity('Years of experience must not be empty')"
-													required="required" maxlength="2" oninput="this.setCustomValidity('')" /></td>
+													required="required" maxlength="2" onkeypress='validate(event)' oninput="this.setCustomValidity('')" /></td>
 
 										</tr>
 										<tr>
@@ -1007,7 +1007,7 @@ $('#logout').click(function () {
 													path="relevantExperience" id="relevantExperienceProfile"
 													type="text"
 													oninvalid="this.setCustomValidity('Relevant experience must not be empty')"
-													required="required" maxlength="2"  oninput="this.setCustomValidity('')" /></td>
+													required="required" maxlength="2"  onkeypress='validate(event)' oninput="this.setCustomValidity('')" /></td>
 										</tr>
 										<tr>
 											<td><spring:label path="currentCTC">CurrentCTC
@@ -1024,7 +1024,7 @@ $('#logout').click(function () {
 
 
 											<td><spring:input class="form-control"
-													path="noticePeriod" id="noticePeriodProfile" type="text"/></td>
+													path="noticePeriod" id="noticePeriodProfile" type="text" onkeypress='validate(event)'/></td>
 
 										</tr>
 										<tr>

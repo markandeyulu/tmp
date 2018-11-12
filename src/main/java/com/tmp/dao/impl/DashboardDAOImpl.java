@@ -488,7 +488,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 	}
 	public List<Project> getProjectDetails(String userId){
 		StringBuffer sql = new StringBuffer
-				("SELECT A.PROJECT_ID, A.PROJECT_NAME, A.ACC_ID FROM PROJECTS A \r\n" + 
+				("SELECT DISTINCT A.PROJECT_ID, A.PROJECT_NAME, A.ACC_ID FROM PROJECTS A \r\n" + 
 						"INNER JOIN USER_ACCOUNT_MAPPING B ON B.ACCOUNT_ID = A.ACC_ID \r\n" + 
 						"INNER JOIN USER C ON B.USER_ID = C.ID \r\n" + 
 						"WHERE C.ID = ?");

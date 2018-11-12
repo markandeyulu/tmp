@@ -32,7 +32,7 @@ $(document).ready(function(){
                    e.preventDefault();
                }
            });
-	   $( "#nameProfile,#locationProfile,#currentCompanyProfile,#primarySkillProfile,#profileSharedBy,#createdByProfile,#updatedByProfile,#remarksProfile" ).keypress(function(e) {
+	   $( "#nameProfile,#locationProfile,#currentCompanyProfile,#primarySkillProfile,#profileSharedBy,#createdByProfile,#updatedByProfile,#remarksProfile,#profileSharedByProfile" ).keypress(function(e) {
            var key = e.keyCode;
            if (key >= 48 && key <= 57) {
                e.preventDefault();
