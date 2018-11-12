@@ -1094,7 +1094,7 @@ $('#logout').click(function () {
               <tr>
                   <td><spring:label path="billingRate">Billing Rate<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="billingRateNew" path="billingRate" type="text" oninvalid="this.setCustomValidity('Billing rate must not be empty')" 
-							required="required"		maxlength="6"		oninput="this.setCustomValidity('')"/></td>
+							required="required"		maxlength="6"	onkeypress='validate(event)' oninput="this.setCustomValidity('')"/></td>
               </tr>
               <tr>
                   <td><spring:label path="intimatedBy">Intimated By<span style="color:red">*</span></spring:label></td>
@@ -1171,7 +1171,7 @@ $('#logout').click(function () {
                 <tr>
                     <td><spring:label path="yearExperience">Years Of Experience<span style="color:red">*</span></spring:label></td>
                     <td><spring:input class="form-control" id="yearExperienceNew" path="yearExperience" type="text" oninvalid="this.setCustomValidity('Years of experience must not be empty')" 
-								required="required"			oninput="this.setCustomValidity('')"/></td>
+								required="required" onkeypress='validate(event)' oninput="this.setCustomValidity('')"/></td>
                 </tr>
                 <tr>
                           <td><spring:label path="remarks">Remarks<span style="color:red">*</span></spring:label></td>

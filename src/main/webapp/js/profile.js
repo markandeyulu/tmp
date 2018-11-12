@@ -26,7 +26,7 @@ $(document).ready(function(){
 			
 		});
 	   
-	   $( "#name,#profileSharedBy,#currentCompany,#location" ).keypress(function(e) {
+	   $( "#name,#profileSharedBy,#currentCompany,#location,#profileSharedByProfile" ).keypress(function(e) {
                var key = e.keyCode;
                if (key >= 48 && key <= 57) {
                    e.preventDefault();

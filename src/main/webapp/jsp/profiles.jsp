@@ -706,7 +706,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input type="text" class="form-control" id="noticePeriod" onkeypress='validate(event)' 
-										path="noticePeriod" placeholder="Enter Notice Period(in days).." />
+										path="noticePeriod" placeholder="Enter Notice Period(in days).." maxlength="2"/>
 									</div>
 								</div>
 
@@ -1024,7 +1024,7 @@ $('#logout').click(function () {
 
 
 											<td><spring:input class="form-control"
-													path="noticePeriod" id="noticePeriodProfile" type="text" onkeypress='validate(event)'/></td>
+													path="noticePeriod" id="noticePeriodProfile" type="text" onkeypress='validate(event)' maxlength="2"/></td>
 
 										</tr>
 										<tr>
