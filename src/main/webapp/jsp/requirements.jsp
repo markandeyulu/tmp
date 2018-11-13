@@ -93,8 +93,10 @@ $(document).ready(function () {
 	$('#account1').change(function() {
 		var account_id=$('#account1').val();
 		$('#projectAdd option').remove();
-		
 		var projectListData=projectValues.projectsJson;
+		if(projectListData==undefined || projectListData==""){
+			projectListData = projectValues.projectListJson;
+		}
 		var g_projectListArray = [];	
 	      $.each(projectListData, function(index) {
 	      var g_item = [];
@@ -822,7 +824,7 @@ $('#logout').click(function () {
 										<spring:input type="text" class="form-control" oninvalid="this.setCustomValidity('Billing rate must not be empty')" 
 										oninput="this.setCustomValidity('')"
 											id="billingRate" path="billingRate" onkeypress='validate(event)'
-											placeholder="Enter Billing Rate in USD.." required="required" maxlength="3"/>
+											placeholder="Enter Billing Rate in USD.." required="required" maxlength="6"/>
 									</div>
 								</div>
 								<div class="row">
