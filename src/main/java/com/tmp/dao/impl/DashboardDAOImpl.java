@@ -340,7 +340,7 @@ public class DashboardDAOImpl implements DashboardDAO{
 		while(rs1.next())
 		{
 
-			String status=rs1.getString(2);
+			String status=rs1.getString(5);
 
 			int count=rs1.getInt(1);
 

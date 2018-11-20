@@ -364,7 +364,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		if(reqStatus <= proposedReqStatus){
 			return proposedReqStatus;
 		}else if(profiles.size()==1){
-			RequirementProfileMapping requirementProfileMapping = profiles.get(0);
+			/*RequirementProfileMapping requirementProfileMapping = profiles.get(0);
 
 			int initialEvalRes,customerInterviewStatus;
 			String profileSharedCusomer;
@@ -383,8 +383,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 			}
 
 			propReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profileSharedCusomer,customerInterviewStatus);
-
-			return propReqStatus;
+*/
+			return proposedReqStatus;
 		}
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
 		Set<Integer> reqStatusList = new TreeSet<Integer>();

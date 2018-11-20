@@ -78,7 +78,11 @@ public class ReportDAOImpl implements ReportDAO {
 		PreparedStatement ps = null;
 		try {
 
-			StringBuffer sql = new StringBuffer("SELECT * FROM REQUIREMENT where CREATED_ON >= ? AND CREATED_ON <= ? ORDER BY CREATED_ON DESC");
+			StringBuffer sql = new StringBuffer("SELECT a.ACCOUNT_NAME,p.PROJECT_NAME,u.NAME,r.* FROM tmp.requirement r"
+					+ " INNER JOIN tmp.projects p ON p.PROJECT_ID = r.PROJECT"
+					+ " INNER JOIN tmp.account_master a ON a.ACCOUNT_ID = r.ACCOUNT"
+					+ " INNER JOIN tmp.user u ON u.ID = r.CREATED_BY"
+					+ " where r.CREATED_ON >= ? AND r.CREATED_ON <= ? ORDER BY r.CREATED_ON DESC");
 			conn = dataSource.getConnection();
 			ps = conn.prepareStatement(sql.toString());
 			ps.setDate(1, ssqlDate);
@@ -392,24 +396,16 @@ public class ReportDAOImpl implements ReportDAO {
 				cell.setCellValue(rs.getString("REMARKS"));
 				cell = row.createCell(24);
 				cell.setCellStyle(cellstyle1);
-				if((rs.getInt("ACCOUNT"))>0){
-				cell.setCellValue(configDAO.getAdminInfoKeyValueMapping(rs.getInt("ACCOUNT")).getAdminInfoValue().getValue());
-				}else{
-					cell.setCellValue("");
-				}
+				cell.setCellValue(rs.getString("ACCOUNT_NAME"));
 				cell = row.createCell(25);
 				cell.setCellStyle(cellstyle1);
-				if((rs.getInt("PROJECT"))>0){
-				cell.setCellValue(configDAO.getAdminInfoKeyValueMapping(rs.getInt("PROJECT")).getAdminInfoValue().getValue());
-				}else{
-					cell.setCellValue("");
-				}
+				cell.setCellValue(rs.getString("PROJECT_NAME"));
 				cell = row.createCell(26);
 				cell.setCellStyle(cellstyle1);
 				cell.setCellValue(rs.getString("CREATED_ON"));
 				cell = row.createCell(27);
 				cell.setCellStyle(cellstyle1);
-				cell.setCellValue(rs.getString("CREATED_BY"));
+				cell.setCellValue(rs.getString("NAME"));
 				cell = row.createCell(28);
 				cell.setCellStyle(cellstyle1);
 				cell.setCellValue(rs.getString("UPDATED_ON"));
