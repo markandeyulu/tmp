@@ -632,9 +632,13 @@ $('#logout').click(function () {
 										<spring:label path="primarySkillAdd">Primary Skill<span style="color:red">*</span></spring:label>
 									</div>
 									<div class="col-75">
-										<spring:input class="form-control" path="primarySkillAdd"  
+									<%-- 	<spring:input class="form-control" path="primarySkillAdd"  
 											id="primarySkillAdd" type="text" oninvalid="this.setCustomValidity('Primary skill must not be empty')"
 											placeholder="Enter Primary Skill.." required="required"  oninput="this.setCustomValidity('')" />
+									 --%>
+									<spring:select id="primarySkillNew" multiple="false" path="primarySkillAdd"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                						  oninvalid="this.setCustomValidity('Please select Primary Skill')" required="required"	oninput="this.setCustomValidity('')">
+										  </spring:select>
 									</div>
 								</div>
 
@@ -947,7 +951,7 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											<spring:select id="primarySkillProfile" multiple="false" path="primarySkill.id" class="form-control dropdown-toggle text-left " 
+											<spring:select id="primarySkill1" multiple="false" path="primarySkill.id" class="form-control dropdown-toggle text-left " 
 											oninvalid="this.setCustomValidity('Primary skill must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')">
 						            </spring:select></td>

@@ -725,10 +725,14 @@ $('#logout').click(function () {
 										<spring:label path="primarySkill1">Competency/Domain<span style="color:red">*</span></spring:label>
 									</div>
 									<div class="col-75">
-										<spring:input class="form-control" type="text" oninvalid="this.setCustomValidity('Competency/Domain must not be empty')" 
+										<%-- <spring:input class="form-control" type="text" oninvalid="this.setCustomValidity('Competency/Domain must not be empty')" 
 										oninput="this.setCustomValidity('')"
 											id="primarySkill1" path="primarySkill1"
-											placeholder="Enter Competency/Domain.." required="required"/>
+											placeholder="Enter Competency/Domain.." required="required"/> --%>
+											
+										 <spring:select id="primarySkill1" multiple="false" path="primarySkill1"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                						  oninvalid="this.setCustomValidity('Please select Primary Skill')" required="required"	oninput="this.setCustomValidity('')">
+										  </spring:select>	
 										</div>
 								</div>
 								<div class="row">
@@ -736,10 +740,9 @@ $('#logout').click(function () {
 										<spring:label path="skillCategoryAdd1">Skill Category 1<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<spring:input type="text" class="form-control"  required="required"
-											id="skillCategoryAdd1" path="skillCategoryAdd1" oninvalid="this.setCustomValidity('Skill Category 1 must not be empty')" 
-										oninput="this.setCustomValidity('')"
-											placeholder="Enter Skill Category 1.." />
+										 <spring:select id="skillCategoryAdd1" multiple="false" path="skillCategoryAdd1"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                						  oninvalid="this.setCustomValidity('Please select Skill Category')" required="required"	oninput="this.setCustomValidity('')">
+										  </spring:select>	
 										</div>
 									</div>
 									<div class="row">

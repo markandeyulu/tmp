@@ -631,7 +631,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setString(i++, profile.getCurrentCompany());
 		ps.setString(i++, profile.getLocation());
 		adminDAO.getRequirementMappingValue(profile.getPrimarySkillAdd(), 11, strUserId);
-		ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
+		//ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
+		ps.setInt(i++,Integer.parseInt(profile.getPrimarySkillAdd()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSourceAdd());
 		ps.setString(i++, profile.getProfileSharedBy());

@@ -33,10 +33,10 @@ $(document).ready(function(){
     		               g_item.push(primarySkillData[index].id);	             		
     		               g_primarySkillArray.push(g_item);	             		
     	                 });
-                          $("#primarySkillNew,#primarySkillProfile").append('<option value="">Select Primary Skill</option>');   
+                          $("#primarySkillNew,#primarySkill1").append('<option value="">Select Primary Skill</option>');   
     	$.each(g_primarySkillArray, function(i) {
     		var g_primarySkillItem = g_primarySkillArray[i];
-    		$("#primarySkillNew,#primarySkillProfile").append('<option id="' + g_primarySkillItem[1] + '" value="' + g_primarySkillItem[1] + '">' + g_primarySkillItem[0] + '</option>');
+    		$("#primarySkillNew,#primarySkill1").append('<option id="' + g_primarySkillItem[1] + '" value="' + g_primarySkillItem[1] + '">' + g_primarySkillItem[0] + '</option>');
     	});	
 	
 /*    	var projectData=[
