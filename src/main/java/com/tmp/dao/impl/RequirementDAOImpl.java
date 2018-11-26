@@ -251,10 +251,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		
 		ps.setString(1, requirement.getId());
 		ps.setString(2, requirement.getCriticality1());
-		adminDAO.getRequirementMappingValue(requirement.getSkillCategoryAdd1(), 10, userId);
-		ps.setInt(3, configDAO.getConfigKeyValueMapping(requirement.getSkillCategoryAdd1()).getId());
-		adminDAO.getRequirementMappingValue(requirement.getPrimarySkill1(), 11, userId);
-		ps.setInt(4, configDAO.getConfigKeyValueMapping(requirement.getPrimarySkill1()).getId());
+		ps.setInt(3, Integer.parseInt(requirement.getSkillCategoryAdd1()));
+		ps.setInt(4, Integer.parseInt(requirement.getPrimarySkill1()));
 		ps.setString(5, requirement.getJobDescription());
 		ps.setString(6, requirement.getLocation1());
 		ps.setString(7, requirement.getCity());
