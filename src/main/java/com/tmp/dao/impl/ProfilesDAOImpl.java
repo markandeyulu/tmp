@@ -473,10 +473,18 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 				}
 				int proposedReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profile.getProfileSharedCustomer(),customerInterviewStatus);
 				
+				int actualReqStatus = getActualRequirementStatus(profiles, reqStatus, proposedReqStatus, profile.getId());
 				
-				ps2.setInt(1, getActualRequirementStatus(profiles, reqStatus, proposedReqStatus, profile.getId()));
+				ps2.setInt(1, actualReqStatus);
 				ps2.setString(2, profile.getReqRefNo());
 				ps2.executeUpdate();
+				
+				if(actualReqStatus == 18) {// append this profile id to SHORTLISTED_PROFILE_ID column value in tmp.requirement table 
+					String sql3 = "UPDATE REQUIREMENT SET SHORTLISTED_PROFILE_ID = IF(SHORTLISTED_PROFILE_ID IS NULL, '"+profile.getId()+"', CONCAT(SHORTLISTED_PROFILE_ID, ',"+profile.getId()+"')) WHERE ID=?";
+					PreparedStatement ps3 = conn.prepareStatement(sql3);
+					ps3.setString(1, profile.getReqRefNo());
+					ps3.executeUpdate();
+				}
 			
 			ps.executeUpdate();
 			int result=ps1.executeUpdate();

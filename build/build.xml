@@ -1,7 +1,7 @@
 <project name="ResourceManagementApp Web Application" default="deploy" basedir="./..">
 	<property environment="env"/>
 	<property name="app.name" value="ResourceManagementApp" />
-	<property name="deploy.path" value="D:\NVO\apache-tomcat-7.0.26\webapps" />
+	<property name="deploy.path" value="D:\apache-tomcat-7.0.26\webapps" />
 	<property name="work.home" value="${basedir}/build" />
 	<property name="src.home" value="${basedir}/src/main" />
 	<property name="web.home" value="${src.home}/webapp" />
