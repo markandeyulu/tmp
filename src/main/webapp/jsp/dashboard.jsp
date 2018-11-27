@@ -267,7 +267,7 @@ $("#reqtable tr").each(function() {
 							</div>
 							<div id="rcorners3" class="w3-panel w3-card"
 								style="margin-left: 2%;">
-								<h6>Onboarding</h6>
+								<h6>Onboarded</h6>
 								<p></p>
 
 								<span>

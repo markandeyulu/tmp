@@ -480,7 +480,7 @@ $('#logout').click(function () {
 					</span>
 				</div>
 				<div id="rcorners5" class="w3-panel w3-card chcol_6" style="">
-					<h6>Onboarding</h6>
+					<h6>Onboarded</h6>
 					<p></p>
 					<span>
 						<h1 id="dvalue6" style="float: right; margin-top: 18%;"></h1>
