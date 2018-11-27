@@ -1,10 +1,15 @@
 package com.tmp.dao.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +20,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -35,7 +47,7 @@ import com.tmp.util.TMPUtil;
 
 @Repository
 @Qualifier("profilesDAO")
-public class ProfilesDAOImpl implements ProfilesDAO {
+public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 
 	@Autowired(required = true)
 	@Qualifier("configDAO")
@@ -486,7 +498,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 					ps3.executeUpdate();
 				}
 			
-			ps.executeUpdate();
+				ps.executeUpdate();
 			int result=ps1.executeUpdate();
 			ps.close();
 			
@@ -852,13 +864,15 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		public int isProfilesExist(Profile profile, String userId){
 			StringBuffer sql = new StringBuffer("SELECT ID, EMAIL_ID, CONTACT_NO, REQUIREMENT_ID FROM PROFILE WHERE EMAIL_ID=? AND REQUIREMENT_ID = ?");
 			Connection conn = null;
+			PreparedStatement ps = null;
+			ResultSet rs = null;
 			int id = 0;
 			try {
 				conn = dataSource.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql.toString());
+				ps = conn.prepareStatement(sql.toString());
 				ps.setString(1, profile.getEmail());
 				ps.setString(2, profile.getReqRefNo());
-				ResultSet rs = ps.executeQuery();
+				rs = ps.executeQuery();
 				 
 				if (rs != null ) {
 					
@@ -871,38 +885,32 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 						if((contactNum.equals(profile.getContactNo()) && reqRefNum.equals(profile.getReqRefNo())) || 
 								(emailId.equals(profile.getEmail()) && reqRefNum.equals(profile.getReqRefNo()))){
 							id = rs.getInt("ID");
-							//system.out.println("Profile ID==> "+id);
-						}else{
-							insertProfile(profile, userId);
 						}
 						
 					}
 				} 
-				rs.close();
-				ps.close();
-		     return id;
-			} catch (SQLException sqlException) {
-				throw new RuntimeException(sqlException);
+				
+		     
+			} catch (SQLException e) {
+				System.out.println("SQLException Occurred "+e.getMessage());
 			} finally {
-				if (conn != null) {
-					try {
-						conn.close();
-					} catch (SQLException sqlException) {
-					}
-				}
+				closeDBObjects(conn, rs, ps);
 			}
+			return id;
 		} 
 		
 		public int isProfileMapingExist(int profileId, String refNo){
 			StringBuffer sql = new StringBuffer("SELECT * FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID=? AND PROFILE_ID=?");
 			Connection conn = null;
+			PreparedStatement ps = null;
+			ResultSet rs = null;
 			int id = 0;
 			try {
 				conn = dataSource.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql.toString());
+				ps = conn.prepareStatement(sql.toString());
 				ps.setString(1, refNo);
 				ps.setInt(2, profileId);
-				ResultSet rs = ps.executeQuery();
+				rs = ps.executeQuery();
 				 
 				if (rs != null ) {
 					
@@ -911,19 +919,13 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 						//system.out.println("Profile ID==> "+id);
 					}
 				} 
-				rs.close();
-				ps.close();
-		     return id;
+		     
 			} catch (SQLException sqlException) {
-				throw new RuntimeException(sqlException);
+				System.out.println("Exception Occurred "+sqlException.getMessage());
 			} finally {
-				if (conn != null) {
-					try {
-						conn.close();
-					} catch (SQLException sqlException) {
-					}
-				}
+				closeDBObjects(conn, rs, ps);
 			}
+			return id;
 		} 
 	
 	public int insertProfile(Profile profile, String userId) {
@@ -934,38 +936,28 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		.append("CREATED_BY, EMAIL_ID, ALLOCATION_START_DATE, ALLOCATION_END_DATE, IS_ALLOCATED, REQUIREMENT_ID ) \r\n")
 		.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		Connection conn = null;
-		int value;
-		int profileId;
+		PreparedStatement ps = null;
+		int profileId = 0;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			populateProfileForInsertExcel(ps, profile, userId);
-			 value = ps.executeUpdate();
+			ps.executeUpdate();
 			
 				ResultSet generatedKeys = ps.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					 profileId=generatedKeys.getInt(1);
-					 //system.out.println("profileId==> "+profileId);
-				} else {
-					throw new SQLException(
-							"Creating user failed, no ID obtained.");
-				}
+				} 
 			
-			 //system.out.println("valueee...."+value);
-			ps.close();
 		} catch (SQLException sqlException) {
-			sqlException.getMessage();
-			return 0;
+			System.out.println("SQLException occurred "+sqlException.getMessage());
+			
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, null, ps);
 		}
 		return profileId;
 	}
+	
 	private void populateProfileForInsertExcel(PreparedStatement ps, Profile profile, String userId) throws SQLException {
 
 		if (ps == null) {
@@ -1091,64 +1083,274 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		StringBuffer sql = new StringBuffer("INSERT INTO REQUIREMENT_PROFILE_MAPPING(REQUIREMENT_ID,PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,"
 				+ "REMARKS,CREATED_ON,CREATED_BY, INTERNAL_EVALUATION_RESULT_DATE,PROFILE_SHARED_CUSTOMER,PROFILE_SHARED_CUSTOMER_DATE)VALUES(?,?,?,?,?,?,?,?,?,?)");
 		Connection conn = null;
-		int value;
+		PreparedStatement ps = null;
+		int value = 0;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			populateProfileMappingForInsertExcel(ps, profile,refNo, userId);
-			 value = ps.executeUpdate();
+			value = ps.executeUpdate();
 			 //system.out.println("INSERT INTO REQUIREMENT_PROFILE_MAPPING valueee...."+value);
-			ps.close();
+			
 		} catch (SQLException sqlException) {
-			sqlException.printStackTrace();
-			return 0;
+			System.out.println("SQLException Occurred "+sqlException.getMessage());
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, null, ps);
 		}
 		return value;
 	}
+	
 	private void populateProfileMappingForInsertExcel(PreparedStatement ps, Profile profile,String refNo, String userId) throws SQLException {
 
-		if (ps == null) {
-			return;
+		if(null != ps) {
+			
+			if(StringUtils.isNotBlank(refNo)) {
+				ps.setString(1,refNo);
+			}else {
+				ps.setString(1,profile.getReqRefNo());
+			}
+			
+			ps.setInt(2,profile.getId());
+			
+			if(StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd()) && !profile.getInitialEvaluationResultAdd().equals("0")){
+				ps.setInt(3, new Integer(profile.getInitialEvaluationResultAdd()));
+				}else{
+					ps.setInt(3,configDAO.getConfigKeyValueMapping("In Progress").getId());
+			}
+			
+			if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
+				ps.setInt(4, new Integer(profile.getCustomerInterviewStatusAdd()));
+				}else{
+					ps.setInt(4,configDAO.getConfigKeyValueMapping("Yet to Process").getId());
+			}
+			
+			if(profile.getRemarks()!=null){
+				ps.setString(5,profile.getRemarks());
+				}else{
+				ps.setString(5, "");
+			}
+			
+			ps.setTimestamp(6,tmpDAOUtil.getCurrentTimestamp());
+			ps.setString(7,userId);
+			ps.setDate(8, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
+					
+			ps.setString(9, profile.getProfileSharedCustomer());
+			
+			ps.setDate(10, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
 		}
-		if (refNo == null || refNo == "") {
-			ps.setString(1,profile.getReqRefNo());
-		}else{
-		ps.setString(1,refNo);
-		}
-		ps.setInt(2,profile.getId());
-		
-		if(StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd()) && !profile.getInitialEvaluationResultAdd().equals("0")){
-			ps.setInt(3, new Integer(profile.getInitialEvaluationResultAdd()));
-			}else{
-				ps.setInt(3,configDAO.getConfigKeyValueMapping("In Progress").getId());
-		}
-		
-		if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
-			ps.setInt(4, new Integer(profile.getCustomerInterviewStatusAdd()));
-			}else{
-				ps.setInt(4,configDAO.getConfigKeyValueMapping("Yet to Process").getId());
-		}
-		
-		if(profile.getRemarks()!=null){
-			ps.setString(5,profile.getRemarks());
-			}else{
-			ps.setString(5, "");
-		}
-		
-		ps.setTimestamp(6,tmpDAOUtil.getCurrentTimestamp());
-		ps.setString(7,userId);
-		ps.setDate(8, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
-				
-		ps.setString(9, profile.getProfileSharedCustomer());
-		
-		ps.setDate(10, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
 	}
+	
+	/**
+	 * This method used to get Excel File
+	 * @param workingDirectory input parameters
+	 * @param fileName File Object
+	 * @param request HttpServletRequest Object
+	 * @param userId input parameters
+	 */
+	 
+	public int getExcelFile(String workingDirectory, File fileName, String file1, HttpServletRequest request,String userId) {
+		
+		FileInputStream fis = null;
+		XSSFWorkbook workbook = null;
+		XSSFSheet sheet = null;
+		
+		int result = 0;
+		try {
+			fis = new FileInputStream(file1);
+			// Create an excel workbook from the file system.
+			workbook = new XSSFWorkbook(fis);
+			// Get the first sheet on the workbook.
+			sheet = workbook.getSheetAt(0);
+			Iterator<?> rows = sheet.rowIterator();
+			
+			while (rows.hasNext()) {
+				
+				XSSFRow row = (XSSFRow) rows.next();
+				XSSFCell cell;
+				for (int i = 0; i < row.getLastCellNum(); i++) {
+					cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+					System.out.print("cell==> "+cell.toString() + " ");
+				}
+				//system.out.println ("Row No.: " + row.getRowNum ());
+				if(row.getRowNum()==0 ){
+					continue; //just skip the rows if row number is 0 or 1
+				}
+				else
+				{
+					Iterator<?> cells = row.cellIterator();
+					Profile profile = new Profile();
+					DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+					while (cells.hasNext()) {
+						String refNo=((XSSFCell) cells.next()).toString().trim();
+						profile.setReqRefNo(refNo);
+						profile.setName(((XSSFCell) cells.next()).toString().trim());
+						profile.setEmail(((XSSFCell) cells.next()).toString().trim());								
+						profile.setContactNo(new BigDecimal(((XSSFCell) cells.next()).getNumericCellValue()).toString().trim());			
+						
+						String currentCompany = ((XSSFCell) cells.next()).toString().trim();
+						if((currentCompany!=null) && (!currentCompany.isEmpty())){
+							profile.setCurrentCompany(currentCompany);
+							}else{
+							profile.setCurrentCompany("");	
+						}
+						
+						String location = ((XSSFCell) cells.next()).toString().trim();
+						if((location!=null) && (!location.isEmpty())){
+							profile.setLocation(location);
+							}else{
+							profile.setLocation("");	
+						}
+						
+						String primarySkill = ((XSSFCell) cells.next()).toString().trim();
+						if((primarySkill!=null) && (!primarySkill.isEmpty())){
+							profile.setPrimarySkillAdd(primarySkill);
+							}else{
+							profile.setPrimarySkillAdd("");	
+						}
+						
+						String profSharedDate = ((XSSFCell) cells.next()).toString().trim();
+						if((profSharedDate!=null) && (!profSharedDate.equals(""))){
+							Date profileSharedDate = formatter.parse(profSharedDate);
+							profile.setProfileSharedDate(profileSharedDate);
+							}else{
+							Date profileSharedDate = null;
+							profile.setProfileSharedDate(profileSharedDate);	
+						}
+						
+						String profileSharedBy = (((XSSFCell) cells.next()).toString().trim());
+						if((profileSharedBy!=null) && (!profileSharedBy.isEmpty())){
+							profile.setProfileSharedBy(profileSharedBy);
+							}else{
+							profile.setProfileSharedBy("");	
+						}
+						
+						String yearsofExp = ((XSSFCell) cells.next()).toString().trim();
+						if((yearsofExp!=null) && (!yearsofExp.isEmpty())){
+							int yearsOfExperience=(int)Double.parseDouble(yearsofExp);
+							profile.setYearsOfExperience(yearsOfExperience);
+							}else{
+							profile.setYearsOfExperience(0);	
+						}
+						
+						String relevantExp = ((XSSFCell) cells.next()).toString().trim();
+						if((relevantExp!=null) && (!relevantExp.isEmpty())){
+							int relevantExperience=(int)Double.parseDouble(relevantExp);
+							profile.setRelevantExperience(relevantExperience);
+							}else{
+							profile.setRelevantExperience(0);	
+						}
+						
+						String noticePerd = ((XSSFCell) cells.next()).toString().trim();
+						if((noticePerd!=null) && (!noticePerd.isEmpty())){
+							int noticePeriod=(int)Double.parseDouble(noticePerd);
+							profile.setNoticePeriod(noticePeriod);
+							}else{
+							profile.setNoticePeriod(0);	
+						}
+						
+						String currCTC = ((XSSFCell) cells.next()).toString().trim();
+						if((currCTC!=null) && (!currCTC.isEmpty())){
+							int currentCTC=(int)Double.parseDouble(currCTC);
+							profile.setCurrentCTC(currentCTC);
+							}else{
+							profile.setCurrentCTC(0);	
+						}
+						
+						String expectCTC = ((XSSFCell) cells.next()).toString().trim();
+						if((expectCTC!=null) && (!expectCTC.isEmpty())){
+							int expectedCTC=(int)Double.parseDouble(expectCTC);
+							profile.setExpectedCTC(expectedCTC);
+							}else{
+							profile.setExpectedCTC(0);	
+						}
+						
+						String allocation = ((XSSFCell) cells.next()).toString().trim();
+						if((allocation!=null) && (!allocation.isEmpty())){
+							//int isAllocated=(int)Integer.parseInt(allocation);
+							profile.setIsAllocated1(allocation);
+							}else{
+							profile.setIsAllocated1("No");	
+						}
+																					
+						String allocStartDate = ((XSSFCell) cells.next()).toString().trim();
+						if((allocStartDate!=null) && (!allocStartDate.equals(""))){
+							Date allocationStartDate = formatter.parse(allocStartDate);
+							profile.setAllocationStartDate(allocationStartDate);
+						}else{
+							Date allocationStartDate = null;
+							profile.setAllocationStartDate(allocationStartDate);	
+						}
+						String allocEndDate = ((XSSFCell) cells.next()).toString().trim();
+						if((allocEndDate!=null) && (!allocEndDate.equals(""))){
+							Date allocationEndDate = formatter.parse(allocEndDate);
+							profile.setAllocationEndDate(allocationEndDate);
+						}else{
+							Date allocationEndDate = null;
+							profile.setAllocationEndDate(allocationEndDate);	
+						}
+						
+						String profileSourceAdd = ((XSSFCell) cells.next()).toString().trim();
+						if((profileSourceAdd!=null) && (!profileSourceAdd.isEmpty())){
+							profile.setProfileSourceAdd(profileSourceAdd);
+							}else{
+							profile.setProfileSourceAdd("");	
+						}
+													
+						String remarks = ((XSSFCell) cells.next()).toString();
+						if((remarks!=null) && (!remarks.isEmpty())){
+							profile.setRemarks(remarks);
+							}else{
+							profile.setRemarks("");	
+						}
+						
+						int profileId = tmpUtil.isProfilesExist(profile,userId);
+						if(profileId == 0){
+							int id = tmpUtil.insertProfile(profile,userId);
+							profile.setId(id);
+							int profId = profile.getId();
+							if(profId>0){
+								int profileMapingId = tmpUtil.isProfileMapingExist(profId,refNo);
+								if(profileMapingId == 0){
+									profile.setId(profId);
+									if(profile.getId()>0){
+										result = tmpUtil.createProfileRequirementMapping(profile,refNo, userId);
+									}
+								}
+							}
+						}else{
+							int profileMapingId = tmpUtil.isProfileMapingExist(profileId,refNo);
+							if(profileMapingId == 0){
+								profile.setId(profileId);
+								if(profile.getId()>0){
+									result = tmpUtil.createProfileRequirementMapping(profile,refNo, userId);
+								}
+							}
+						workbook.close();
+							}
+					}
+			}
+		}
+		}catch(Exception e) {
+			System.out.println("Exception occured"+e.getMessage());
+		}
+		
+		 
+		finally {
 
+			if (fis != null) {
+
+				try {
+					fis.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+		
+		return result;
+	}
+	
 }

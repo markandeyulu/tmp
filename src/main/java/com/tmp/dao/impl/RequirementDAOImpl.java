@@ -771,12 +771,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 			rq.setOppurtunitystatus(rs.getString(8));
 			rq.setProfileshared(rs.getInt(9));
 			if(rs.getString(10)!=null){
-				String shortlist=rs.getString(10);			 			
-				String[] shortlistId = shortlist.split(",");
-				int count=shortlistId.length;
-				rq.setCustomershortlisted(String.valueOf(count));
+			String shortlist=rs.getString(10);			 			
+			String[] shortlistId = shortlist.split(",");
+			int count=shortlistId.length;
+			rq.setCustomershortlisted(String.valueOf(count));
 			}else{
-				rq.setCustomershortlisted("0");
+			rq.setCustomershortlisted("0");
 			}
 			int internalEvalInProg = rq.getProfileshared()-Integer.parseInt(rq.getCustomershortlisted());
 			
@@ -789,7 +789,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 	
 	public ArrayList<Requirement> getRequirementTable(String userId){
 		StringBuffer sql = new StringBuffer("SELECT R.ID, C1.VALUE, C2.VALUE, C3.VALUE, INTIMATION_DATE,EXPECTED_DOJ, C4.VALUE, C6.VALUE, COUNT(DISTINCT R1.PROFILE_ID), \r\n")
-        .append("R.SHORTLISTED_PROFILE_ID, COUNT(R1.INTERNAL_EVALUATION_RESULT) FROM REQUIREMENT R \r\n ") 
+        .append("R.SHORTLISTED_PROFILE_ID, COUNT(DISTINCT R1.INTERNAL_EVALUATION_RESULT),COUNT(DISTINCT R1.CUSTOMER_INTERVIEW_STATUS) FROM REQUIREMENT R \r\n ") 
         .append("LEFT JOIN CONFIG_VALUE C1 ON C1.ID=(SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID=R.CRITICALITY ) \r\n")
         .append("LEFT JOIN CONFIG_VALUE C2 ON C2.ID = (SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID= R.PRIMARY_SKILL) \r\n")
         .append("LEFT JOIN CONFIG_VALUE C3 ON C3.ID = (SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID= R.LOCATION) \r\n")

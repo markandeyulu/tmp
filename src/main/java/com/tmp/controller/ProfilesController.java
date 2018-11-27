@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tmp.dao.ConfigDAO;
 import com.tmp.entity.Profile;
+import com.tmp.service.ProfileService;
 import com.tmp.util.TMPUtil;
 @Controller
 public class ProfilesController {
@@ -44,7 +46,26 @@ public class ProfilesController {
 	@Qualifier("configDAO")
 	ConfigDAO configDAO;
 
+	@Autowired(required = true)
+	@Qualifier("profileService")
+	ProfileService profileService;
 	
+	
+	
+	/**
+	 * @return the profileService
+	 */
+	public ProfileService getProfileService() {
+		return profileService;
+	}
+
+	/**
+	 * @param profileService the profileService to set
+	 */
+	public void setProfileService(ProfileService profileService) {
+		this.profileService = profileService;
+	}
+
 	public TMPUtil getTmpUtil() {
 		return tmpUtil;
 	}
@@ -180,16 +201,40 @@ public class ProfilesController {
 	}
 	@RequestMapping(value="uploadFile",  method = RequestMethod.POST, produces="text/plain")
 	public @ResponseBody String uploadFileHandlerProfile(@RequestParam("file") String file, HttpServletRequest request) {
-		//system.out.println("upload file starting");
-		String workingDirectory = System.getProperty("user.dir");
-		File fileName = new File("D:\\", file);
-		String file1 = fileName.getAbsolutePath();
-		//system.out.println("Final filepath : " + fileName.getAbsolutePath());
+		String file1 = null;
+		String userId = null;
 		HttpSession session = request.getSession();
+		userId = session.getAttribute("user").toString();
+		try {
+			  file1 = new File("D:\\", file).getAbsolutePath();
+			  if (!file1.isEmpty()) {
+			  ArrayList<Profile> profileList = readDataFromExcel(file1);
+			  int result = profileService.writeDataIntoDB(profileList,userId);
+			  
+			  if(result == 0)
+				  return  "Successfully uploaded a profile(s)!!";
+			  else if(profileList.size() == result * (-1))
+				  return "All profiles are already exists!!";
+			  else	 
+				  return (result * (-1)) + " of profiles already exists!! and rest of the profile(s) uploaded sucessfully ";
+			  
+			  }else
+				  return "Upload file is empty!!";
+	
+			
+		}catch (Exception e) {
+			System.out.println(	"Exception occured"+e.getMessage());
+			return "Profile upload is failed";
+		} 
+		
+	}
+	
+	
+	public ArrayList<Profile> readDataFromExcel(String file1) {
+		
+		ArrayList<Profile> profileList = new ArrayList<Profile>();
 		if (!file1.isEmpty()) {
-			try {
 				FileInputStream fis = null;
-				int result = 0;
 				try {
 
 					fis = new FileInputStream(file1);
@@ -198,29 +243,24 @@ public class ProfilesController {
 					// Get the first sheet on the workbook.
 					XSSFSheet sheet = workbook.getSheetAt(0);
 					Iterator<?> rows = sheet.rowIterator();
-					String userId=session.getAttribute("user").toString();
-					if(session != null && !session.isNew()) {
-						   //do something here
-						} else {
-							return "redirect:/login.jsp";
-						}
+					
+					
 					while (rows.hasNext()) {
-						
+						Profile profile = new Profile();
 						XSSFRow row = (XSSFRow) rows.next();
 						XSSFCell cell;
 						for (int i = 0; i < row.getLastCellNum(); i++) {
 							cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
 							System.out.print("cell==> "+cell.toString() + " ");
 						}
-						//system.out.println ("Row No.: " + row.getRowNum ());
+						System.out.println ("Row No.: " + row.getRowNum ());
 						if(row.getRowNum()==0 ){
 							continue; //just skip the rows if row number is 0 or 1
 						}
 						else
 						{
 							Iterator<?> cells = row.cellIterator();
-							Profile profile = new Profile();
-							DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+							
 							while (cells.hasNext()) {
 								String refNo=((XSSFCell) cells.next()).toString().trim();
 								profile.setReqRefNo(refNo);
@@ -250,13 +290,10 @@ public class ProfilesController {
 								}
 								
 								String profSharedDate = ((XSSFCell) cells.next()).toString().trim();
-								if((profSharedDate!=null) && (!profSharedDate.equals(""))){
-									Date profileSharedDate = formatter.parse(profSharedDate);
-									profile.setProfileSharedDate(profileSharedDate);
-									}else{
-									Date profileSharedDate = null;
-									profile.setProfileSharedDate(profileSharedDate);	
-								}
+								
+								profile.setProfileSharedDate(parseDate(profSharedDate));
+								
+								
 								
 								String profileSharedBy = (((XSSFCell) cells.next()).toString().trim());
 								if((profileSharedBy!=null) && (!profileSharedBy.isEmpty())){
@@ -312,23 +349,17 @@ public class ProfilesController {
 									}else{
 									profile.setIsAllocated1("No");	
 								}
-																							
+								
+															
 								String allocStartDate = ((XSSFCell) cells.next()).toString().trim();
-								if((allocStartDate!=null) && (!allocStartDate.equals(""))){
-									Date allocationStartDate = formatter.parse(allocStartDate);
-									profile.setAllocationStartDate(allocationStartDate);
-								}else{
-									Date allocationStartDate = null;
-									profile.setAllocationStartDate(allocationStartDate);	
-								}
+								
+									
+								profile.setAllocationStartDate(parseDate(allocStartDate));	
+								
 								String allocEndDate = ((XSSFCell) cells.next()).toString().trim();
-								if((allocEndDate!=null) && (!allocEndDate.equals(""))){
-									Date allocationEndDate = formatter.parse(allocEndDate);
-									profile.setAllocationEndDate(allocationEndDate);
-								}else{
-									Date allocationEndDate = null;
-									profile.setAllocationEndDate(allocationEndDate);	
-								}
+								
+								profile.setAllocationEndDate(parseDate(allocEndDate));
+								
 								
 								String profileSourceAdd = ((XSSFCell) cells.next()).toString().trim();
 								if((profileSourceAdd!=null) && (!profileSourceAdd.isEmpty())){
@@ -336,6 +367,7 @@ public class ProfilesController {
 									}else{
 									profile.setProfileSourceAdd("");	
 								}
+								
 															
 								String remarks = ((XSSFCell) cells.next()).toString();
 								if((remarks!=null) && (!remarks.isEmpty())){
@@ -344,34 +376,17 @@ public class ProfilesController {
 									profile.setRemarks("");	
 								}
 								
-								int profileId = tmpUtil.isProfilesExist(profile,userId);
-								if(profileId == 0){
-									int id = tmpUtil.insertProfile(profile,userId);
-									profile.setId(id);
-									int profId = profile.getId();
-									if(profId>0){
-										int profileMapingId = tmpUtil.isProfileMapingExist(profId,refNo);
-										if(profileMapingId == 0){
-											profile.setId(profId);
-											if(profile.getId()>0){
-												result = tmpUtil.createProfileRequirementMapping(profile,refNo, userId);
-											}
-										}
-									}
-								}else{
-									int profileMapingId = tmpUtil.isProfileMapingExist(profileId,refNo);
-									if(profileMapingId == 0){
-										profile.setId(profileId);
-										if(profile.getId()>0){
-											result = tmpUtil.createProfileRequirementMapping(profile,refNo, userId);
-										}
-									}
-								workbook.close();
-									}
+								
 							}
 					}
+						profileList.add(profile);
+						
+						
 				}
-
+					
+					
+					
+					workbook.close();
 				} catch (IOException e) {
 
 					e.printStackTrace();
@@ -379,31 +394,33 @@ public class ProfilesController {
 				} finally {
 
 					if (fis != null) {
-
-						fis.close();
-
+						try {
+							fis.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 
 				}
 				
-				if(result == 0) {
-					return "Profile upload is failed";
-				}else {
-					return "Successfully uploaded a profile(s)";
-				}
-				
-				//if(result>0){
-					
-				/*}else{
-					return "Failed to upload profile(s)";	
-				}*/
-				
-			} catch (Exception e) {
-				return "Profile upload is failed";
-			}
-		} else {
-			return "Failed to upload because the file was empty.";
 		}
+		return profileList;
 	}
+
+
 	
+private Date parseDate(String strDate) {
+	Date convertedDate = null;
+	DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+	if(null != strDate)
+		try {
+			 convertedDate = formatter.parse(strDate);
+		}catch (ParseException e) {
+			System.out.println("Exception during data parse "+e.getMessage());
+		}
+	return convertedDate;
 }
+}
+	
+

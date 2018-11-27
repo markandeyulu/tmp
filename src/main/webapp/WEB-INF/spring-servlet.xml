@@ -73,11 +73,12 @@
     	<property name="tmpUtil" ref="tmpUtil" />
 	</bean>
 	<bean id="reportController" class="com.tmp.controller.ReportController">
-    	<property name="tmpUtil" ref="tmpUtil" />
+    	<property name="reportService" ref="reportService" />
 	</bean>
 	<bean id="tmpDAOUtil" class="com.tmp.util.TMPDAOUtil">
 	 	<property name="dataSource" ref="dataSource" />
 	</bean>
+	
 	<mvc:annotation-driven />          
 	<mvc:resources mapping="/css/**" location="/css/"/>
 	<mvc:resources mapping="/js/**" location="/js/"/>

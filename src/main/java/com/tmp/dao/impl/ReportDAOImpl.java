@@ -6,9 +6,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
@@ -33,8 +34,9 @@ import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.ReportDAO;
 import com.tmp.entity.Report;
 import com.tmp.util.TMPDAOUtil;
+import com.tmp.vo.ReportVO;
 
-public class ReportDAOImpl implements ReportDAO {
+public class ReportDAOImpl extends BaseDAO implements ReportDAO {
 	@Autowired(required = true)
 	@Qualifier("configDAO")
 	ConfigDAO configDAO;
@@ -59,6 +61,166 @@ public class ReportDAOImpl implements ReportDAO {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+	
+	/**
+	 * This method used to populate the report list from given resultset
+	 * @param rs ResultSet Object
+	 * @return List of ReportVO
+	 */
+	private ArrayList<ReportVO> populateReportList(ResultSet rs) {
+		
+		ArrayList<ReportVO> reportList = new ArrayList<ReportVO>();
+		
+		try {
+			if(null != rs) {
+			while (rs.next()) {
+				
+				ReportVO obj = new ReportVO();
+				
+				obj.setId(rs.getString("ID"));
+				if(rs.getInt("CRITICALITY") > 0)
+					obj.setCriticality(configDAO.getConfigKeyValueMapping(rs.getInt("CRITICALITY")).getConfigValue().getValue());
+				else
+					obj.setCriticality("");
+				
+				if(rs.getInt("SKILL_CATEGORY") > 0)
+					obj.setSkillCategory(configDAO.getConfigKeyValueMapping(rs.getInt("SKILL_CATEGORY")).getConfigValue().getValue());
+				else
+					obj.setSkillCategory("");
+				
+				if(rs.getInt("PRIMARY_SKILL") > 0)
+					obj.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
+				else
+					obj.setPrimarySkill("");
+				
+				obj.setJobDescription(rs.getString("JOB_DESCRIPTION"));
+				
+				if(rs.getInt("LOCATION") > 0)
+					obj.setLocation(configDAO.getConfigKeyValueMapping(rs.getInt("LOCATION")).getConfigValue().getValue());
+				else
+					obj.setLocation("");
+				
+				obj.setCity(rs.getString("CITY"));
+				obj.setBillingRate(rs.getString("BILLING_RATE"));
+				obj.setIntimationDate(rs.getString("INTIMATION_DATE"));
+				obj.setIntimatedBy(rs.getString("INTIMATED_BY"));
+				obj.setIntimatorEmail(rs.getString("INTIMATOR_EMAIL"));
+				
+				if(rs.getInt("INTIMATION_MODE") > 0)
+					obj.setIntimationMode(configDAO.getConfigKeyValueMapping(rs.getInt("INTIMATION_MODE")).getConfigValue().getValue());
+				else
+					obj.setIntimationMode("");
+				
+				if(rs.getInt("REQUIREMENT_TYPE") > 0)
+					obj.setRequirementType(configDAO.getConfigKeyValueMapping(rs.getInt("REQUIREMENT_TYPE")).getConfigValue().getValue());
+				else
+					obj.setRequirementType("");
+				
+				obj.setExpectedDOJ(rs.getString("EXPECTED_DOJ"));
+				obj.setActualClosureDate(rs.getString("ACTUAL_CLOSURE_DATE"));
+				obj.setSo(rs.getString("SO"));
+				obj.setJo(rs.getString("JO"));
+				obj.setShortlistedProfileId(rs.getString("SHORTLISTED_PROFILE_ID"));
+				
+				if(rs.getInt("STATUS") > 0)
+					obj.setStatus(configDAO.getConfigKeyValueMapping(rs.getInt("STATUS")).getConfigValue().getValue());
+				else
+					obj.setStatus("");
+				
+				obj.setActivityOwner(rs.getString("ACTIVITY_OWNER"));
+				obj.setActivityOwnerEmail(rs.getString("ACTIVITY_OWNER_EMAIL"));
+				obj.setActualOwner(rs.getString("ACTUAL_OWNER"));
+				obj.setActualOwnerEmail(rs.getString("ACTUAL_OWNER_EMAIL"));
+				obj.setRemarks(rs.getString("REMARKS"));
+				obj.setAccountName(rs.getString("ACCOUNT_NAME"));
+				obj.setProjectName(rs.getString("PROJECT_NAME"));
+				obj.setCreatedOn(rs.getString("CREATED_ON"));
+				obj.setName(rs.getString("NAME"));
+				obj.setUpdatedOn(rs.getString("UPDATED_ON"));
+				obj.setUpdatedBy(rs.getString("UPDATED_BY"));
+				obj.setBand(rs.getString("BAND"));
+				obj.setQuantity(rs.getString("QUANTITY"));
+				obj.setProjectDuration(rs.getString("PROJECT_DURATION"));
+				obj.setPidCrmidSo(rs.getString("PID_CRMID_SO"));
+				obj.setYearOfExperience(rs.getString("YEAR_EXPERIENCE"));
+				obj.setSkillCategory2(rs.getString("SKILL_CATEGORY2"));
+				obj.setSkillCategory3(rs.getString("SKILL_CATEGORY3"));
+				obj.setSkillCategory4(rs.getString("SKILL_CATEGORY4"));
+				obj.setIbgCdg(configDAO.getAdminInfoKeyValueMapping(rs.getInt("IBG_CDG")).getAdminInfoValue().getValue());
+				if(configDAO.getAdminInfoKeyValueMapping(rs.getInt("IBU_CDU")).getAdminInfoValue() != null)
+					obj.setIbuCdu(configDAO.getAdminInfoKeyValueMapping(rs.getInt("IBU_CDU")).getAdminInfoValue().getValue());
+				else
+					obj.setIbuCdu("");
+				
+				if(rs.getInt("OPPORTUNITY_STATUS") > 0)
+					obj.setOpportunityStatus(configDAO.getConfigKeyValueMapping(rs.getInt("OPPORTUNITY_STATUS")).getConfigValue().getValue());
+				else
+					obj.setOpportunityStatus("");
+				
+				
+				reportList.add(obj);
+
+			}
+			}
+		} catch (SQLException se) {
+			System.out.println("SQL Exception in populateReportList "+se.getMessage());
+		} catch (Exception e) {
+			System.out.println("Exception in populateReportList "+e.getMessage());
+		}
+		return reportList;
+	}
+	
+	
+	public ArrayList<ReportVO> getReportForExcel(Report report) {
+		
+		String startDate = report.getStartdate();
+		String endDate =report.getEnddate();
+		ArrayList<ReportVO> reportList = null;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		java.util.Date date1 = null;
+		java.util.Date date2 = null;
+		
+		try {
+			date1 = sdf.parse(startDate);
+			date2 = sdf.parse(endDate);
+		} catch (ParseException pe) {
+			System.out.println("Exception - date parsing " + pe.getMessage());
+		}
+
+		java.sql.Date ssqlDate = new Date(date1.getTime());
+		java.sql.Date esqlDate = new Date(date2.getTime());
+		//system.out.println("String converted to java.sql.Date :ssqlDate--> " +ssqlDate+"esqlDate-->"+esqlDate);
+
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+
+			StringBuffer sql = new StringBuffer("SELECT a.ACCOUNT_NAME,p.PROJECT_NAME,u.NAME,r.* FROM tmp.requirement r"
+					+ " INNER JOIN tmp.projects p ON p.PROJECT_ID = r.PROJECT"
+					+ " INNER JOIN tmp.account_master a ON a.ACCOUNT_ID = r.ACCOUNT"
+					+ " INNER JOIN tmp.user u ON u.ID = r.CREATED_BY"
+					+ " where r.CREATED_ON >= ? AND r.CREATED_ON <= ? ORDER BY r.CREATED_ON DESC");
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sql.toString());
+			ps.setDate(1, ssqlDate);
+			ps.setDate(2, esqlDate);
+			//system.out.println("ps.executeQuery()===> "+ps.executeQuery());
+			rs = ps.executeQuery();
+			
+			reportList = populateReportList(rs);
+		} catch(SQLException se) { 
+			System.out.println("SQL Exception Occured "+se.getMessage());
+		}
+		catch (Exception e) {
+			System.out.println("Exception Occured "+e.getMessage());
+		}finally {
+				closeDBObjects(conn, rs, ps);
+		}
+		return reportList;
+		
 	}
 
 	public void getReport(Report report, HttpServletResponse response) throws ParseException, IOException {

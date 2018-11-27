@@ -1,7 +1,10 @@
 package com.tmp.dao;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
@@ -34,4 +37,8 @@ public interface ProfilesDAO {
 	public int isProfileMapingExist(int profileId, String refNo);
 
 	public int getRefId(String refId);
+	
+	public int getExcelFile(String workingDirectory, File fileName, String file1, HttpServletRequest request,String userId);
+	
+	
 }
