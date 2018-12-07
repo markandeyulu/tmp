@@ -76,6 +76,13 @@ var table=${requirementtableJson};
 var locationJson=${locationJson};
 var accountValues = ${accountValuesJson};
 var projectValues = ${projectValuesJson};
+var criticalJson=${criticalJson};
+var intimationModeJson=${intimationModeJson};
+var requirementTypeJson=${requirementTypeJson};
+var positionStatusJson=${positionStatusJson};
+var opportunityStatusJson=${opportunityStatusJson};
+var skillCategoryJson=${skillCategoryJson};
+var primarySkillJson=${primarySkillJson};
 
 function validate(evt) {
 	  var theEvent = evt || window.event;
@@ -253,7 +260,85 @@ $(document).ready(function () {
 	            $("#accountNew")[0].selectedIndex = 0;
 	            location.reload(true);
 	        }); */
-	   
+	 $('#btnAvenger').click(function (e) {
+         $('select').moveToList('#StaffList', '#PresenterList');
+         e.preventDefault();
+     });
+
+     $('#btnRemoveAvenger').click(function (e) {
+         $('select').removeSelected('#PresenterList');
+         e.preventDefault();
+     });
+
+     $('#btnAvengerUp').click(function (e) {
+         $('select').moveUpDown('#PresenterList', true, false);
+         e.preventDefault();
+     });
+
+     $('#btnAvengerDown').click(function (e) {
+         $('select').moveUpDown('#PresenterList', false, true);
+         e.preventDefault();
+     });
+
+     $('#btnShield').click(function (e) {
+         $('select').moveToList('#StaffList', '#ContactList');
+         e.preventDefault();
+     });
+
+     $('#btnRemoveShield').click(function (e) {
+         $('select').removeSelected('#ContactList');
+         e.preventDefault();
+     });
+
+     $('#btnShieldUp').click(function (e) {
+         $('select').moveUpDown('#ContactList', true, false);
+         e.preventDefault();
+     });
+
+     $('#btnShieldDown').click(function (e) {
+         $('select').moveUpDown('#ContactList', false, true);
+         e.preventDefault();
+     });
+
+     $('#btnJusticeLeague').click(function (e) {
+         $('select').moveToList('#StaffList', '#FacilitatorList');
+         e.preventDefault();
+     });
+
+     $('#btnRemoveJusticeLeague').click(function (e) {
+         $('select').removeSelected('#FacilitatorList');
+         e.preventDefault();
+     });
+
+     $('#btnJusticeLeagueUp').click(function (e) {
+         $('select').moveUpDown('#FacilitatorList', true, false);
+         e.preventDefault();
+     });
+
+     $('#btnJusticeLeagueDown').click(function (e) {
+         $('select').moveUpDown('#FacilitatorList', false, true);
+         e.preventDefault();
+     });
+		
+     $('#btnRight').click(function (e) {
+         $('select').moveToListAndDelete('#lstBox1', '#lstBox2');
+         e.preventDefault();
+     });
+
+     $('#btnAllRight').click(function (e) {
+         $('select').moveAllToListAndDelete('#lstBox1', '#lstBox2');
+         e.preventDefault();
+     });
+
+     $('#btnLeft').click(function (e) {
+         $('select').moveToListAndDelete('#lstBox2', '#lstBox1');
+         e.preventDefault();
+     });
+
+     $('#btnAllLeft').click(function (e) {
+         $('select').moveAllToListAndDelete('#lstBox2', '#lstBox1');
+         e.preventDefault();
+     });
 });
 
 function adminRoleCheck() {
@@ -588,7 +673,7 @@ $('#logout').click(function () {
 							<div class="container">
 							<spring:form name='addRequirementForm' action="addrequirement"
 								method="POST" modelAttribute="requirements">
-									<div class="row">
+								 <div class="row">
 										<div class="col-25">
 										<spring:label path="band">Band<span style="color:red">*</span></spring:label>
 										</div>
@@ -607,6 +692,18 @@ $('#logout').click(function () {
 										</spring:select>
 										</div>
 									</div>
+									<div class="row">
+									<div class="col-25">
+										<spring:label path="criticality1">Criticality<span style="color:red">*</span></spring:label>
+									</div>
+									<div class="col-75">
+										<spring:select required="required" class="form-control" id="criticality1" path="criticality1"
+										oninvalid="this.setCustomValidity('Please select Criticality')" 
+										oninput="this.setCustomValidity('')" >
+											
+										</spring:select>
+									</div>
+								</div>
 									<div class="row">
 										<div class="col-25">
 										<spring:label path="account1">Customer Name<span style="color:red">*</span></spring:label>
@@ -630,8 +727,8 @@ $('#logout').click(function () {
 										
 										</spring:select>
 										</div>
-										
-										<%-- <div class="col-75">
+										<%-- 
+										<div class="col-75">
 										<spring:input class="form-control" path="projectAdd" id="projectAdd" oninvalid="this.setCustomValidity('Project name must not be empty')" 
 										oninput="this.setCustomValidity('')"
 											type="text" placeholder="Enter Project Name.." required="required"/>
@@ -774,8 +871,8 @@ $('#logout').click(function () {
 											id="skillCategoryAdd4" path="skillCategoryAdd4"
 											placeholder="Enter Skill Category 4.." />
 										</div>
-									</div>
-									<div class="row">
+									</div> 
+									 <div class="row">
 										<div class="col-25">
 										<spring:label path="jobDescription">Job Description<span style="color:red">*</span></spring:label>
 										</div>
@@ -786,8 +883,7 @@ $('#logout').click(function () {
 												placeholder="Write Job Description here.."
 											style="height:200px"></spring:textarea>
 										</div>
-									</div>
-									<div class="row">
+									</div>  <div class="row">
 										<div class="col-25">
 										<spring:label path="ibg_cdg">From IBG/CDG<span style="color:red">*</span></spring:label>
 										</div>
@@ -796,7 +892,7 @@ $('#logout').click(function () {
 										oninput="this.setCustomValidity('')"
 											path="ibg_cdg" placeholder="Enter IBG/CDG.." required="required"/>
 										</div>
-									</div>
+									</div> 
 									<div class="row">
 										<div class="col-25">
 										<spring:label path="ibu_cdu">From IBU/CDU<span style="color:red">*</span></spring:label>
@@ -852,22 +948,7 @@ $('#logout').click(function () {
 											placeholder="Enter PID / CRM ID to raise the SO.." required="required"/>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-25">
-										<spring:label path="criticality1">Criticality<span style="color:red">*</span></spring:label>
-									</div>
-									<div class="col-75">
-										<spring:select required="required" class="form-control" id="criticality1" path="criticality1"
-										oninvalid="this.setCustomValidity('Please select Criticality')" 
-										oninput="this.setCustomValidity('')" >
-											<!-- <option value="">Select Criticality</option>
-											<option value="critical">Critical</option>
-											<option value="high">High</option>
-											<option value="medium">Medium</option>
-											<option value="low">Low</option> -->
-										</spring:select>
-									</div>
-								</div>
+								
 								<div class="row">
 									<div class="col-25">
 										<spring:label path="intimationDate">Intimation Date<span style="color:red">*</span></spring:label>
@@ -930,7 +1011,7 @@ $('#logout').click(function () {
 									<Button name="submit" class="btn btn-md button1"
 										style="background-color: #cc0000; color: white; float:right;margin-right:7%;" type="submit">Submit</Button>
 									<!--  <button style="background-color:#b30000;color:white;float:right;margin-right:7%;" type="submit" class="btn btn-md button1">Submit</button> -->
-								</div>
+								</div> 
 							</spring:form>
 							</div>
 						</div>
@@ -954,18 +1035,18 @@ $('#logout').click(function () {
 				<spring:form name='RequirementForm1' action="requirementsById" method='POST' modelAttribute="requirements">
 				 <div style="width:50%" class="row1">
                     <table>
-                        <tr>
+                         <tr>
                           <td><spring:label path="id">Ref No#</spring:label> </td>
                           <td><spring:input class="form-control" id="id" path="id" type="text" readonly="true"/></td>
                         </tr>      
                        <tr>
                           <td><spring:label path="skillCategory">Skill Category<span style="color:red">*</span></spring:label></td>
                           <td>
-                          <spring:select id="skillCategoryNew" multiple="false" path="skillCategory.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                          <spring:select id="skillCategoryNew" multiple="false" path="skillCategory3" class="form-control dropdown-toggle text-left " Style="width:100%"
                           oninvalid="this.setCustomValidity('Please select Skill Category')" 
 						  required="required"	oninput="this.setCustomValidity('')" >
 						</spring:select></td>
-                    </tr>
+                    </tr> 
                     <tr>
                           <td><spring:label path="jobDescription">Job Description<span style="color:red">*</span></spring:label> </td>
                           <td><spring:input class="form-control" id="jobDescriptionNew" path="jobDescription" type="text" oninvalid="this.setCustomValidity('Job description must not be empty')" 
@@ -990,11 +1071,11 @@ $('#logout').click(function () {
                     <tr>
                           <td><spring:label path="requirementType">Requirement Type<span style="color:red">*</span></spring:label> </td>
                           <td>
-                          <spring:select id="requirementTypeNew" multiple="false" path="requirementType.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                          <spring:select id="requirementTypeNew" multiple="false" path="requirementType3" class="form-control dropdown-toggle text-left " Style="width:100%"
                           oninvalid="this.setCustomValidity('Please select type of requirement')" 
 								required="required"		oninput="this.setCustomValidity('')">
 						</spring:select></td>
-                        </tr>      
+                        </tr>   
                        <tr>
                           <td><spring:label path="actualClosureDate">Actual Closure Date</spring:label></td>
                           <td><spring:input class="form-control" id="actualClosureDateNew" path="actualClosureDate" type="text"/></td>
@@ -1056,7 +1137,7 @@ $('#logout').click(function () {
                     </tr>
                      <tr>
                   <td><spring:label path="oppurtunityStatus">Opportunity Status<span style="color:red">*</span></spring:label></td>
-                  <td><spring:select id="oppurtunityNew" multiple="false" path="oppurtunityStatus.id"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                  <td><spring:select id="oppurtunityNew" multiple="false" path="oppurtunityStatus3"   class="form-control dropdown-toggle text-left " Style="width:100%"
                   oninvalid="this.setCustomValidity('Opportunity Status must not be empty')" 
 							required="required"	oninput="this.setCustomValidity('')">
 						</spring:select></td>
@@ -1065,8 +1146,8 @@ $('#logout').click(function () {
                     <td><spring:label path="createdBy">Created By</spring:label></td>
                     <td><spring:input class="form-control" id="createdByNew" path="createdBy.name" type="text" readonly="true"/>
                    </td>
-                </tr>
-                  </table>
+                </tr> 
+                  </table> 
                  
               </div>
           <div  class="row1">
@@ -1075,7 +1156,7 @@ $('#logout').click(function () {
              <tr>
                   <td><spring:label path="criticality">Criticality<span style="color:red">*</span></spring:label></td>
                   <td>
-                  <spring:select id="criticalityNew" multiple="false" path="criticality.id"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                  <spring:select id="criticalityNew" multiple="false" path="criticality3"   class="form-control dropdown-toggle text-left " Style="width:100%"
                   oninvalid="this.setCustomValidity('Please select Criticality')" 
 								required="required"			oninput="this.setCustomValidity('')">
 						</spring:select></td>
@@ -1083,33 +1164,33 @@ $('#logout').click(function () {
               <tr>
                   <td><spring:label path="primarySkill">Primary Skill<span style="color:red">*</span></spring:label></td>
                   <td>
-                  <spring:select id="primarySkillNew" multiple="false" path="primarySkill.id"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                  <spring:select id="primarySkillNew" multiple="false" path="primarySkill3"   class="form-control dropdown-toggle text-left " Style="width:100%"
                   oninvalid="this.setCustomValidity('Primary Skill must not be empty')" 
 								required="required"			oninput="this.setCustomValidity('')">
 						</spring:select></td>
-              </tr>
+              </tr>    
                <tr>
                   <td><spring:label path="location">Location<span style="color:red">*</span></spring:label></td>
                   <td>
-                  <spring:select id="locationNew" multiple="false" path="location.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                  <spring:select id="locationNew" multiple="false" path="location3" class="form-control dropdown-toggle text-left " Style="width:100%"
                   oninvalid="this.setCustomValidity('Please select location')" 
 									required="required"		oninput="this.setCustomValidity('')">
 						</spring:select></td>
-              </tr>
+              </tr> 
               <tr>
                   <td><spring:label path="billingRate">Billing Rate<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="billingRateNew" path="billingRate" type="text" oninvalid="this.setCustomValidity('Billing rate must not be empty')" 
 							required="required"		maxlength="6"	onkeypress='validate(event)' oninput="this.setCustomValidity('')"/></td>
-              </tr>
-              <tr>
+              </tr> 
+             <tr>
                   <td><spring:label path="intimatedBy">Intimated By<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="intimatedByNew" path="intimatedBy" type="text" oninvalid="this.setCustomValidity('Initimated By must not be empty')" 
 							required="required"				oninput="this.setCustomValidity('')"/></td>
               </tr>
-              <tr>
+               <tr>
                   <td><spring:label path="intimationMode">Intimator Mode<span style="color:red">*</span></spring:label></td>
                   <td>
-                  <spring:select id="intimationModeNew" multiple="false" path="intimationMode.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                  <spring:select id="intimationModeNew" multiple="false" path="intimationMode3" class="form-control dropdown-toggle text-left " Style="width:100%"
                   oninvalid="this.setCustomValidity('Please select Mode of Intimation')" 
 						required="required"				oninput="this.setCustomValidity('')">
 						</spring:select></td>
@@ -1126,7 +1207,7 @@ $('#logout').click(function () {
                <tr>
                    <td><spring:label path="status">Status</spring:label> </td>
                    <td>
-                   <spring:select id="statusNew" multiple="false" path="status.id"   class="form-control dropdown-toggle text-left " Style="width:100%">
+                   <spring:select id="statusNew" multiple="false" path="status3"   class="form-control dropdown-toggle text-left " Style="width:100%">
 						</spring:select></td>
                </tr>      
                 <tr>
@@ -1136,7 +1217,7 @@ $('#logout').click(function () {
                 <tr>
                     <td><spring:label path="actualOwnerEmail">Actual Owner Email</spring:label> </td>
                     <td><spring:input class="form-control" id="actualOwnerEmail" path="actualOwnerEmail" type="text" onChange="validateEmail(this);"/></td>
-                </tr>      
+                </tr>  
                 <tr>
                    <td><spring:label path="account">Account</spring:label> </td>
                    <td>
@@ -1182,7 +1263,7 @@ $('#logout').click(function () {
                           <td><spring:label path="remarks">Remarks<span style="color:red">*</span></spring:label></td>
                           <td><spring:input class="form-control" id="remarks" path="remarks" type="text" oninvalid="this.setCustomValidity('Remarks must not be empty')" 
 								required="required"		oninput="this.setCustomValidity('')"/></td>
-                </tr>
+                </tr> 
              </table>      
         </div>   
         <div style="background-color: #f1f1f1; margin-top: 2%; margin-left:90%;">
@@ -1268,7 +1349,7 @@ $('#logout').click(function () {
 			Tech Mahindra Limited ©2018. All rights reserved.</div>
 		
 		
-		<script>
+		<!-- <script>
 		 var table=${requirementtableJson};
 		    var locationJson=${locationJson};
 		     /* var accountValues = ${accountValuesJson}; */ 
@@ -1280,7 +1361,7 @@ $('#logout').click(function () {
 		    var skillCategoryJson=${skillCategoryJson};
 		    var primarySkillJson=${primarySkillJson};
 		    
-</script>
+</script> -->
 
 		<script>
 			var myObjObj = ${requirementblockJson};
@@ -1294,85 +1375,7 @@ $('#logout').click(function () {
 			$("#dvalue9").text(myObjObj.totalcount);
 		</script> 
 <script>
-        $('#btnAvenger').click(function (e) {
-            $('select').moveToList('#StaffList', '#PresenterList');
-            e.preventDefault();
-        });
-
-        $('#btnRemoveAvenger').click(function (e) {
-            $('select').removeSelected('#PresenterList');
-            e.preventDefault();
-        });
-
-        $('#btnAvengerUp').click(function (e) {
-            $('select').moveUpDown('#PresenterList', true, false);
-            e.preventDefault();
-        });
-
-        $('#btnAvengerDown').click(function (e) {
-            $('select').moveUpDown('#PresenterList', false, true);
-            e.preventDefault();
-        });
-
-        $('#btnShield').click(function (e) {
-            $('select').moveToList('#StaffList', '#ContactList');
-            e.preventDefault();
-        });
-
-        $('#btnRemoveShield').click(function (e) {
-            $('select').removeSelected('#ContactList');
-            e.preventDefault();
-        });
-
-        $('#btnShieldUp').click(function (e) {
-            $('select').moveUpDown('#ContactList', true, false);
-            e.preventDefault();
-        });
-
-        $('#btnShieldDown').click(function (e) {
-            $('select').moveUpDown('#ContactList', false, true);
-            e.preventDefault();
-        });
-
-        $('#btnJusticeLeague').click(function (e) {
-            $('select').moveToList('#StaffList', '#FacilitatorList');
-            e.preventDefault();
-        });
-
-        $('#btnRemoveJusticeLeague').click(function (e) {
-            $('select').removeSelected('#FacilitatorList');
-            e.preventDefault();
-        });
-
-        $('#btnJusticeLeagueUp').click(function (e) {
-            $('select').moveUpDown('#FacilitatorList', true, false);
-            e.preventDefault();
-        });
-
-        $('#btnJusticeLeagueDown').click(function (e) {
-            $('select').moveUpDown('#FacilitatorList', false, true);
-            e.preventDefault();
-        });
-		
-        $('#btnRight').click(function (e) {
-            $('select').moveToListAndDelete('#lstBox1', '#lstBox2');
-            e.preventDefault();
-        });
-
-        $('#btnAllRight').click(function (e) {
-            $('select').moveAllToListAndDelete('#lstBox1', '#lstBox2');
-            e.preventDefault();
-        });
-
-        $('#btnLeft').click(function (e) {
-            $('select').moveToListAndDelete('#lstBox2', '#lstBox1');
-            e.preventDefault();
-        });
-
-        $('#btnAllLeft').click(function (e) {
-            $('select').moveAllToListAndDelete('#lstBox2', '#lstBox1');
-            e.preventDefault();
-        });
+        
     </script>
 </body>
 

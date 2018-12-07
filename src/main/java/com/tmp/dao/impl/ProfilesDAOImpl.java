@@ -41,6 +41,7 @@ import com.tmp.dao.RequirementDAO;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
 import com.tmp.entity.RequirementProfileMapping;
+import com.tmp.util.EnumClasses;
 import com.tmp.util.ProfileRequirementStatusMappingUtil;
 import com.tmp.util.TMPDAOUtil;
 import com.tmp.util.TMPUtil;
@@ -286,7 +287,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			if(StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd()) && !profile.getInitialEvaluationResultAdd().equals("0")){
 				initialEvalRes = new Integer(profile.getInitialEvaluationResultAdd());
 				}else{
-				initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
+				//initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
+				profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromString("In Progress"));
+				initialEvalRes = profile.getInitialEvaluationResult().getId();
 			}
 			
 			if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
@@ -410,7 +413,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				if(!requirementProfileMapping.getInternalEvaluationResult().equals("0")){
 					initialEvalRes = requirementProfileMapping.getInternalEvaluationResult().getId();
 					}else{
-					initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
+						requirementProfileMapping.setInternalEvaluationResult(EnumClasses.InitialEvaluationResult.fromString("In Progress"));
+						initialEvalRes = requirementProfileMapping.getInternalEvaluationResult().getId();
+					//initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
 				}
 				
 				if((requirementProfileMapping.getProfileSharedCustomer().equalsIgnoreCase("yes"))){
@@ -472,14 +477,16 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				System.out.println("sql2-->"+sql2);
 				PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
 				int initialEvalRes,customerInterviewStatus;
- 				if(!profile.getInitialEvaluationResult().equals("0")){
-					initialEvalRes = profile.getInitialEvaluationResult().getId();
+ 				if(!profile.getInitialEvaluationResult3().equals("0")){
+					initialEvalRes = Integer.parseInt(profile.getInitialEvaluationResult3());
 					}else{
-					initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
+					//initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
+						profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromString("In Progress"));
+						initialEvalRes = profile.getInitialEvaluationResult().getId();
 				}
 				
-				if((profile.getCustomerInterviewStatus()!=null)){
-						customerInterviewStatus = new Integer(profile.getCustomerInterviewStatus().getId());
+				if((profile.getCustomerInterviewStatus3()!=null)){
+						customerInterviewStatus = Integer.parseInt(profile.getCustomerInterviewStatus3());
 					}else{
 						customerInterviewStatus=0;
 				}
@@ -536,8 +543,16 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setContactNo(rs.getString("CONTACT_NO"));
 		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
 		profile.setLocation(rs.getString("LOCATION"));
-		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
-		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
+		//profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
+		
+		profile.setPrimarySkill(EnumClasses.PrimarySkill.fromInt(rs.getInt("PRIMARY_SKILL")));
+		profile.setPrimarySkill3(profile.getPrimarySkill().getDisplay());
+		
+		//profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
+		profile.setProfileSource(EnumClasses.ProfileSource.fromInt(rs.getInt("PROFILE_SOURCE")));
+		profile.setProfileSource3(profile.getProfileSource().getDisplay());
+		
+		
 		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
 		profile.setYearsOfExperience(rs.getInt("YEARS_OF_EXPERIENCE"));
@@ -545,7 +560,10 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
-		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));/*
+		//profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));
+		profile.setIsAllocated(EnumClasses.IsAllocated.fromInt(rs.getInt("IS_ALLOCATED")));
+		profile.setIsAllocated3(profile.getIsAllocated().getDisplay());
+		/*
 		profile.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
 		profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));*/
 		profile.setAllocationStartDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_START_DATE")));
@@ -562,16 +580,26 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setUpdatedOn(rs.getDate("UPDATED_ON"));
 		int iniEvalResult = rs.getInt("INTERNAL_EVALUATION_RESULT");
 		if(iniEvalResult>0){
-			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
+			//profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
+			profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromInt(iniEvalResult));
+			profile.setInitialEvaluationResult3(profile.getInitialEvaluationResult().getDisplay());
+			
+			
 		}else{
-			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping("In Progress"));
+			//profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping("In Progress"));
+			profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromString("In Progress"));
+			profile.setInitialEvaluationResult3(profile.getInitialEvaluationResult().getDisplay());
 		}
 		
 		int customerInterStatus = rs.getInt("CUSTOMER_INTERVIEW_STATUS");
 		if(customerInterStatus>0){
-			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
+			profile.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromInt(customerInterStatus));
+			profile.setCustomerInterviewStatus3(profile.getCustomerInterviewStatus().getDisplay());
+			//profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
 		}else{
-			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
+			profile.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromString("Yet to Process"));
+			profile.setCustomerInterviewStatus3(profile.getCustomerInterviewStatus().getDisplay());
+			//profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
 		}
 		Date sqldate=rs.getDate("PROFILE_SHARED_DATE");
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
@@ -593,8 +621,13 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setContactNo(rs.getString("CONTACT_NO"));
 		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
 		profile.setLocation(rs.getString("LOCATION"));
-		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
-		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
+		//profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
+		profile.setPrimarySkill(EnumClasses.PrimarySkill.fromInt(rs.getInt("PRIMARY_SKILL")));
+		profile.setPrimarySkill3(profile.getPrimarySkill().getDisplay());
+		
+		//profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
+		profile.setProfileSource(EnumClasses.ProfileSource.fromInt(rs.getInt("PROFILE_SOURCE")));
+		profile.setProfileSource3(profile.getProfileSource().getDisplay());
 		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
 		profile.setYearsOfExperience(rs.getInt("YEARS_OF_EXPERIENCE"));
@@ -602,7 +635,10 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
-		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));
+		//profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));
+		profile.setIsAllocated(EnumClasses.IsAllocated.fromInt(rs.getInt("IS_ALLOCATED")));
+		profile.setIsAllocated3(profile.getIsAllocated().getDisplay());
+		
 		profile.setAccount2(tmpDAOUtil.getAccount(rs.getInt("ACCOUNT")));
 		profile.setProject2(tmpDAOUtil.getProject(rs.getInt("PROJECT")));
 		profile.setAllocationStartDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_START_DATE")));
@@ -619,17 +655,32 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setUpdatedOn(rs.getDate("UPDATED_ON"));
 		int iniEvalResult = rs.getInt("INTERNAL_EVALUATION_RESULT");
 		if(iniEvalResult>0){
-			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
+			//profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
+			profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromInt(iniEvalResult));
+			profile.setInitialEvaluationResult3(profile.getInitialEvaluationResult().getDisplay());
+			
+			
 		}else{
-			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping("In Progress"));
+			//profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping("In Progress"));
+			profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromString("In Progress"));
+			profile.setInitialEvaluationResult3(profile.getInitialEvaluationResult().getDisplay());
 		}
-		
 		int customerInterStatus = rs.getInt("CUSTOMER_INTERVIEW_STATUS");
-		if(customerInterStatus>0){
+		/*if(customerInterStatus>0){
 			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
 		}else{
 			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
+		}*/
+		if(customerInterStatus>0){
+			profile.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromInt(customerInterStatus));
+			profile.setCustomerInterviewStatus3(profile.getCustomerInterviewStatus().getDisplay());
+			//profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
+		}else{
+			profile.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromString("Yet to Process"));
+			profile.setCustomerInterviewStatus3(profile.getCustomerInterviewStatus().getDisplay());
+			//profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
 		}
+		
 		profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));
 	/*	Date sqldate=rs.getDate("PROFILE_SHARED_DATE");
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
@@ -679,7 +730,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		ps.setString(i++, profile.getContactNo());
 		ps.setString(i++, profile.getCurrentCompany());
 		ps.setString(i++, profile.getLocation());
-		ps.setInt(i++, profile.getPrimarySkill().getId());
+		ps.setInt(i++, Integer.parseInt(profile.getPrimarySkill3()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSharedBy());
 		ps.setInt(i++, profile.getYearsOfExperience());
@@ -687,12 +738,15 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		ps.setInt(i++, profile.getNoticePeriod());
 		ps.setInt(i++, profile.getCurrentCTC());
 		ps.setInt(i++, profile.getExpectedCTC());
-		ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getIsAllocated1()).getId());
+		//ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getIsAllocated1()).getId());
+		
+		profile.setIsAllocated(EnumClasses.IsAllocated.fromString(profile.getIsAllocated1().toUpperCase()));
+		ps.setInt(i++, profile.getIsAllocated().getId());
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getAllocationStartDate()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getAllocationEndDate()));
 		ps.setDate(i++,tmpDAOUtil.convertUtilDatetoSQLDate(profile.getCreatedOn()));
 		ps.setTimestamp(i++,tmpDAOUtil.getCurrentTimestamp());
-		ps.setInt(i++,profile.getProfileSource().getId());
+		ps.setInt(i++, Integer.parseInt(profile.getProfileSource3()));
 		ps.setString(i++, profile.getRemarks());
 		ps.setString(i++, userId);
 		if(null != profile.getAccount() && profile.getAccount().getId()!=0){
@@ -717,12 +771,12 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			return;
 		}
 		int i=1;
-		ps1.setInt(i++, profile.getInitialEvaluationResult().getId());
-		if(null!=profile.getCustomerInterviewStatus())
-			ps1.setInt(i++, profile.getCustomerInterviewStatus().getId());
+		ps1.setInt(i++, Integer.parseInt(profile.getInitialEvaluationResult3()));
+		if(null!=profile.getCustomerInterviewStatus3())
+			ps1.setInt(i++, Integer.parseInt(profile.getCustomerInterviewStatus3()));
 		else
 			ps1.setInt(i++,61);
-		//ps1.setInt(i++, profile.getCustomerInterviewStatus().getId());
+		//ps1.setInt(i++, profile.getCustomerInterviewStatus3());
 		ps1.setString(i++, profile.getRemarks());
 		ps1.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
 		ps1.setString(i++, profile.getProfileSharedCustomer());
@@ -825,8 +879,8 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 									while (rs1.next()) {
 										RequirementProfileMapping requirement1 =new RequirementProfileMapping() ;
 								requirement1.setProfileId(configDAO.getProfileName(rs1.getInt("PROFILE_ID")));
-								requirement1.setInternalEvaluationResult(configDAO.getConfigKeyValueMapping(rs1.getInt("INTERNAL_EVALUATION_RESULT")));
-								requirement1.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(rs1.getInt("CUSTOMER_INTERVIEW_STATUS")));
+								requirement1.setInternalEvaluationResult(EnumClasses.InitialEvaluationResult.fromInt(rs1.getInt("INTERNAL_EVALUATION_RESULT")));
+								requirement1.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromInt(rs1.getInt("CUSTOMER_INTERVIEW_STATUS")));
 								requirement1.setProfileSharedCustomer(rs1.getString("PROFILE_SHARED_CUSTOMER"));
 								requirement.add(requirement1);
 							   }
@@ -1115,13 +1169,17 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			if(StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd()) && !profile.getInitialEvaluationResultAdd().equals("0")){
 				ps.setInt(3, new Integer(profile.getInitialEvaluationResultAdd()));
 				}else{
-					ps.setInt(3,configDAO.getConfigKeyValueMapping("In Progress").getId());
+					
+					profile.setInitialEvaluationResult(EnumClasses.InitialEvaluationResult.fromString("In Progress"));
+					ps.setInt(3,profile.getInitialEvaluationResult().getId());
 			}
 			
 			if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
 				ps.setInt(4, new Integer(profile.getCustomerInterviewStatusAdd()));
 				}else{
-					ps.setInt(4,configDAO.getConfigKeyValueMapping("Yet to Process").getId());
+					profile.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromString("Yet to Process"));
+					ps.setInt(4,profile.getCustomerInterviewStatus().getId());
+					//ps.setInt(4,configDAO.getConfigKeyValueMapping("Yet to Process").getId());
 			}
 			
 			if(profile.getRemarks()!=null){

@@ -2,6 +2,8 @@ package com.tmp.entity;
 
 import java.io.Serializable;
 
+import com.tmp.util.EnumClasses;
+
 public class RequirementProfileMapping implements Serializable {
 
 	/**
@@ -11,8 +13,12 @@ public class RequirementProfileMapping implements Serializable {
 	private int id;
 	private Requirement requirementId;
 	private Profile profileId;
-	private ConfigKeyValueMapping internalEvaluationResult;
-	private ConfigKeyValueMapping customerInterviewStatus;
+	//private ConfigKeyValueMapping internalEvaluationResult;
+	//private ConfigKeyValueMapping customerInterviewStatus;
+	private EnumClasses.InitialEvaluationResult internalEvaluationResult;
+	private EnumClasses.CustomerInterviewStatus customerInterviewStatus;
+	private String internalEvaluationResult3;
+	private String customerInterviewStatus3;
 	private String remarks;
 	private java.util.Date createdOn;
 	private User createdBy;
@@ -91,7 +97,7 @@ public class RequirementProfileMapping implements Serializable {
 		this.profileId = profileId;
 	}
 
-	public ConfigKeyValueMapping getInternalEvaluationResult() {
+	/*public ConfigKeyValueMapping getInternalEvaluationResult() {
 		return internalEvaluationResult;
 	}
 
@@ -105,12 +111,31 @@ public class RequirementProfileMapping implements Serializable {
 
 	public void setCustomerInterviewStatus(ConfigKeyValueMapping customerInterviewStatus) {
 		this.customerInterviewStatus = customerInterviewStatus;
+	}*/
+	
+	
+
+	public EnumClasses.InitialEvaluationResult getInternalEvaluationResult() {
+		return internalEvaluationResult;
 	}
+
+	public void setInternalEvaluationResult(EnumClasses.InitialEvaluationResult internalEvaluationResult) {
+		this.internalEvaluationResult = internalEvaluationResult;
+	}
+
+	public EnumClasses.CustomerInterviewStatus getCustomerInterviewStatus() {
+		return customerInterviewStatus;
+	}
+
+	public void setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus customerInterviewStatus) {
+		this.customerInterviewStatus = customerInterviewStatus;
+	}
+	
 
 	public String getRemarks() {
 		return remarks;
 	}
-
+	
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
@@ -147,4 +172,21 @@ public class RequirementProfileMapping implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
+	public String getInternalEvaluationResult3() {
+		return internalEvaluationResult3;
+	}
+
+	public void setInternalEvaluationResult3(String internalEvaluationResult3) {
+		this.internalEvaluationResult3 = internalEvaluationResult3;
+	}
+
+	public String getCustomerInterviewStatus3() {
+		return customerInterviewStatus3;
+	}
+
+	public void setCustomerInterviewStatus3(String customerInterviewStatus3) {
+		this.customerInterviewStatus3 = customerInterviewStatus3;
+	}
+
+	
 }

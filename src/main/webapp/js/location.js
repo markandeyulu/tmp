@@ -8,10 +8,10 @@ var locdata=locationJson.locationJson;
 ]*/
 var g_LocationArray = [];
 
-$.each(locdata, function(index) {
+$.each(locdata, function(key,value) {
 	var g_LocationItem = [];
-	g_LocationItem.push(locdata[index].id);
-	g_LocationItem.push(locdata[index].configValue.value);
+	g_LocationItem.push(key);
+	g_LocationItem.push(value);
 	//if ($.inArray(g_LocationItem, g_LocationArray) == -1) {
 		g_LocationArray.push(g_LocationItem);
 	//}

@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.tmp.util.EnumClasses;
+
 public class Requirement implements Serializable {
 
 	/**
@@ -13,25 +15,48 @@ public class Requirement implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private ConfigKeyValueMapping criticality;
-	private ConfigKeyValueMapping skillCategory;
-	private ConfigKeyValueMapping primarySkill;
+	private EnumClasses.Critical criticality;
+	
+	private EnumClasses.SkillCategory skillCategory;
+	private EnumClasses.PrimarySkill primarySkill;
+	private EnumClasses.IntimationMode intimationMode;
+	private EnumClasses.RequirementType requirementType;
+	private EnumClasses.Location location;
+	private EnumClasses.PositionStatus status;
+	private EnumClasses.OpportunityStatus oppurtunityStatus;
+	
+	private String criticality3;
+	private String skillCategory3;
+	private String primarySkill3;
+	private String intimationMode3;
+	private String requirementType3;
+	private String location3;
+	private String status3;
+	private String oppurtunityStatus3;
+	
+	//private ConfigKeyValueMapping criticality;
+	//private ConfigKeyValueMapping skillCategory;
+	//private ConfigKeyValueMapping primarySkill;
+	//private ConfigKeyValueMapping status;
+	//private ConfigKeyValueMapping oppurtunityStatus;
+	private ConfigKeyValueMapping internalEvaluation;
 	private String jobDescription;
-	private ConfigKeyValueMapping location;
+	//private ConfigKeyValueMapping criticality;
+	//private ConfigKeyValueMapping location;
 	private String city;
 	private double billingRate;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date intimationDate;
 	private String intimatedBy;
 	@NotNull
 	private String intimatorEmail;
-	private ConfigKeyValueMapping intimationMode;
-	private ConfigKeyValueMapping requirementType;
+	//private ConfigKeyValueMapping intimationMode;
+	//private ConfigKeyValueMapping requirementType;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date expectedDOJ;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date actualClosureDate;
 	private int so;
 	private int jo;
 	private Profile shortlistedProfile_id;
-	private ConfigKeyValueMapping status;
+	//private ConfigKeyValueMapping status;
 	private String activityOwner;
 	private String activityOwnerEmail;
 	private String actualOwner;
@@ -44,7 +69,7 @@ public class Requirement implements Serializable {
 	private User createdBy;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date updatedOn;
 	private User updatedBy;
-	private ConfigKeyValueMapping oppurtunityStatus;
+	//private ConfigKeyValueMapping oppurtunityStatus;
 	private int leadcount;
 	private int profilecount;
 	private int techevalcount;
@@ -78,7 +103,7 @@ public class Requirement implements Serializable {
 	private int profileshared;
 	private String shortlistedProfiles;
 	private String assignedProfiles;
-	private ConfigKeyValueMapping internalEvaluation;
+	//private ConfigKeyValueMapping internalEvaluation;
 	
 	private int internalEvaluation1;
 	
@@ -127,13 +152,13 @@ public class Requirement implements Serializable {
 		this.shortlistedProfiles = shortlistedProfiles;
 	}
 
-	public ConfigKeyValueMapping getOppurtunityStatus() {
+	/*public ConfigKeyValueMapping getOppurtunityStatus() {
 		return oppurtunityStatus;
 	}
 
 	public void setOppurtunityStatus(ConfigKeyValueMapping oppurtunityStatus) {
 		this.oppurtunityStatus = oppurtunityStatus;
-	}
+	}*/
 
 	public int getProfileshared() {
 		return profileshared;
@@ -295,14 +320,24 @@ public class Requirement implements Serializable {
 		this.id = id;
 	}
 
-	public ConfigKeyValueMapping getCriticality() {
+	
+	
+	public EnumClasses.Critical getCriticality() {
+		return criticality;
+	}
+
+	public void setCriticality(EnumClasses.Critical criticality) {
+		this.criticality = criticality;
+	}
+	
+	/*public ConfigKeyValueMapping getCriticality() {
 		return criticality;
 	}
 
 	public void setCriticality(ConfigKeyValueMapping criticality) {
 		this.criticality = criticality;
 	}
-
+	 
 	public ConfigKeyValueMapping getSkillCategory() {
 		return skillCategory;
 	}
@@ -317,7 +352,7 @@ public class Requirement implements Serializable {
 
 	public void setPrimarySkill(ConfigKeyValueMapping primarySkill) {
 		this.primarySkill = primarySkill;
-	}
+	}*/
 
 	public String getJobDescription() {
 		return jobDescription;
@@ -327,13 +362,13 @@ public class Requirement implements Serializable {
 		this.jobDescription = jobDescription;
 	}
 
-	public ConfigKeyValueMapping getLocation() {
+	/*public ConfigKeyValueMapping getLocation() {
 		return location;
 	}
 
 	public void setLocation(ConfigKeyValueMapping location) {
 		this.location = location;
-	}
+	}*/
 
 	public String getCity() {
 		return city;
@@ -375,7 +410,7 @@ public class Requirement implements Serializable {
 		this.intimatorEmail = intimatorEmail;
 	}
 
-	public ConfigKeyValueMapping getIntimationMode() {
+	/*public ConfigKeyValueMapping getIntimationMode() {
 		return intimationMode;
 	}
 
@@ -390,7 +425,7 @@ public class Requirement implements Serializable {
 	public void setRequirementType(ConfigKeyValueMapping requirementType) {
 		this.requirementType = requirementType;
 	}
-
+	*/
 	public java.util.Date getExpectedDOJ() {
 		return expectedDOJ;
 	}
@@ -431,13 +466,13 @@ public class Requirement implements Serializable {
 		this.shortlistedProfile_id = shortlistedProfile_id;
 	}
 
-	public ConfigKeyValueMapping getStatus() {
+	/*public ConfigKeyValueMapping getStatus() {
 		return status;
 	}
 
 	public void setStatus(ConfigKeyValueMapping status) {
 		this.status = status;
-	}
+	}*/
 
 	public String getActivityOwner() {
 		return activityOwner;
@@ -626,6 +661,127 @@ public class Requirement implements Serializable {
 		this.projectAdd = projectAdd;
 	}
 
+	public EnumClasses.SkillCategory getSkillCategory() {
+		return skillCategory;
+	}
 
+	public void setSkillCategory(EnumClasses.SkillCategory skillCategory) {
+		this.skillCategory = skillCategory;
+	}
+
+	public EnumClasses.PrimarySkill getPrimarySkill() {
+		return primarySkill;
+	}
+
+	public void setPrimarySkill(EnumClasses.PrimarySkill primarySkill) {
+		this.primarySkill = primarySkill;
+	}
+
+	public EnumClasses.IntimationMode getIntimationMode() {
+		return intimationMode;
+	}
+
+	public void setIntimationMode(EnumClasses.IntimationMode intimationMode) {
+		this.intimationMode = intimationMode;
+	}
+
+	public EnumClasses.RequirementType getRequirementType() {
+		return requirementType;
+	}
+
+	public void setRequirementType(EnumClasses.RequirementType requirementType) {
+		this.requirementType = requirementType;
+	}
+
+	public EnumClasses.Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(EnumClasses.Location location) {
+		this.location = location;
+	}
+
+	public String getCriticality3() {
+		return criticality3;
+	}
+
+	public void setCriticality3(String criticality3) {
+		this.criticality3 = criticality3;
+	}
+
+	public String getSkillCategory3() {
+		return skillCategory3;
+	}
+
+	public void setSkillCategory3(String skillCategory3) {
+		this.skillCategory3 = skillCategory3;
+	}
+
+	public String getPrimarySkill3() {
+		return primarySkill3;
+	}
+
+	public void setPrimarySkill3(String primarySkill3) {
+		this.primarySkill3 = primarySkill3;
+	}
+
+	public String getIntimationMode3() {
+		return intimationMode3;
+	}
+
+	public void setIntimationMode3(String intimationMode3) {
+		this.intimationMode3 = intimationMode3;
+	}
+
+	public String getRequirementType3() {
+		return requirementType3;
+	}
+
+	public void setRequirementType3(String requirementType3) {
+		this.requirementType3 = requirementType3;
+	}
+
+	public String getLocation3() {
+		return location3;
+	}
+
+	public void setLocation3(String location3) {
+		this.location3 = location3;
+	}
+
+	public String getStatus3() {
+		return status3;
+	}
+
+	public void setStatus3(String status3) {
+		this.status3 = status3;
+	}
+
+	public String getOppurtunityStatus3() {
+		return oppurtunityStatus3;
+	}
+
+	public void setOppurtunityStatus3(String oppurtunityStatus3) {
+		this.oppurtunityStatus3 = oppurtunityStatus3;
+	}
+
+	public void setStatus(EnumClasses.PositionStatus status) {
+		this.status = status;
+	}
+
+	public void setOppurtunityStatus(EnumClasses.OpportunityStatus oppurtunityStatus) {
+		this.oppurtunityStatus = oppurtunityStatus;
+	}
+
+	public EnumClasses.PositionStatus getStatus() {
+		return status;
+	}
+
+	public EnumClasses.OpportunityStatus getOppurtunityStatus() {
+		return oppurtunityStatus;
+	}
+	
+	
+	
 	
 }

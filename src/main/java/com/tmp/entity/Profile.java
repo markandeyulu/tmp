@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.tmp.util.EnumClasses;
+
 public class Profile implements Serializable {
 
 	/**
@@ -18,7 +20,9 @@ public class Profile implements Serializable {
 	private String contactNo;
 	private String currentCompany;
 	private String location;
-	private ConfigKeyValueMapping primarySkill;
+	private EnumClasses.PrimarySkill primarySkill;
+	private String primarySkill3;
+	
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date profileSharedDate;
 	private String profileSharedDatestr;
 	
@@ -36,7 +40,8 @@ public class Profile implements Serializable {
 	private int noticePeriod;
 	private int currentCTC;
 	private int expectedCTC;
-	private ConfigKeyValueMapping isAllocated;
+	private EnumClasses.IsAllocated isAllocated;
+	private String isAllocated3;
 	private String isAllocated1;
 	private Account account2;
 	private Project project2;
@@ -81,12 +86,17 @@ public class Profile implements Serializable {
 	private User createdBy;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date updatedOn;
 	private User updatedBy;
-	private ConfigKeyValueMapping profileSource;
+	private EnumClasses.ProfileSource profileSource;
+	private String profileSource3;
+	
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date internalEvaluationResultDate; 
-	private ConfigKeyValueMapping  initialEvaluationResult; 
+	private EnumClasses.InitialEvaluationResult initialEvaluationResult; 
+	private EnumClasses.CustomerInterviewStatus customerInterviewStatus; 
+	private String initialEvaluationResult3; 
+	private String customerInterviewStatus3; 
 	private String profileSharedCustomer; 
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date profileSharedCustomerDate; 
-	private ConfigKeyValueMapping  customerInterviewStatus; 
+	
 	private String remarks;
 	private String primarySkillAdd;
 	private String profileSourceAdd;
@@ -127,13 +137,13 @@ public class Profile implements Serializable {
 		this.profileSourceAdd = profileSourceAdd;
 	}
 
-	public ConfigKeyValueMapping getProfileSource() {
+	/*public ConfigKeyValueMapping getProfileSource() {
 		return profileSource;
 	}
 
 	public void setProfileSource(ConfigKeyValueMapping profileSource) {
 		this.profileSource = profileSource;
-	}
+	}*/
 
 	public int getId() {
 		return id;
@@ -183,13 +193,13 @@ public class Profile implements Serializable {
 		this.location = location;
 	}
 
-	public ConfigKeyValueMapping getPrimarySkill() {
+	/*public ConfigKeyValueMapping getPrimarySkill() {
 		return primarySkill;
 	}
 
 	public void setPrimarySkill(ConfigKeyValueMapping primarySkill) {
 		this.primarySkill = primarySkill;
-	}
+	}*/
 
 	public Date getProfileSharedDate() {
 		return profileSharedDate;
@@ -247,13 +257,13 @@ public class Profile implements Serializable {
 		this.expectedCTC = expectedCTC;
 	}
 
-	public ConfigKeyValueMapping getIsAllocated() {
+	/*public ConfigKeyValueMapping getIsAllocated() {
 		return isAllocated;
 	}
 
 	public void setIsAllocated(ConfigKeyValueMapping isAllocated) {
 		this.isAllocated = isAllocated;
-	}
+	}*/
 
 	public java.util.Date getAllocationStartDate() {
 		return allocationStartDate;
@@ -353,16 +363,16 @@ public class Profile implements Serializable {
 		this.project = project;
 	}
 
-	public ConfigKeyValueMapping getInitialEvaluationResult() {
+	/*public ConfigKeyValueMapping getInitialEvaluationResult() {
 		return initialEvaluationResult;
 	}
 
 	public void setInitialEvaluationResult(
 			ConfigKeyValueMapping initialEvaluationResult) {
 		this.initialEvaluationResult = initialEvaluationResult;
-	}
+	}*/
 
-	public ConfigKeyValueMapping getCustomerInterviewStatus() {
+	/*public ConfigKeyValueMapping getCustomerInterviewStatus() {
 		return customerInterviewStatus;
 	}
 
@@ -370,7 +380,7 @@ public class Profile implements Serializable {
 			ConfigKeyValueMapping customerInterviewStatus) {
 		this.customerInterviewStatus = customerInterviewStatus;
 	}
-
+*/
 	public String getInitialEvaluationResultAdd() {
 		return initialEvaluationResultAdd;
 	}
@@ -386,7 +396,87 @@ public class Profile implements Serializable {
 	public void setCustomerInterviewStatusAdd(String customerInterviewStatusAdd) {
 		this.customerInterviewStatusAdd = customerInterviewStatusAdd;
 	}
-	
+
+	public EnumClasses.PrimarySkill getPrimarySkill() {
+		return primarySkill;
+	}
+
+	public void setPrimarySkill(EnumClasses.PrimarySkill primarySkill) {
+		this.primarySkill = primarySkill;
+	}
+
+	public String getPrimarySkill3() {
+		return primarySkill3;
+	}
+
+	public void setPrimarySkill3(String primarySkill3) {
+		this.primarySkill3 = primarySkill3;
+	}
+
+	public EnumClasses.IsAllocated getIsAllocated() {
+		return isAllocated;
+	}
+
+	public void setIsAllocated(EnumClasses.IsAllocated isAllocated) {
+		this.isAllocated = isAllocated;
+	}
+
+	public String getIsAllocated3() {
+		return isAllocated3;
+	}
+
+	public void setIsAllocated3(String isAllocated3) {
+		this.isAllocated3 = isAllocated3;
+	}
+
+	public EnumClasses.ProfileSource getProfileSource() {
+		return profileSource;
+	}
+
+	public void setProfileSource(EnumClasses.ProfileSource profileSource) {
+		this.profileSource = profileSource;
+	}
+
+	public String getProfileSource3() {
+		return profileSource3;
+	}
+
+	public void setProfileSource3(String profileSource3) {
+		this.profileSource3 = profileSource3;
+	}
+
+	public EnumClasses.InitialEvaluationResult getInitialEvaluationResult() {
+		return initialEvaluationResult;
+	}
+
+	public void setInitialEvaluationResult(EnumClasses.InitialEvaluationResult initialEvaluationResult) {
+		this.initialEvaluationResult = initialEvaluationResult;
+	}
+
+	public EnumClasses.CustomerInterviewStatus getCustomerInterviewStatus() {
+		return customerInterviewStatus;
+	}
+
+	public void setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus customerInterviewStatus) {
+		this.customerInterviewStatus = customerInterviewStatus;
+	}
+
+	public String getInitialEvaluationResult3() {
+		return initialEvaluationResult3;
+	}
+
+	public void setInitialEvaluationResult3(String initialEvaluationResult3) {
+		this.initialEvaluationResult3 = initialEvaluationResult3;
+	}
+
+	public String getCustomerInterviewStatus3() {
+		return customerInterviewStatus3;
+	}
+
+	public void setCustomerInterviewStatus3(String customerInterviewStatus3) {
+		this.customerInterviewStatus3 = customerInterviewStatus3;
+	}
+
 	
 
 }

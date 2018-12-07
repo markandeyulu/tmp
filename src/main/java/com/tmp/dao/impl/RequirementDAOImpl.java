@@ -26,6 +26,7 @@ import com.tmp.entity.Project;
 import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
 import com.tmp.entity.Requirements;
+import com.tmp.util.EnumClasses;
 import com.tmp.util.TMPDAOUtil;
 
 @Repository
@@ -147,13 +148,28 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setRemarks(rs.getString("REMARKS"));
 		requirement.setSo(rs.getInt("SO"));
 		requirement.setUpdatedOn(rs.getDate("UPDATED_ON"));
-		requirement.setCriticality(configDAO.getConfigKeyValueMapping(rs.getInt("CRITICALITY")));
+		/*requirement.setCriticality(configDAO.getConfigKeyValueMapping(rs.getInt("CRITICALITY")));
 		requirement.setIntimationMode(configDAO.getConfigKeyValueMapping(rs.getInt("INTIMATION_MODE")));
 		requirement.setLocation(configDAO.getConfigKeyValueMapping(rs.getInt("LOCATION")));
 		requirement.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
 		requirement.setRequirementType(configDAO.getConfigKeyValueMapping(rs.getInt("REQUIREMENT_TYPE")));
-		requirement.setSkillCategory(configDAO.getConfigKeyValueMapping(rs.getInt("SKILL_CATEGORY")));
-		requirement.setStatus(configDAO.getConfigKeyValueMapping(rs.getInt("STATUS")));
+		requirement.setSkillCategory(configDAO.getConfigKeyValueMapping(rs.getInt("SKILL_CATEGORY")));*/
+        requirement.setCriticality(EnumClasses.Critical.fromInt(rs.getInt("CRITICALITY")));
+        requirement.setCriticality3(requirement.getCriticality().getDisplay());
+		requirement.setIntimationMode(EnumClasses.IntimationMode.fromInt(rs.getInt("INTIMATION_MODE")));
+		requirement.setIntimationMode3(requirement.getIntimationMode().getDisplay());
+		requirement.setLocation(EnumClasses.Location.fromInt(rs.getInt("LOCATION")));
+		requirement.setLocation3(requirement.getLocation().getDisplay());
+		requirement.setPrimarySkill(EnumClasses.PrimarySkill.fromInt(rs.getInt("PRIMARY_SKILL")));
+		requirement.setPrimarySkill3(requirement.getPrimarySkill().getDisplay());
+		requirement.setRequirementType(EnumClasses.RequirementType.fromInt(rs.getInt("REQUIREMENT_TYPE")));
+		requirement.setRequirementType3(requirement.getRequirementType().getDisplay());
+		requirement.setSkillCategory(EnumClasses.SkillCategory.fromInt(rs.getInt("SKILL_CATEGORY")));
+		requirement.setSkillCategory3(requirement.getSkillCategory().getDisplay());
+		
+		//requirement.setStatus(configDAO.getConfigKeyValueMapping(rs.getInt("STATUS")));
+		requirement.setStatus(EnumClasses.PositionStatus.fromInt(rs.getInt("STATUS")));
+		requirement.setStatus3(requirement.getStatus().getDisplay());
 		requirement.setAccount(tmpDAOUtil.getAccount(rs.getInt("ACCOUNT")));
 		requirement.setProject(tmpDAOUtil.getProject(rs.getInt("PROJECT")));
 		requirement.setBand(rs.getString("BAND"));
@@ -165,7 +181,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setPid_crmid_so(rs.getString("PID_CRMID_SO"));
 		requirement.setUpdatedBy(configDAO.getUserId(rs.getInt("UPDATED_BY")));
 		requirement.setCreatedBy(configDAO.getUserId(rs.getInt("CREATED_BY")));
-		requirement.setOppurtunityStatus(configDAO.getConfigKeyValueMapping(rs.getInt("OPPORTUNITY_STATUS")));
+		//requirement.setOppurtunityStatus(configDAO.getConfigKeyValueMapping(rs.getInt("OPPORTUNITY_STATUS")));
+		requirement.setOppurtunityStatus(EnumClasses.OpportunityStatus.fromInt(rs.getInt("OPPORTUNITY_STATUS")));
+		requirement.setOppurtunityStatus3(requirement.getOppurtunityStatus().getDisplay());
 		requirement.setShortlistedProfile_id(configDAO.getProfileName(rs.getInt("SHORTLISTED_PROFILE_ID")));
 		return requirement;
 	}
@@ -292,8 +310,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setString(30, requirement.getSkillCategoryAdd2());
 		ps.setString(31, requirement.getSkillCategoryAdd3());
 		ps.setString(32, requirement.getSkillCategoryAdd4());
-		ps.setInt(33, configDAO.getConfigKeyValueMapping("Profile Sourcing").getId());
-		ps.setInt(34, configDAO.getConfigKeyValueMapping("Open").getId());
+		//ps.setInt(33, configDAO.getConfigKeyValueMapping("Profile Sourcing").getId());
+		//ps.setInt(34, configDAO.getConfigKeyValueMapping("Open").getId());
+		requirement.setStatus(EnumClasses.PositionStatus.fromString("Profile Sourcing"));
+		ps.setInt(33,(requirement.getStatus().getId()));
+		requirement.setOppurtunityStatus(EnumClasses.OpportunityStatus.fromString("Open"));
+		ps.setInt(34,(requirement.getOppurtunityStatus().getId()));
 
 	}
 
@@ -336,23 +358,23 @@ public class RequirementDAOImpl implements RequirementDAO {
 		if (ps == null) {
 			return;
 		}
-		ps.setInt(1, requirement.getCriticality().getId());
-		ps.setInt(2, requirement.getSkillCategory().getId());
-		ps.setInt(3, requirement.getPrimarySkill().getId());
+		ps.setInt(1, Integer.parseInt(requirement.getCriticality3()));
+		ps.setInt(2, Integer.parseInt(requirement.getSkillCategory3()));
+		ps.setInt(3, Integer.parseInt(requirement.getPrimarySkill3()));
 		ps.setString(4, requirement.getJobDescription());
-		ps.setInt(5, requirement.getLocation().getId());
+		ps.setInt(5, Integer.parseInt(requirement.getLocation3()));
 		ps.setString(6, requirement.getCity());
 		ps.setDouble(7, requirement.getBillingRate());
 		ps.setDate(8, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getIntimationDate()));
 		ps.setString(9, requirement.getIntimatedBy());
 		ps.setString(10, requirement.getIntimatorEmail());
-		ps.setInt(11, requirement.getIntimationMode().getId());
-		ps.setInt(12, requirement.getRequirementType().getId());
+		ps.setInt(11, Integer.parseInt(requirement.getIntimationMode3()));
+		ps.setInt(12, Integer.parseInt(requirement.getRequirementType3()));
 		ps.setDate(13, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getExpectedDOJ()));
 		ps.setDate(14, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getActualClosureDate()));
 		ps.setInt(15, requirement.getSo());
 		ps.setInt(16, requirement.getJo());
-		ps.setInt(17, requirement.getStatus().getId());
+		ps.setInt(17, Integer.parseInt(requirement.getStatus3()));
 		ps.setString(18, requirement.getActivityOwner());
 		ps.setString(19, requirement.getActivityOwnerEmail());
 		ps.setString(20, requirement.getActualOwner());
@@ -369,7 +391,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setInt(29,configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
 		ps.setString(30,requirement.getPid_crmid_so());
 		ps.setString(31, userId);
-		ps.setInt(32, requirement.getOppurtunityStatus().getId());
+		ps.setInt(32, Integer.parseInt(requirement.getOppurtunityStatus3()));
 		ps.setString(33, requirement.getId());
 	}
 
@@ -1191,8 +1213,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 			while (rs.next()) {
 				RequirementProfileMapping requirement =new RequirementProfileMapping() ;
 		requirement.setProfileId(configDAO.getProfileName(rs.getInt("PROFILE_ID")));
-		requirement.setInternalEvaluationResult(configDAO.getConfigKeyValueMapping(rs.getInt("INTERNAL_EVALUATION_RESULT")));
-		requirement.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(rs.getInt("CUSTOMER_INTERVIEW_STATUS")));
+		requirement.setInternalEvaluationResult(EnumClasses.InitialEvaluationResult.fromInt(rs.getInt("INTERNAL_EVALUATION_RESULT")));
+		requirement.setCustomerInterviewStatus(EnumClasses.CustomerInterviewStatus.fromInt(rs.getInt("CUSTOMER_INTERVIEW_STATUS")));
 		requirement.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
 		requirement.setRemarks(rs.getString("REMARKS"));
 		mapping.add(requirement);

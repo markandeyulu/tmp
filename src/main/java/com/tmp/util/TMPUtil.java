@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -341,11 +342,50 @@ public class TMPUtil {
 	}
 
 	public String getConfigKeyValues(int configKeyId) {
-		List<ConfigKeyValueMapping> list= configDAO.getConfigKeyValues(configKeyId);
-	
 		try {
+			 Map<Integer, String> map = null;
+		 switch (configKeyId) { 
+	        case 1: 
+	        	map = EnumClasses.Critical.getDisplayText();
+	            break; 
+	        case 2: 
+	        	map = EnumClasses.Location.getDisplayText();
+	            break; 
+	        case 3: 
+	        	map = EnumClasses.IntimationMode.getDisplayText();
+	        	break;
+	        case 4: 
+	        	map = EnumClasses.RequirementType.getDisplayText();
+	            break; 
+	        case 5: 
+	        	map = EnumClasses.PositionStatus.getDisplayText();
+	            break; 
+	        case 6: 
+	        	map = EnumClasses.OpportunityStatus.getDisplayText();
+	        	break;
+	        case 7: 
+	        	map = EnumClasses.ProfileSource.getDisplayText();
+	        	break;
+	        case 8: 
+	        	map = EnumClasses.InitialEvaluationResult.getDisplayText();
+	        	break;
+	        case 9: 
+	        	map = EnumClasses.CustomerInterviewStatus.getDisplayText();
+	        	break;
+	        case 10: 
+	        	map = EnumClasses.SkillCategory.getDisplayText();
+	            break; 
+	        case 11: 
+	        	map = EnumClasses.PrimarySkill.getDisplayText();
+	        	break;
+	        default: 
+	            break; 
+	        } 
+			
+		 //Map<Integer, String> map = EnumClasses.Location.getDisplayText();
+		
 			JSONObject jsonObj = new JSONObject();			
-			jsonObj.put("locationJson", list);
+			jsonObj.put("locationJson", map);
 			String jsonStr = jsonObj.toString();
 			return jsonStr;
 		} catch (Exception e) {

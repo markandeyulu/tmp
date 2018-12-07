@@ -141,9 +141,9 @@ table.dataTable thead th:first-child {
 		<td id="profileCustomerID" href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
 		<td>{{reqRefNo}}</td>
 		<td>{{location}}</td>
-		<td>{{primarySkill.configValue.value}}</td>
+		<td>{{primarySkill3}}</td>
 		
-		<td>{{profileSource.configValue.value}}</td>
+		<td>{{profileSource3}}</td>
 		<td>{{profileSharedBy}}</td>
 		<td>{{name}}</td>
 		<td>{{email}}</td>
@@ -155,10 +155,10 @@ table.dataTable thead th:first-child {
 		<td>{{currentCTC}}</td>
 		<td>{{expectedCTC}}</td>
 		<td>{{internalEvaluationResultDate}}</td>
-		<td>{{initialEvaluationResult.configValue.value}}</td>
+		<td>{{initialEvaluationResult3}}</td>
 		<td>{{profileSharedCustomer}}</td>
 		<td>{{profileSharedCustomerDate}}</td>
-		<td>{{customerInterviewStatus.configValue.value}}</td>
+		<td>{{customerInterviewStatus3}}</td>
 		<td>{{remarks}}</td>
 		<td>{{profileSharedDatestr}}</td>
 </tr>
@@ -761,12 +761,12 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:select class="form-control" id="initialEvaluationResultAdd" path="initialEvaluationResultAdd">
-											 <option value="">Select Initial Evaluation Result</option>
+											 <!-- <option value="">Select Initial Evaluation Result</option>
 											<option value="23">Shortlisted</option>
 											<option value="24">Rejected</option>
 											<option value="25">Hold</option>
 											<option value="26">Did not process</option> 
-											<option selected="selected" value="60">In Progress</option> 
+											<option selected="selected" value="60">In Progress</option>  -->
 										</spring:select>
 									</div>
 								</div>
@@ -951,7 +951,7 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											<spring:select id="primarySkill1" multiple="false" path="primarySkill.id" class="form-control dropdown-toggle text-left " 
+											<spring:select id="primarySkill1" multiple="false" path="primarySkill3" class="form-control dropdown-toggle text-left " 
 											oninvalid="this.setCustomValidity('Primary skill must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')">
 						            </spring:select></td>
@@ -973,7 +973,7 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											<spring:select id="profileSourceProfile" multiple="false" path="profileSource.id"   class="form-control dropdown-toggle text-left " 
+											<spring:select id="profileSourceProfile" multiple="false" path="profileSource3"   class="form-control dropdown-toggle text-left " 
 											oninvalid="this.setCustomValidity('Profile source must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')"
 											onchange="show(this.options[this.selectedIndex].value)">
@@ -1138,15 +1138,15 @@ $('#logout').click(function () {
 									
 									
 										<td>
-										<spring:select class="form-control dropdown-toggle text-left " onchange="disableTextBox();" id="initialEvaluationResultProfile" path="initialEvaluationResult.id"  
+										<spring:select class="form-control dropdown-toggle text-left " onchange="disableTextBox();" id="initialEvaluationResultProfile" path="initialEvaluationResult3"  
 										oninvalid="this.setCustomValidity('Initial Evaluation Result must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')">
-											<option value="">Select Initial Evaluation Result</option>
+											<!-- <option value="">Select Initial Evaluation Result</option>
 											<option value="23">Shortlisted</option>
 											<option value="24">Rejected</option>
 											<option value="25">Hold</option>
 											<option value="26">Did not process</option>
-											<option value="60">In Progress</option>  
+											<option value="60">In Progress</option>   -->
 										</spring:select>
 										</td>
 									</tr>
@@ -1175,7 +1175,7 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											 <spring:select id="customerInterviewStatusProfile" multiple="false" path="customerInterviewStatus.id"   class="form-control dropdown-toggle text-left " 
+											 <spring:select id="customerInterviewStatusProfile" multiple="false" path="customerInterviewStatus3"   class="form-control dropdown-toggle text-left " 
 											 oninvalid="this.setCustomValidity('Customer Interview Status must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')" >
 						            </spring:select></td>
