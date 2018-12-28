@@ -57,33 +57,34 @@ public class ProfileRequirementStatusMappingUtil {
 	statusList.add(status9);
 	}
 
-	public static int findDashboardStatus(int initEvalResultValue, String isProfileSharedWithCus, int cusIntStatusValue) {
-	int result = 0;
-	if(statusList !=null && statusList.size()==0)
-	populateList();
-	for (int i = 0; i < statusList.size(); i++) {
+	public static int findDashboardStatus(int initEvalResultValue, String isProfileSharedWithCus,
+			int cusIntStatusValue) {
+		int result = 0;
+		if (statusList != null && statusList.size() == 0)
+			populateList();
+		for (int i = 0; i < statusList.size(); i++) {
 
-	ProfileRequirementStatusMappingUtil sl = null;
-	sl = statusList.get(i);
-	if (cusIntStatusValue != 0) {
-	if (sl.initEvalResultValue == initEvalResultValue
-	&& sl.isProfileSharedWithCus.equalsIgnoreCase(isProfileSharedWithCus)
-	&& sl.cusIntStatusValue == cusIntStatusValue) {
-	return sl.resultStatusValue;
+			ProfileRequirementStatusMappingUtil sl = null;
+			sl = statusList.get(i);
+			if (cusIntStatusValue != 0) {
+				if (sl.initEvalResultValue == initEvalResultValue
+						&& sl.isProfileSharedWithCus.equalsIgnoreCase(isProfileSharedWithCus)
+						&& sl.cusIntStatusValue == cusIntStatusValue) {
+					return sl.resultStatusValue;
 
-	}
+				}
 
-	} else {
-	if (sl.initEvalResultValue == initEvalResultValue
-	&& sl.isProfileSharedWithCus.equalsIgnoreCase(isProfileSharedWithCus)) {
-	return sl.resultStatusValue;
+			} else {
+				if (sl.initEvalResultValue == initEvalResultValue
+						&& sl.isProfileSharedWithCus.equalsIgnoreCase(isProfileSharedWithCus)) {
+					return sl.resultStatusValue;
 
-	}
+				}
 
-	}
+			}
 
-	}
-	return result;
+		}
+		return result;
 
 	}
 	

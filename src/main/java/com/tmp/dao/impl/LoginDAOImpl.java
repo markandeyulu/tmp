@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.LoginDAO;
+import com.tmp.entity.Role;
 import com.tmp.entity.User;
 import com.tmp.entity.UserRoleMapping;
-import com.tmp.util.EnumClasses;
 
 @Repository
 @Qualifier("loginDAO")
@@ -55,8 +55,7 @@ public class LoginDAOImpl implements LoginDAO{
 				userInfo.setId(rs.getInt("ID"));
 				userInfo.setName(rs.getString("NAME"));
 				userInfo.setDisplayName(rs.getString("DISPLAY_NAME"));
-				//userInfo.setRole( Role.fromInt(rs.getInt("ROLE")));
-				userInfo.setRole(EnumClasses.Role.fromInt(rs.getInt("ROLE")));
+				userInfo.setRole(Role.fromInt(rs.getInt("ROLE")));
 			}
 
 		}catch (SQLException sqlException) {

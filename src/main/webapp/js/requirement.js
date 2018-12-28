@@ -81,14 +81,14 @@ function loadDetail(id){
 		success: function (data) {
 			$("option:selected").removeAttr("selected");
 			$('#id').val(data.id);
-			$("#criticalityNew option:contains(" + data.criticality3+ ")").attr('selected', 'selected');
+			$("#criticalityNew option:contains(" + data.criticality.configValue.value + ")").attr('selected', 'selected');
 			//$('#criticalityNew').val(data.criticality.configValue.value);
-			$("#skillCategoryNew option:contains(" + data.skillCategory3 + ")").attr('selected', 'selected');
+			$("#skillCategoryNew option:contains(" + data.skillCategory.configValue.value + ")").attr('selected', 'selected');
 			// $('#skillCategoryNew').val(data.skillCategory.configValue.value);
-			$("#primarySkillNew option:contains(" + data.primarySkill3+ ")").attr('selected', 'selected');
+			$("#primarySkillNew option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
 			// $('#primarySkill').val(data.primarySkill.configValue.value);
 			$('#jobDescriptionNew').val(data.jobDescription);
-			$("#locationNew option:contains(" + data.location3+ ")").attr('selected', 'selected');
+			$("#locationNew option:contains(" + data.location.configValue.value + ")").attr('selected', 'selected');
 			// $('#locationNew').val(data.location.configValue.value);
 			$('#cityNew').val(data.city);
 			$('#billingRateNew').val(data.billingRate);
@@ -96,8 +96,8 @@ function loadDetail(id){
 			$('#intimatedByNew').val(data.intimatedBy);
 			$('#intimatorEmailNew').val(data.intimatorEmail);
 			//$('#intimationModeNew').val(data.intimationMode.configValue.value);
-			$("#intimationModeNew option:contains(" + data.intimationMode3 + ")").attr('selected', 'selected');
-			$("#requirementTypeNew option:contains(" + data.requirementType3 + ")").attr('selected', 'selected');
+			$("#intimationModeNew option:contains(" + data.intimationMode.configValue.value + ")").attr('selected', 'selected');
+			$("#requirementTypeNew option:contains(" + data.requirementType.configValue.value + ")").attr('selected', 'selected');
 			// $('#requirementTypeNew').val(data.requirementType.configValue.value);
 			$('#expectedDOJ').val(data.expectedDOJ);
 			$('#actualClosureDateNew').val(data.actualClosureDate);
@@ -146,11 +146,11 @@ function loadDetail(id){
 				 $('#projectNew').val(data.project.projectName);	 
 			 }
 			
-			if(data.status3!=null && data.status3!=""){
-				$("#statusNew option:contains(" + data.status3 + ")").attr('selected', 'selected');
+			if(data.status.configValue.value!=null && data.status.configValue.value!=""){
+				$("#statusNew option:contains(" + data.status.configValue.value + ")").attr('selected', 'selected');
 			}
-			if(data.oppurtunityStatus3!=null && data.oppurtunityStatus3!=""){
-				$("#oppurtunityNew option:contains(" + data.oppurtunityStatus3 + ")").attr('selected', 'selected');
+			if(data.oppurtunityStatus.configValue.value!=null && data.oppurtunityStatus.configValue.value!=""){
+				$("#oppurtunityNew option:contains(" + data.oppurtunityStatus.configValue.value + ")").attr('selected', 'selected');
 			}
 		},
 		failure: function(data){

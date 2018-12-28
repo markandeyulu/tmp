@@ -63,12 +63,8 @@ function loadDetail(id){
 			 $('#idProfile').val(data.id);
 			 $('#emailProfile').val(data.email);
 			 $('#currentCompanyProfile').val(data.currentCompany);
-			 $("#primarySkillProfile option:contains(" + data.primarySkill3+ ")").attr('selected', 'selected');
-			 var theText = "java";
-			 $("#primarySkill1 option").filter(function () {
-			     return $.trim($(this).text()) == data.primarySkill3;
-			 }).attr('selected', 'selected');
-			// $("#primarySkill1 option:contains(" + data.primarySkill3 + ")").attr('selected', 'selected');
+			 $("#primarySkillProfile option:contains(" + data.primarySkill.configValue.value+ ")").attr('selected', 'selected');
+			 $("#primarySkill1 option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
 			 //$('#primarySkillId').val(data.primarySkill.id);
 			 $('#profileSharedDateProfile').val(data.profileSharedDate);
 			 $('#yearsOfExperienceProfile').val(data.yearsOfExperience);
@@ -79,22 +75,22 @@ function loadDetail(id){
 			 $('#updatedOnProfile').val(data.updatedOn);
 			 $('#internalEvaluationResultDateProfile').val(data.internalEvaluationResultDate);
 			 $("#profileSharedCustomerProfile option:contains(" + data.profileSharedCustomer + ")").attr('selected', 'selected');
-			 $("#customerInterviewStatusProfile option:contains(" + data.customerInterviewStatus3 + ")").attr('selected', 'selected');
+			 $("#customerInterviewStatusProfile option:contains(" + data.customerInterviewStatus.configValue.value + ")").attr('selected', 'selected');
 			 $('#nameProfile').val(data.name);
 			 $('#contactNoProfile').val(data.contactNo);
 			 $('#locationProfile').val(data.location);
-			 $("#profileSourceProfile option:contains(" + data.profileSource3+ ")").attr('selected', 'selected');
+			 $("#profileSourceProfile option:contains(" + data.profileSource.configValue.value+ ")").attr('selected', 'selected');
 			 $('#profileSourceId').val(data.profileSource.id);
 			 $('#profileSharedByProfile').val(data.profileSharedBy);
 			 $('#relevantExperienceProfile').val(data.relevantExperience);
 			 $('#currentCTCProfile').val(data.currentCTC);
-			 if(null!=data.isAllocated3){
-				 $("#isAllocatedProfile option:contains(" + data.isAllocated3+ ")").attr('selected', 'selected');
+			 if(null!=data.isAllocated.configValue){
+				 $("#isAllocatedProfile option:contains(" + data.isAllocated.configValue.value+ ")").attr('selected', 'selected');
 			 }
 			 $('#allocationEndDateProfile').val(data.allocationEndDate);
 			 $('#createdByProfile').val(data.createdBy.name);
 			 $('#updatedByProfile').val(data.updatedBy.name);
-			 $("#initialEvaluationResultProfile option:contains(" + data.initialEvaluationResult3 + ")").attr('selected', 'selected');
+			 $("#initialEvaluationResultProfile option:contains(" + data.initialEvaluationResult.configValue.value + ")").attr('selected', 'selected');
 			 /*$("#accountProfile option:contains(" + data.account.adminInfoValue.value + ")").attr('selected', 'selected');
 			 $("#projectProfile option:contains(" + data.project.project.adminInfoValue.value + ")").attr('selected', 'selected');*/
 			 $('#profileSharedCustomerDateProfile').val(data.profileSharedCustomerDate);
