@@ -409,7 +409,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		System.out.println("profile size "+profiles.size());
 		if(reqStatus <= proposedReqStatus){
 			return proposedReqStatus;
-		}else if(profiles.size()==1){
+		}else if(profiles.size()==1 && reqStatus<16){
 			return proposedReqStatus;
 		}
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
