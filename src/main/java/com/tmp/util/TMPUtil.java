@@ -4,9 +4,16 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,6 +80,28 @@ public class TMPUtil {
 	@Autowired(required = true)
 	@Qualifier("loginDAO")
 	LoginDAO loginDAO;
+	
+	@Autowired(required = true)
+	@Qualifier("tmpDAOUtil")
+	TMPDAOUtil tmpDAOUtil;
+	
+	private DataSource dataSource;
+
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	public TMPDAOUtil getTmpDAOUtil() {
+		return tmpDAOUtil;
+	}
+
+	public void setTmpDAOUtil(TMPDAOUtil tmpDAOUtil) {
+		this.tmpDAOUtil = tmpDAOUtil;
+	}
 	
 	public String getRequirementJson(String userId) {
 		ArrayList<DashboardRequirement> dashboardRequirementList = dashboardDAO.getRequirementJson(userId);
@@ -496,5 +525,334 @@ public class TMPUtil {
 		return requirementDAO.getShortlistedProfiles(requirementId);
 	}
 	
+	public int getKeyByValue(String searchFor, String searchValue) {
+		
+		int searchKey = 0;
+		
+		if(StringUtils.isNotBlank(searchValue)) {
+			System.out.println("SearchValue "+ searchValue);
+			searchKey = getConfigKeyIdByName(getSearchIndex(searchFor), searchValue);
+		}
+		
+		return searchKey;
+	}
 	
+	static int getSearchIndex(String searchFor) {
+		
+		int searchIndex = 0;
+		if(StringUtils.isNotBlank(searchFor)) {
+		if(searchFor.equalsIgnoreCase("location"))
+			searchIndex = 2;
+		if(searchFor.equalsIgnoreCase("criticality"))
+			searchIndex = 1;
+		if(searchFor.equalsIgnoreCase("positionstatus"))
+			searchIndex = 5;
+		if(searchFor.equalsIgnoreCase("opportunitystatus"))
+			searchIndex = 6;
+		if(searchFor.equalsIgnoreCase("primaryskill"))
+			searchIndex = 11;
+		if(searchFor.equalsIgnoreCase("skillcategory"))
+			searchIndex = 10;
+		if(searchFor.equalsIgnoreCase("intimationmode"))
+			searchIndex = 3;
+		if(searchFor.equalsIgnoreCase("reqtype"))
+			searchIndex = 4;
+		}
+		return searchIndex;
+	}
+	
+	public int getConfigKeyIdByName(int searchId, String configValue) {
+		
+		List<ConfigKeyValueMapping> list= configDAO.getConfigKeyValues(searchId);
+		
+		int configKey = 0;
+		
+		for(ConfigKeyValueMapping obj : list) {
+			
+			//if(obj.getConfigValue().getValue().equalsIgnoreCase(configValue)) {
+			if(obj.getConfigValue().getValue().toLowerCase().contains(configValue.toLowerCase()) || 
+					configValue.toLowerCase().contains(obj.getConfigValue().getValue().toLowerCase())) {
+				configKey = obj.getId();
+				return configKey;
+			}
+			
+			
+		}
+		
+		if(configKey == 0) {
+			configKey = insertConfigTableValues(searchId, configValue);
+		}
+		
+		return configKey;
+		
+	}
+	
+	public int insertConfigTableValues(int searchId, String configValue) {
+		
+		// insert values into INSERT INTO `config_value` VALUES (1,'Critical','2018-04-18 18:30:00',1,'0000-00-00 00:00:00',NULL);
+		// get primary key form config_value table
+		// insert INSERT INTO `config_key_value_mapping` VALUES (1,1,1,'2018-04-18 18:30:00',1,'0000-00-00 00:00:00',NULL);
+		
+		StringBuffer sql = new StringBuffer("INSERT INTO CONFIG_VALUE(VALUE, CREATED_ON, CREATED_BY) VALUES(?, ?, ?) ");
+		StringBuffer sql1 = new StringBuffer("INSERT INTO CONFIG_KEY_VALUE_MAPPING(CONFIG_KEY_ID, CONFIG_VALUE_ID, CREATED_ON, CREATED_BY) VALUES(?, ?, ?, ?)");
+
+		Connection conn = null;
+		int generatedKey = 0;
+		int value;
+		try {
+			conn = dataSource.getConnection();
+			
+			PreparedStatement ps = conn.prepareStatement(sql.toString(),Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, configValue);
+			ps.setTimestamp(2, tmpDAOUtil.getCurrentTimestamp());
+			ps.setInt(3, 1);
+		    value = ps.executeUpdate();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			//system.out.println("Inserted ADMIN_INFO_VALUE record's ID: " + generatedKey);
+			rs.close();
+			ps.close();
+			
+			PreparedStatement ps1 = conn.prepareStatement(sql1.toString(),Statement.RETURN_GENERATED_KEYS);
+			ps1.setInt(1, searchId);
+			ps1.setInt(2, generatedKey);
+			ps1.setTimestamp(3, tmpDAOUtil.getCurrentTimestamp());
+			ps1.setInt(4, 1);
+		    value = ps1.executeUpdate();
+		    ResultSet rs1 = ps1.getGeneratedKeys();
+			
+			if (rs1.next()) {
+			    generatedKey = rs1.getInt(1);
+			}
+			rs1.close();
+			ps1.close();
+ 
+		} catch (SQLException sqlException) {
+			sqlException.getMessage();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+		return generatedKey;
+		
+	}
+	
+	public int getAccountIdByName(String accountName,  String userId) {
+		
+		int accountId = 0;
+ 		if(StringUtils.isNotBlank(accountName)) {
+ 			System.out.println("Account Name : "+accountName);
+			accountId = getAccountByName(accountName, userId);
+		}
+ 		
+ 		
+ 		
+		return accountId;
+	}
+	
+	public int getAccountByName(String accountName, String userId) {
+		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.account_master WHERE LOWER(ACCOUNT_NAME) like ? ");
+			
+		Connection conn = null;
+		Account account = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int accountId = 0;
+		try {
+			conn = dataSource.getConnection();
+		    ps = conn.prepareStatement(sql.toString());
+			ps.setString(1, accountName.toLowerCase());
+		    rs = ps.executeQuery();
+			
+			if (rs != null) {
+				if (rs.next()) {
+					accountId = rs.getInt("ACCOUNT_ID");
+					/*account = new Account();
+					account.setAccountId(rs.getInt("ACCOUNT_ID"));
+					account.setAccountName(rs.getString("ACCOUNT_NAME"));*/
+				}
+			}
+			
+			
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					rs.close();
+					ps.close();
+					conn.close();
+				} catch (SQLException sqlException) {}
+			}
+		}
+		if(accountId == 0) {
+			accountId = insertForAccountName(accountName);
+					StringBuffer sql2 = new StringBuffer("INSERT INTO user_account_mapping (USER_ID,ACCOUNT_ID) VALUES (?,?)");
+
+					
+					try {
+						conn = dataSource.getConnection();
+						
+						ps = conn.prepareStatement(sql2.toString(),Statement.RETURN_GENERATED_KEYS);
+						ps.setString(1, userId);
+						ps.setInt(2, accountId);
+						
+					    ps.executeUpdate();
+						
+						
+						
+			 
+					} catch (SQLException sqlException) {
+						sqlException.getMessage();
+					} finally {
+						if (conn != null) {
+							try {
+								rs.close();
+								ps.close();
+								conn.close();
+							} catch (SQLException sqlException) {
+							}
+						}
+					}
+				}
+		
+		return accountId;
+	}
+	
+	public int insertForAccountName(String accountName) {
+		/*INSERT INTO `account_master` VALUES (1,'Ford'),(2,'Ford Direct'),(3,'Mazda'),(4,'TRW');
+		   
+		INSERT INTO `projects` VALUES (1,'OWS',1);*/
+		StringBuffer sql = new StringBuffer("INSERT INTO account_master(ACCOUNT_NAME) VALUES(?) ");
+		//StringBuffer sql1 = new StringBuffer("INSERT INTO projects(PROJECT_NAME, ACC_ID) VALUES(?, ?)");
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int generatedKey = 0;
+		try {
+			conn = dataSource.getConnection();
+			
+			ps = conn.prepareStatement(sql.toString(),Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, accountName);
+		    ps.executeUpdate();
+			
+			rs = ps.getGeneratedKeys();
+			
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			
+			
+ 
+		} catch (SQLException sqlException) {
+			sqlException.getMessage();
+		} finally {
+			if (conn != null) {
+				try {
+					rs.close();
+					ps.close();
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+		return generatedKey;
+	}
+	
+	public int getProjectNameByAccountId(String projectName, int accountId) {
+		int projectId = 0;
+		if(StringUtils.isNotBlank(projectName)) {
+			projectId = getProjectIdByName(projectName, accountId);
+		}
+		
+		
+		return projectId;
+	}
+	public int getProjectIdByName(String projectName , int accountId) {
+		
+		int projectId = 0;
+		
+		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.projects WHERE LOWER(PROJECT_NAME) like ? ");
+		
+		Connection conn = null;
+		PreparedStatement ps=null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			 ps = conn.prepareStatement(sql.toString());
+			ps.setString(1, projectName.toLowerCase());
+			rs = ps.executeQuery();
+			
+			if (rs != null) {
+				if (rs.next()) {
+					projectId = rs.getInt("PROJECT_ID");			
+					}
+			}
+			
+			
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					rs.close();
+					ps.close();
+					conn.close();
+				} catch (SQLException sqlException) {}
+			}
+		}
+			if(projectId == 0) {
+			projectId = insertProject(accountId, projectName);	
+			}
+		return projectId;
+		
+	}
+	public int insertProject(int accountId, String projectName) {
+		
+		StringBuffer sql = new StringBuffer("INSERT INTO projects(PROJECT_NAME,ACC_ID) VALUES(?,?) ");
+		//StringBuffer sql1 = new StringBuffer("INSERT INTO projects(PROJECT_NAME, ACC_ID) VALUES(?, ?)");
+
+		Connection conn = null;
+		int generatedKey = 0;
+		try {
+			conn = dataSource.getConnection();
+			
+			PreparedStatement ps = conn.prepareStatement(sql.toString(),Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, projectName);
+			ps.setInt(2, accountId);
+		    ps.executeUpdate();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			rs.close();
+			ps.close();
+			
+ 
+		} catch (SQLException sqlException) {
+			sqlException.getMessage();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+		return generatedKey;
+		
+	}
+
 }

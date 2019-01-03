@@ -612,11 +612,11 @@ $('#logout').click(function () {
 										<spring:label path="account1">Customer Name<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<spring:select required="required" class="form-control" id="account1" path="account1"
+										<%-- <spring:select required="required" class="form-control" id="account1" path="account1"
 										oninvalid="this.setCustomValidity('Please select Customer name')" 
 										oninput="this.setCustomValidity('')" >
-										
-										</spring:select>
+										</spring:select> --%>
+										<spring:input type="text" class="form-control" id="account1" path="account1" placeholder="Enter Customer Name.." />	
 										</div>
 									</div>
 									 <div class="row">
@@ -624,11 +624,12 @@ $('#logout').click(function () {
 										<spring:label path="projectAdd">Project Name<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<spring:select required="required" class="form-control" id="projectAdd" path="projectAdd"
+										<%-- <spring:select required="required" class="form-control" id="projectAdd" path="projectAdd"
 										oninvalid="this.setCustomValidity('Project name must not be empty')" 
 										oninput="this.setCustomValidity('')" >
 										
-										</spring:select>
+										</spring:select> --%>
+										<spring:input type="text" class="form-control" id="projectAdd" path="projectAdd" placeholder="Enter Project Name.." />	
 										</div>
 										
 										<%-- <div class="col-75">
@@ -730,9 +731,10 @@ $('#logout').click(function () {
 											id="primarySkill1" path="primarySkill1"
 											placeholder="Enter Competency/Domain.." required="required"/> --%>
 											
-										 <spring:select id="primarySkill1" multiple="false" path="primarySkill1"   class="form-control dropdown-toggle text-left " Style="width:100%"
+										<%--  <spring:select id="primarySkill1" multiple="false" path="primarySkill1"   class="form-control dropdown-toggle text-left " Style="width:100%"
                 						  oninvalid="this.setCustomValidity('Please select Primary Skill')" required="required"	oninput="this.setCustomValidity('')">
-										  </spring:select>	
+										  </spring:select> --%>
+										   	<spring:input type="text" class="form-control" id="primarySkill1" path="primarySkill1" placeholder="Enter Primary Skill.." />	
 										</div>
 								</div>
 								<div class="row">
@@ -740,10 +742,12 @@ $('#logout').click(function () {
 										<spring:label path="skillCategoryAdd1">Skill Category 1<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										 <spring:select id="skillCategoryAdd1" multiple="false" path="skillCategoryAdd1"   class="form-control dropdown-toggle text-left " Style="width:100%"
+										<%--  <spring:select id="skillCategoryAdd1" multiple="false" path="skillCategoryAdd1"   class="form-control dropdown-toggle text-left " Style="width:100%"
                 						  oninvalid="this.setCustomValidity('Please select Skill Category')" required="required"	oninput="this.setCustomValidity('')">
-										  </spring:select>	
-										</div>
+										  </spring:select>	 --%>
+										  
+										  	<spring:input type="text" class="form-control" id="skillCategoryAdd1" path="skillCategoryAdd1" placeholder="Enter Skill Category.." />
+										 </div>
 									</div>
 									<div class="row">
 										<div class="col-25">

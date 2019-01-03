@@ -27,6 +27,7 @@ import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
 import com.tmp.entity.Requirements;
 import com.tmp.util.TMPDAOUtil;
+import com.tmp.util.TMPUtil;
 
 @Repository
 @Qualifier("requirementDAO")
@@ -49,6 +50,17 @@ public class RequirementDAOImpl implements RequirementDAO {
 	@Autowired(required = true)
 	@Qualifier("tmpDAOUtil")
 	TMPDAOUtil tmpDAOUtil;
+	
+	@Autowired(required = true)
+	@Qualifier("tmpUtil")
+	TMPUtil tmpUtil;
+	
+	public TMPUtil getTmpUtil() {
+		return tmpUtil;
+	}
+	public void setTmpUtil(TMPUtil tmpUtil) {
+		this.tmpUtil = tmpUtil;
+	}
 
 	private DataSource dataSource;
 
@@ -251,8 +263,11 @@ public class RequirementDAOImpl implements RequirementDAO {
 		
 		ps.setString(1, requirement.getId());
 		ps.setString(2, requirement.getCriticality1());
-		ps.setInt(3, Integer.parseInt(requirement.getSkillCategoryAdd1()));
-		ps.setInt(4, Integer.parseInt(requirement.getPrimarySkill1()));
+		//ps.setInt(3, Integer.parseInt(requirement.getSkillCategoryAdd1()));
+		//reqBulk.setPositionStatus(getKeyByValue("positionstatus", cell.getStringCellValue()));
+		ps.setInt(3, tmpUtil.getKeyByValue("skillcategory", requirement.getSkillCategoryAdd1()));
+		//ps.setInt(4, Integer.parseInt(requirement.getPrimarySkill1()));
+		ps.setInt(4, tmpUtil.getKeyByValue("primaryskill", requirement.getPrimarySkill1()));
 		ps.setString(5, requirement.getJobDescription());
 		ps.setString(6, requirement.getLocation1());
 		ps.setString(7, requirement.getCity());
@@ -280,8 +295,10 @@ public class RequirementDAOImpl implements RequirementDAO {
 		int projectId = configDAO.getAdminInfoKeyValueMapping(requirement.getProjectAdd()).getId();
 		ps.setInt(22, configDAO.getProjectMappingId(accountId,projectId).getId());*/
 		
-		ps.setInt(21, Integer.parseInt(requirement.getAccount1()));
-		ps.setInt(22, Integer.parseInt(requirement.getProjectAdd()));
+		//ps.setInt(21, Integer.parseInt(requirement.getAccount1()));
+		//ps.setInt(22, Integer.parseInt(requirement.getProjectAdd()));
+		ps.setInt(21, tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
+		ps.setInt(22, tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId))); 
 		ps.setTimestamp(23, tmpDAOUtil.getCurrentTimestamp());
 		ps.setString(24, userId);
 		ps.setString(25, requirement.getBand());
@@ -434,10 +451,10 @@ public class RequirementDAOImpl implements RequirementDAO {
 		try {
 			
 			String accountName = null, projectName = null;
-			int accountId = Integer.parseInt(requirement.getAccount1());
+			int accountId = tmpUtil.getAccountIdByName(requirement.getAccount1(), userId);
 			//accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
 			accountName = tmpDAOUtil.getAccount(accountId).getAccountName();
-			int projectId = Integer.parseInt(requirement.getProjectAdd());
+			int projectId = tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
 			String incrementor=null;
 			String dbDate=null;
 			//projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
@@ -1348,6 +1365,8 @@ public ArrayList<Requirement>  populateShortlistedProfiles(ResultSet rs) throws 
 	return mapping;
 
 }
+
+
 
 }
 	

@@ -304,7 +304,7 @@ public class ProfilesController {
 								
 								String yearsofExp = ((XSSFCell) cells.next()).toString().trim();
 								if((yearsofExp!=null) && (!yearsofExp.isEmpty())){
-									int yearsOfExperience=(int)Double.parseDouble(yearsofExp);
+									double yearsOfExperience=Double.parseDouble(yearsofExp);
 									profile.setYearsOfExperience(yearsOfExperience);
 									}else{
 									profile.setYearsOfExperience(0);	
@@ -312,7 +312,7 @@ public class ProfilesController {
 								
 								String relevantExp = ((XSSFCell) cells.next()).toString().trim();
 								if((relevantExp!=null) && (!relevantExp.isEmpty())){
-									int relevantExperience=(int)Double.parseDouble(relevantExp);
+									double relevantExperience=Double.parseDouble(relevantExp);
 									profile.setRelevantExperience(relevantExperience);
 									}else{
 									profile.setRelevantExperience(0);	

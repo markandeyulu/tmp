@@ -998,7 +998,7 @@ $('#logout').click(function () {
 													path="yearsOfExperience" id="yearsOfExperienceProfile"
 													type="text" value=""
 													oninvalid="this.setCustomValidity('Years of experience must not be empty')"
-													required="required" maxlength="2" onkeypress='validate(event)' oninput="this.setCustomValidity('')" /></td>
+													required="required" maxlength="4" onkeypress='validate(event)' oninput="this.setCustomValidity('')" /></td>
 
 										</tr>
 										<tr>
@@ -1011,7 +1011,7 @@ $('#logout').click(function () {
 													path="relevantExperience" id="relevantExperienceProfile"
 													type="text"
 													oninvalid="this.setCustomValidity('Relevant experience must not be empty')"
-													required="required" maxlength="2"  onkeypress='validate(event)' oninput="this.setCustomValidity('')" /></td>
+													required="required" maxlength="4"  onkeypress='validate(event)' oninput="this.setCustomValidity('')" /></td>
 										</tr>
 										<tr>
 											<td><spring:label path="currentCTC">CurrentCTC

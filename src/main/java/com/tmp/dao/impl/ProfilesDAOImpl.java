@@ -616,8 +616,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
 		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
-		profile.setYearsOfExperience(rs.getInt("YEARS_OF_EXPERIENCE"));
-		profile.setRelevantExperience(rs.getInt("RELEVANT_EXPERIENCE"));
+		profile.setYearsOfExperience(rs.getDouble("YEARS_OF_EXPERIENCE"));
+		profile.setRelevantExperience(rs.getDouble("RELEVANT_EXPERIENCE"));
 		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
@@ -673,8 +673,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
 		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
-		profile.setYearsOfExperience(rs.getInt("YEARS_OF_EXPERIENCE"));
-		profile.setRelevantExperience(rs.getInt("RELEVANT_EXPERIENCE"));
+		profile.setYearsOfExperience(rs.getDouble("YEARS_OF_EXPERIENCE"));
+		profile.setRelevantExperience(rs.getDouble("RELEVANT_EXPERIENCE"));
 		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
@@ -732,8 +732,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSourceAdd());
 		ps.setString(i++, profile.getProfileSharedBy());
-		ps.setInt(i++, profile.getYearsOfExperience());
-		ps.setInt(i++, profile.getRelevantExperience());
+		ps.setDouble(i++, profile.getYearsOfExperience());
+		ps.setDouble(i++, profile.getRelevantExperience());
 		ps.setInt(i++, profile.getCurrentCTC());
 		ps.setInt(i++, profile.getExpectedCTC());
 		ps.setInt(i++, profile.getNoticePeriod());
@@ -758,8 +758,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setInt(i++, profile.getPrimarySkill().getId());
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSharedBy());
-		ps.setInt(i++, profile.getYearsOfExperience());
-		ps.setInt(i++, profile.getRelevantExperience());
+		ps.setDouble(i++, profile.getYearsOfExperience());
+		ps.setDouble(i++, profile.getRelevantExperience());
 		ps.setInt(i++, profile.getNoticePeriod());
 		ps.setInt(i++, profile.getCurrentCTC());
 		ps.setInt(i++, profile.getExpectedCTC());
@@ -1330,13 +1330,13 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		}
 
 		if(profile.getYearsOfExperience()>0){
-			ps.setInt(9, profile.getYearsOfExperience());
+			ps.setDouble(9, profile.getYearsOfExperience());
 			}else{
 			ps.setString(9, "");
 		}
 		
 		if(profile.getRelevantExperience()>0){
-			ps.setInt(10, profile.getRelevantExperience());
+			ps.setDouble(10, profile.getRelevantExperience());
 			}else{
 			ps.setString(10, "");
 		}

@@ -31,8 +31,7 @@ public class Profile implements Serializable {
 	}
 
 	private String profileSharedBy;
-	private int yearsOfExperience;
-	private int relevantExperience;
+	
 	private int noticePeriod;
 	private int currentCTC;
 	private int expectedCTC;
@@ -94,6 +93,8 @@ public class Profile implements Serializable {
 	private String customerInterviewStatusAdd;
 	private String Account1;
 	private String Project1;
+	private double yearsOfExperience;
+	private double relevantExperience;
 	
 	public String getAccount1() {
 		return Account1;
@@ -207,19 +208,21 @@ public class Profile implements Serializable {
 		this.profileSharedBy = profileSharedBy;
 	}
 
-	public int getYearsOfExperience() {
+		
+
+	public double getYearsOfExperience() {
 		return yearsOfExperience;
 	}
 
-	public void setYearsOfExperience(int yearsOfExperience) {
+	public void setYearsOfExperience(double yearsOfExperience) {
 		this.yearsOfExperience = yearsOfExperience;
 	}
 
-	public int getRelevantExperience() {
+	public double getRelevantExperience() {
 		return relevantExperience;
 	}
 
-	public void setRelevantExperience(int relevantExperience) {
+	public void setRelevantExperience(double relevantExperience) {
 		this.relevantExperience = relevantExperience;
 	}
 
