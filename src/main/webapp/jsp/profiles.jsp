@@ -141,7 +141,7 @@ table.dataTable thead th:first-child {
 		<td id="profileCustomerID" href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
 		<td>{{reqRefNo}}</td>
 		<td>{{location}}</td>
-		<td>{{primarySkill.configValue.value}}</td>
+		<td>{{primarySkill}}</td>
 		
 		<td>{{profileSource.configValue.value}}</td>
 		<td>{{profileSharedBy}}</td>
@@ -636,9 +636,10 @@ $('#logout').click(function () {
 											id="primarySkillAdd" type="text" oninvalid="this.setCustomValidity('Primary skill must not be empty')"
 											placeholder="Enter Primary Skill.." required="required"  oninput="this.setCustomValidity('')" />
 									 --%>
-									<spring:select id="primarySkillNew" multiple="false" path="primarySkillAdd"   class="form-control dropdown-toggle text-left " Style="width:100%"
+								<%-- 	<spring:select id="primarySkillNew" multiple="false" path="primarySkillAdd"   class="form-control dropdown-toggle text-left " Style="width:100%"
                 						  oninvalid="this.setCustomValidity('Please select Primary Skill')" required="required"	oninput="this.setCustomValidity('')">
-										  </spring:select>
+										  </spring:select> --%>
+										<spring:input type="text" class="form-control" id="primarySkillNew" path="primarySkillAdd" placeholder="Enter Primary Skill.." />	  
 									</div>
 								</div>
 
@@ -951,10 +952,13 @@ $('#logout').click(function () {
 									
 									
 										<td>
-											<spring:select id="primarySkill1" multiple="false" path="primarySkill.id" class="form-control dropdown-toggle text-left " 
+											<%-- <spring:select id="primarySkill1" multiple="false" path="primarySkill.id" class="form-control dropdown-toggle text-left " 
 											oninvalid="this.setCustomValidity('Primary skill must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')">
-						            </spring:select></td>
+						            </spring:select> --%>
+						            <spring:input type="text" class="form-control" id="primarySkill1" path="primarySkill" placeholder="Enter Primary Skill.." />
+						            </td>
+						            
 										
 									</tr>
 									<tr>

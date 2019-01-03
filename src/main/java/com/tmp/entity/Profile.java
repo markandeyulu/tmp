@@ -18,7 +18,7 @@ public class Profile implements Serializable {
 	private String contactNo;
 	private String currentCompany;
 	private String location;
-	private ConfigKeyValueMapping primarySkill;
+	private String primarySkill;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date profileSharedDate;
 	private String profileSharedDatestr;
 	
@@ -184,11 +184,11 @@ public class Profile implements Serializable {
 		this.location = location;
 	}
 
-	public ConfigKeyValueMapping getPrimarySkill() {
+	public String getPrimarySkill() {
 		return primarySkill;
 	}
 
-	public void setPrimarySkill(ConfigKeyValueMapping primarySkill) {
+	public void setPrimarySkill(String primarySkill) {
 		this.primarySkill = primarySkill;
 	}
 

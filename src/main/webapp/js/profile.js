@@ -63,8 +63,9 @@ function loadDetail(id){
 			 $('#idProfile').val(data.id);
 			 $('#emailProfile').val(data.email);
 			 $('#currentCompanyProfile').val(data.currentCompany);
-			 $("#primarySkillProfile option:contains(" + data.primarySkill.configValue.value+ ")").attr('selected', 'selected');
-			 $("#primarySkill1 option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
+			// $("#primarySkillProfile option:contains(" + data.primarySkill.configValue.value+ ")").attr('selected', 'selected');
+			// $("#primarySkill1 option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
+			 $('#primarySkill1').val(data.primarySkill);
 			 //$('#primarySkillId').val(data.primarySkill.id);
 			 $('#profileSharedDateProfile').val(data.profileSharedDate);
 			 $('#yearsOfExperienceProfile').val(data.yearsOfExperience);

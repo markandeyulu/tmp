@@ -612,7 +612,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setContactNo(rs.getString("CONTACT_NO"));
 		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
 		profile.setLocation(rs.getString("LOCATION"));
-		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
+		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
 		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
@@ -669,7 +669,7 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		profile.setContactNo(rs.getString("CONTACT_NO"));
 		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
 		profile.setLocation(rs.getString("LOCATION"));
-		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
+		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
 		/*profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));*/
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
@@ -728,7 +728,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setString(i++, profile.getLocation());
 		//adminDAO.getRequirementMappingValue(profile.getPrimarySkillAdd(), 11, strUserId);
 		//ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
-		ps.setInt(i++,Integer.parseInt(profile.getPrimarySkillAdd()));
+		//ps.setInt(i++,Integer.parseInt(profile.getPrimarySkillAdd()));
+		ps.setInt(i++, tmpUtil.getKeyByValue("primaryskill", profile.getPrimarySkillAdd()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSourceAdd());
 		ps.setString(i++, profile.getProfileSharedBy());
@@ -755,7 +756,8 @@ public class ProfilesDAOImpl implements ProfilesDAO {
 		ps.setString(i++, profile.getContactNo());
 		ps.setString(i++, profile.getCurrentCompany());
 		ps.setString(i++, profile.getLocation());
-		ps.setInt(i++, profile.getPrimarySkill().getId());
+		//ps.setInt(i++, profile.getPrimarySkill().getId());
+		ps.setInt(i++, tmpUtil.getKeyByValue("primaryskill", profile.getPrimarySkill()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSharedBy());
 		ps.setDouble(i++, profile.getYearsOfExperience());
