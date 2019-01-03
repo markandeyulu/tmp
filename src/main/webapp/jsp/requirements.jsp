@@ -965,10 +965,13 @@ $('#logout').click(function () {
                        <tr>
                           <td><spring:label path="skillCategory">Skill Category<span style="color:red">*</span></spring:label></td>
                           <td>
-                          <spring:select id="skillCategoryNew" multiple="false" path="skillCategory.id" class="form-control dropdown-toggle text-left " Style="width:100%"
+                          <%-- <spring:select id="skillCategoryNew" multiple="false" path="skillCategory.id" class="form-control dropdown-toggle text-left " Style="width:100%"
                           oninvalid="this.setCustomValidity('Please select Skill Category')" 
 						  required="required"	oninput="this.setCustomValidity('')" >
-						</spring:select></td>
+						</spring:select> --%>
+						 	<spring:input type="text" class="form-control" id="skillCategoryNew" path="skillCategory" placeholder="Enter Skill Category.." />
+						</td>
+						
                     </tr>
                     <tr>
                           <td><spring:label path="jobDescription">Job Description<span style="color:red">*</span></spring:label> </td>
@@ -1087,10 +1090,12 @@ $('#logout').click(function () {
               <tr>
                   <td><spring:label path="primarySkill">Primary Skill<span style="color:red">*</span></spring:label></td>
                   <td>
-                  <spring:select id="primarySkillNew" multiple="false" path="primarySkill.id"   class="form-control dropdown-toggle text-left " Style="width:100%"
+                 <%--  <spring:select id="primarySkillNew" multiple="false" path="primarySkill.id"   class="form-control dropdown-toggle text-left " Style="width:100%"
                   oninvalid="this.setCustomValidity('Primary Skill must not be empty')" 
 								required="required"			oninput="this.setCustomValidity('')">
-						</spring:select></td>
+						</spring:select> --%>
+					<spring:input type="text" class="form-control" id="primarySkillNew" path="primarySkill" placeholder="Enter Skill Category.." />	
+				  </td>
               </tr>
                <tr>
                   <td><spring:label path="location">Location<span style="color:red">*</span></spring:label></td>

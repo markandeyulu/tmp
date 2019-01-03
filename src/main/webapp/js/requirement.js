@@ -83,10 +83,12 @@ function loadDetail(id){
 			$('#id').val(data.id);
 			$("#criticalityNew option:contains(" + data.criticality.configValue.value + ")").attr('selected', 'selected');
 			//$('#criticalityNew').val(data.criticality.configValue.value);
-			$("#skillCategoryNew option:contains(" + data.skillCategory.configValue.value + ")").attr('selected', 'selected');
-			// $('#skillCategoryNew').val(data.skillCategory.configValue.value);
-			$("#primarySkillNew option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
-			// $('#primarySkill').val(data.primarySkill.configValue.value);
+			//$("#skillCategoryNew option:contains(" + data.skillCategory.configValue.value + ")").attr('selected', 'selected');
+			 //$('#skillCategoryNew').val(data.skillCategory.configValue.value);
+			 $('#skillCategoryNew').val(data.skillCategory);
+			//$("#primarySkillNew option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
+			// $('#primarySkillNew').val(data.primarySkill.configValue.value);
+			 $('#primarySkillNew').val(data.primarySkill);
 			$('#jobDescriptionNew').val(data.jobDescription);
 			$("#locationNew option:contains(" + data.location.configValue.value + ")").attr('selected', 'selected');
 			// $('#locationNew').val(data.location.configValue.value);

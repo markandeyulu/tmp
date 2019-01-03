@@ -162,9 +162,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setCriticality(configDAO.getConfigKeyValueMapping(rs.getInt("CRITICALITY")));
 		requirement.setIntimationMode(configDAO.getConfigKeyValueMapping(rs.getInt("INTIMATION_MODE")));
 		requirement.setLocation(configDAO.getConfigKeyValueMapping(rs.getInt("LOCATION")));
-		requirement.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")));
+		requirement.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
 		requirement.setRequirementType(configDAO.getConfigKeyValueMapping(rs.getInt("REQUIREMENT_TYPE")));
-		requirement.setSkillCategory(configDAO.getConfigKeyValueMapping(rs.getInt("SKILL_CATEGORY")));
+		requirement.setSkillCategory(configDAO.getConfigKeyValueMapping(rs.getInt("SKILL_CATEGORY")).getConfigValue().getValue());
 		requirement.setStatus(configDAO.getConfigKeyValueMapping(rs.getInt("STATUS")));
 		requirement.setAccount(tmpDAOUtil.getAccount(rs.getInt("ACCOUNT")));
 		requirement.setProject(tmpDAOUtil.getProject(rs.getInt("PROJECT")));
@@ -354,8 +354,10 @@ public class RequirementDAOImpl implements RequirementDAO {
 			return;
 		}
 		ps.setInt(1, requirement.getCriticality().getId());
-		ps.setInt(2, requirement.getSkillCategory().getId());
-		ps.setInt(3, requirement.getPrimarySkill().getId());
+		//ps.setInt(2, requirement.getSkillCategory().getId());
+		//ps.setInt(3, requirement.getPrimarySkill().getId());
+		ps.setInt(2, tmpUtil.getKeyByValue("skillcategory", requirement.getSkillCategory()));
+		ps.setInt(3, tmpUtil.getKeyByValue("primaryskill", requirement.getPrimarySkill()));
 		ps.setString(4, requirement.getJobDescription());
 		ps.setInt(5, requirement.getLocation().getId());
 		ps.setString(6, requirement.getCity());

@@ -691,7 +691,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input class="form-control" type="text" oninvalid="this.setCustomValidity('Total experience in years must not be empty')" 
-										 oninput="this.setCustomValidity('')" id="yearsOfExperience" path="yearsOfExperience" onkeypress='validate(event)' maxlength="2"
+										 oninput="this.setCustomValidity('')" id="yearsOfExperience" path="yearsOfExperience" onkeypress='validate(event)' maxlength="4"
 											placeholder="Enter Total Experience(in years).." required="required"/>
 									</div>
 								</div>
@@ -701,7 +701,7 @@ $('#logout').click(function () {
 									</div>
 									<div class="col-75">
 										<spring:input type="text" id="relevantExperience" class="form-control" path="relevantExperience" oninvalid="this.setCustomValidity('Relevant experience in years must not be empty')" 
-										 oninput="this.setCustomValidity('')" placeholder="Enter Relevant Experience(in years).." onkeypress='validate(event)' required="required" maxlength="2"	/>
+										 oninput="this.setCustomValidity('')" placeholder="Enter Relevant Experience(in years).." onkeypress='validate(event)' required="required" maxlength="4"	/>
 									</div>
 								</div>
 								<div class="row">

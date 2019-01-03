@@ -21,6 +21,8 @@ public interface ConfigDAO {
 	public AdminInfoKeyValueMapping getAdminInfoKeyValueMapping(String id);
 	
 	public List<ConfigKeyValueMapping> getConfigKeyValues(int id);
+	
+	public int getConfigKeyValues(int id, String values);
 
 	public List<AdminInfoKeyValueMapping> getAdminInfoKeyValues(int id);
 

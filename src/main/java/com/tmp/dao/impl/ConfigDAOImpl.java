@@ -287,6 +287,42 @@ public class ConfigDAOImpl implements ConfigDAO {
 			}
 		}
 	}
+	
+	public int getConfigKeyValues(int id, String value) {
+		StringBuffer sql = new StringBuffer(
+				"SELECT CKVM.ID as ID ")
+		.append("FROM CONFIG_KEY_VALUE_MAPPING CKVM ")
+		.append("INNER JOIN CONFIG_KEY CK ON CKVM.CONFIG_KEY_ID = CK.ID ")
+		.append("INNER JOIN CONFIG_VALUE CV ON CKVM.CONFIG_VALUE_ID = CV.ID WHERE CK.ID = ? and CV.VALUE = ?");
+
+		Connection conn = null;
+		int CKVMID = 0;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps.setInt(1, id);
+			ps.setString(2, value);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs != null) {
+				while (rs.next()) {
+					CKVMID = rs.getInt("ID");
+				}
+			}
+			rs.close();
+			ps.close();
+			return CKVMID;
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+	}
 
 	public List<AdminInfoKeyValueMapping> getAdminInfoKeyValues(int id) {
 		StringBuffer sql = new StringBuffer(

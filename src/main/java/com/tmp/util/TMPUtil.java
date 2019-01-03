@@ -563,11 +563,11 @@ public class TMPUtil {
 	
 	public int getConfigKeyIdByName(int searchId, String configValue) {
 		
-		List<ConfigKeyValueMapping> list= configDAO.getConfigKeyValues(searchId);
+		//List<ConfigKeyValueMapping> list= configDAO.getConfigKeyValues(searchId);
 		
-		int configKey = 0;
+		int configKey = configDAO.getConfigKeyValues(searchId, configValue);
 		
-		for(ConfigKeyValueMapping obj : list) {
+		/*for(ConfigKeyValueMapping obj : list) {
 			
 			//if(obj.getConfigValue().getValue().equalsIgnoreCase(configValue)) {
 			if(obj.getConfigValue().getValue().toLowerCase().contains(configValue.toLowerCase()) || 
@@ -577,9 +577,9 @@ public class TMPUtil {
 			}
 			
 			
-		}
+		}*/
 		
-		if(configKey == 0) {
+		if( configKey == 0) {
 			configKey = insertConfigTableValues(searchId, configValue);
 		}
 		

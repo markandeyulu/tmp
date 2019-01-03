@@ -14,8 +14,8 @@ public class Requirement implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private ConfigKeyValueMapping criticality;
-	private ConfigKeyValueMapping skillCategory;
-	private ConfigKeyValueMapping primarySkill;
+	private String skillCategory;
+	private String primarySkill;
 	private String jobDescription;
 	private ConfigKeyValueMapping location;
 	private String city;
@@ -303,19 +303,19 @@ public class Requirement implements Serializable {
 		this.criticality = criticality;
 	}
 
-	public ConfigKeyValueMapping getSkillCategory() {
+	public String getSkillCategory() {
 		return skillCategory;
 	}
 
-	public void setSkillCategory(ConfigKeyValueMapping skillCategory) {
+	public void setSkillCategory(String skillCategory) {
 		this.skillCategory = skillCategory;
 	}
 
-	public ConfigKeyValueMapping getPrimarySkill() {
+	public String getPrimarySkill() {
 		return primarySkill;
 	}
 
-	public void setPrimarySkill(ConfigKeyValueMapping primarySkill) {
+	public void setPrimarySkill(String primarySkill) {
 		this.primarySkill = primarySkill;
 	}
 
