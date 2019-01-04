@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tmp.entity.ReqBulk;
 import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
 import com.tmp.entity.Requirements;
+import com.tmp.util.ReqBulkUploadUtil;
 import com.tmp.util.TMPUtil;
 
 @Controller
@@ -30,7 +32,11 @@ public class RequirementController {
 	@Autowired(required = true)
 	@Qualifier("tmpUtil")
 	TMPUtil tmpUtil;
-
+	
+	@Autowired(required = true)
+	@Qualifier("bulkUploadUtil")
+	ReqBulkUploadUtil bulkUploadUtil;
+	
 	@RequestMapping(value = "/requirements/{status}", method = RequestMethod.GET, produces = {"application/json" }, consumes = {"application/json" })
 	@ResponseBody
 	public Requirements getRequirements(@PathVariable("status") String status, @RequestParam("location") String location,
@@ -44,6 +50,14 @@ public class RequirementController {
 
 	public void setTmpUtil(TMPUtil tmpUtil) {
 		this.tmpUtil = tmpUtil;
+	}
+	
+	public ReqBulkUploadUtil getBulkUploadUtil() {
+		return bulkUploadUtil;
+	}
+
+	public void setBulkUploadUtil(ReqBulkUploadUtil bulkUploadUtil) {
+		this.bulkUploadUtil = bulkUploadUtil;
 	}
 	
 	@RequestMapping(value = "/requirements", method = RequestMethod.GET)
@@ -240,6 +254,26 @@ public class RequirementController {
 	@RequestMapping(value = "/requirementShortlistProfile", method = RequestMethod.GET, produces="application/json")
 	public @ResponseBody ArrayList<Requirement> shortlistedProfiles(@RequestParam("id") String requirementId) {
 		return tmpUtil.getShortlistedProfiles(requirementId);
+	}
+	
+	@RequestMapping(value="uploadReqFile",  method = RequestMethod.POST, produces="text/plain")
+	public @ResponseBody String uploadFileHandlerProfile(@RequestParam("file") String file, HttpServletRequest request) {
+		
+		try {
+			ArrayList<ReqBulk> reqList = bulkUploadUtil.getReqListFromExcel(request);
+			HttpSession session = request.getSession();
+			String userId = session.getAttribute("user").toString();
+			String displayName=session.getAttribute("displayName").toString();
+			bulkUploadUtil.processReqList(reqList,userId,displayName);
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return file;
+			
+
 	}
 }
 

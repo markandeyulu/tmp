@@ -753,7 +753,7 @@ $('#logout').click(function () {
 									<div class="col-75">
 										<spring:input class="form-control" path="internalEvaluationResultDate"
 											id="datepicker1"  type="text" 
-											placeholder="Enter Internal Evaluation result Date.." />
+											placeholder="Enter Internal Evaluation result Date.."  disabled="true"/>
 									</div>
 								</div>
 								<div class="row">
@@ -761,7 +761,7 @@ $('#logout').click(function () {
 										<spring:label path="initialEvaluationResultAdd">Initial Evaluation Result</spring:label>
 									</div>
 									<div class="col-75">
-										<spring:select class="form-control" id="initialEvaluationResultAdd" path="initialEvaluationResultAdd">
+										<spring:select class="form-control" id="initialEvaluationResultAdd" path="initialEvaluationResultAdd"  disabled="true">
 											 <option value="">Select Initial Evaluation Result</option>
 											<option value="23">Shortlisted</option>
 											<option value="24">Rejected</option>
@@ -773,12 +773,12 @@ $('#logout').click(function () {
 								</div>
 									<div class="row">
 									<div class="col-25">
-										<spring:label path="profileSharedCustomer">Profile Shared with Customer<span style="color:red">*</span></spring:label>
+										<spring:label path="profileSharedCustomer">Profile Shared with Customer</spring:label>
 									</div>
 									<div class="col-75">
 										<spring:select class="form-control" onchange="changeTextBoxAdd();" id="profileSharedCustomer" path="profileSharedCustomer"
 										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')" >
+											 oninput="this.setCustomValidity('')" disabled="true">
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
 											<option selected="selected" value="No">No</option>
@@ -818,7 +818,7 @@ $('#logout').click(function () {
 									<div class="col-75">
 										<spring:input type="text" class="form-control"
 											id="remarks" path="remarks" 
-											placeholder="Remarks.." />
+											placeholder="Remarks.."  disabled="true"/>
 									</div>
 								</div>
 																	

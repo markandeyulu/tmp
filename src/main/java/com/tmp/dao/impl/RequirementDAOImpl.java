@@ -458,21 +458,26 @@ public class RequirementDAOImpl implements RequirementDAO {
 			accountName = tmpDAOUtil.getAccount(accountId).getAccountName();
 			int projectId = tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
 			String incrementor=null;
-			String dbDate=null;
+			String dbDate="";
 			//projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
 			projectName = tmpDAOUtil.getProject(projectId).getProjectName();
 			
-			requirementId = getLatestRequirementId();
+			incrementor = getLatestIdForAccountAndProject(accountId, projectId);
 			
-			if(StringUtils.isNotBlank(requirementId)) {
+			System.out.println("accountName "+accountName+" projectName "+projectName +" requirementId "+requirementId);
+			
+			/*if(StringUtils.isNotBlank(requirementId)) {
 				String[] requirementIdParts = requirementId.split("_");
+				
+				System.out.println("requirementIdParts "+requirementIdParts.length);
 				
 				if(requirementIdParts.length==6){
 					incrementor = requirementIdParts[5];
 					dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
 				}				
-			}			
-			requirementId = getRandomString(dbDate, incrementor, accountName, projectName, userName);
+			}*/
+			System.out.println("INcrementor "+incrementor);
+			requirementId = getRandomString(dbDate, incrementor, accountName, projectId+"", userName);
 			System.out.println(" New Req ID : "+requirementId);
 			
 		} catch (NumberFormatException e) {
@@ -489,20 +494,19 @@ public class RequirementDAOImpl implements RequirementDAO {
 		String currDate = df.format(today);
 		String defaultIncrementor="01";
 		String reqRandomNo =null;
-		String shortNames = "_"+getShortName(accountName)+"_"+getShortName(projectName)+"_"+getShortName(userName)+"_";
+		String shortNames = "_"+getShortName(accountName)+"_"+projectName+"_"+getShortName(userName)+"_";
 		try {
 			
 			if(dbDate == null){
 				reqRandomNo = currDate+shortNames+defaultIncrementor;
-			}else if(dbDate.equals(currDate)){
-				int reqDateIncr= Integer.parseInt(incrementor)+1;
-				if(reqDateIncr<=9){
-					reqRandomNo = currDate+shortNames+0+reqDateIncr;
-				}else{
-					reqRandomNo = currDate+shortNames+reqDateIncr;
-				}
 			}else{
-				reqRandomNo = currDate+shortNames+defaultIncrementor;
+				int reqDateIncr= Integer.parseInt(incrementor)+1;
+			
+			if(reqDateIncr<=9){
+				reqRandomNo = currDate+shortNames+0+reqDateIncr;
+			}else{
+				reqRandomNo = currDate+shortNames+reqDateIncr;
+			}
 			}
 
 		} catch ( Exception e ) {
@@ -550,6 +554,41 @@ public class RequirementDAOImpl implements RequirementDAO {
 				}
 			}
 		}
+	}
+	private String getLatestIdForAccountAndProject(int accountId, int projectId) {
+		
+		System.out.println(" account *"+accountId +" project *"+projectId);
+		StringBuffer sql = new StringBuffer("select count(*) as ID from requirement where account=? and project=?");
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String id="0";
+		
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sql.toString());
+			
+			ps.setInt(1, accountId);
+			ps.setInt(2, projectId);
+			rs = ps.executeQuery();
+				if (rs.next()) {
+					id = rs.getString("ID");
+				}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			if (conn != null) {
+				try {
+					rs.close();
+					ps.close();
+					conn.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+		}
+		return id;
 	}
 	
 	private boolean isRequirementExist(String requirementId) {
