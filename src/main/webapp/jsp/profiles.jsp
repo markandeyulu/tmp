@@ -86,6 +86,7 @@ var profiledata=${profilesJson};
 var profileSourceJson=${profileSourceJson};
 var initialEvaluationResultJson=${initialEvaluationResultJson};
 var customerInterviewStatusJson=${customerInterviewStatusJson};
+/* var offerProcessingStatus = ${offerProcessingstatusJson};  */
 var primarySkillJson=${primarySkillJson};
 var projectValues = ${projectValuesJson};
 var criticalJson=${criticalJson};
@@ -343,8 +344,8 @@ table.dataTable thead th:first-child {
  	  }
  	}
 function disableTextBox(){
-	var d = document.getElementById("initialEvaluationResultProfile");
-	var dropdown = d.options[d.selectedIndex].value;
+	var dropdown = $("#initialEvaluationResultProfile").val();
+	 
 	if(dropdown=="23"){
 		document.getElementById("profileSharedCustomerProfile").value="Yes";
 		document.getElementById("profileSharedCustomerDateProfile").disabled=false;
@@ -354,15 +355,29 @@ function disableTextBox(){
 		document.getElementById("profileSharedCustomerDateProfile").disabled=true;
 		document.getElementById("customerInterviewStatusProfile").disabled=true;
 	}
+	showOrHideOfferProcessingStatus();
 }
- function changeTextBoxUpdate(){
-		var e = document.getElementById("profileSharedCustomerProfile");
-     
-	    //var strSel = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
-	var chkBoxValue = e.options[e.selectedIndex].value;
+
+function showOrHideOfferProcessingStatus(){
+	var profileSharedCustomer = $("#profileSharedCustomerProfile").val();
+	var customerInterviewStatus = $("#customerInterviewStatusProfile").val();
+	var initialEvaluationResult = $("#initialEvaluationResultProfile").val();
 	
+	/* Enable the OPS dropdown IFF
+	1.IER - 23 && PSC - NO ||
+	2.IER - 23 && PSC - YES && CIS - 27*/
 	
-	//alert(chkBoxValue);
+	if((profileSharedCustomer=="No" && initialEvaluationResult=="23") || 
+			(profileSharedCustomer=="Yes" && initialEvaluationResult=="23" & customerInterviewStatus=="27")){
+		$("#offerProcessingStatusProfile").removeAttr('disabled');
+	}else{
+		$("#offerProcessingStatusProfile").attr('disabled','disabled');
+	}
+	
+}
+
+function changeTextBoxUpdate(){
+	var chkBoxValue = $("#profileSharedCustomerProfile").val();
 
 		if(chkBoxValue=="No"){
 			document.getElementById("profileSharedCustomerDateProfile").disabled=true;
@@ -371,15 +386,17 @@ function disableTextBox(){
 			document.getElementById("profileSharedCustomerDateProfile").disabled=false;
 			document.getElementById("customerInterviewStatusProfile").disabled=false;
 		}
-		}
- function changeTextBoxAdd(){
-	    var f=document.getElementById("profileSharedCustomer");
+		
+		showOrHideOfferProcessingStatus();
+	}
+	
+ /* function changeStatusTextBoxUpdate(){
+	 
+	showOrHideOfferProcessingStatus();
+ } */
  
-	    //var strSel = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
-	var chkValue = f.options[f.selectedIndex].value;
-	
-	
-	//alert(chkValue);
+ function changeTextBoxAdd(){
+	var chkValue = $("#profileSharedCustomer").val();
 
 		if(chkValue=="No"){
 			document.getElementById("datepicker").disabled=true;
@@ -888,7 +905,7 @@ $('#logout').click(function () {
 							<spring:form name='updateProfile' action="profileById"  
 								method="POST" modelAttribute="profiles">
 								
-								 <div style="width:50%; height:100%" class="row1" >
+								 <div style="width:50%; height:100%; float:left;" class="" >
 								 <table width="80%">
 								 <tr>
 										<td><spring:label path="reqRefNo">Requirement Id</spring:label></td>
@@ -958,7 +975,6 @@ $('#logout').click(function () {
 						            </spring:select> --%>
 						            <spring:input type="text" class="form-control" id="primarySkill1" path="primarySkill" placeholder="Enter Primary Skill.." />
 						            </td>
-						            
 										
 									</tr>
 									<tr>
@@ -1043,13 +1059,7 @@ $('#logout').click(function () {
 													path="expectedCTC" id="expectedCTCProfile" type="text" /></td>
 										</tr>
 										
-									<!-- </div> -->
-									</table>
-									</div>
-								
-									<div class="row1" style="width:40%;">
-									<table>
-									<tr>
+										<tr>
 										<td><spring:label path="account">Account</spring:label></td>
 									<%-- 									
 										<td><spring:select id="accountProfile" multiple="false" path="account.id" 
@@ -1068,6 +1078,32 @@ $('#logout').click(function () {
 											<spring:select id="projectProfile" multiple="false" path="project.id"   class="form-control dropdown-toggle text-left " >
 						            </spring:select></td> --%>
 									</tr>
+										
+									<!-- </div> -->
+									</table>
+									</div>
+								
+									<div class="" style="width:40%; float:right">
+									<table>
+									<%-- <tr>
+										<td><spring:label path="account">Account</spring:label></td>
+																		
+										<td><spring:select id="accountProfile" multiple="false" path="account.id" 
+										class="form-control dropdown-toggle text-left " >
+						            </spring:select></td>
+						            <td><spring:input class="form-control" path="account.accountId"
+											id="accountProfile" type="text" value=""  readonly="true"/></td>
+						           
+									</tr>
+									<tr>
+										<td><spring:label path="project">Project</spring:label></td>
+									 <td><spring:input class="form-control" path="project.projectId"
+											id="projectProfile" type="text" value=""  readonly="true"/></td>
+									
+										<td>
+											<spring:select id="projectProfile" multiple="false" path="project.id"   class="form-control dropdown-toggle text-left " >
+						            </spring:select></td>
+									</tr> --%>
 									
 									<tr>
 										<td><spring:label path="isAllocated1">IsAllocated</spring:label></td>
@@ -1144,7 +1180,7 @@ $('#logout').click(function () {
 										<td>
 										<spring:select class="form-control dropdown-toggle text-left " onchange="disableTextBox();" id="initialEvaluationResultProfile" path="initialEvaluationResult.id"  
 										oninvalid="this.setCustomValidity('Initial Evaluation Result must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')">
+											required="required" oninput="this.setCustomValidity('')" >
 											<option value="">Select Initial Evaluation Result</option>
 											<option value="23">Shortlisted</option>
 											<option value="24">Rejected</option>
@@ -1159,7 +1195,7 @@ $('#logout').click(function () {
 									
 										<td><spring:select class="form-control" onchange="changeTextBoxUpdate();" id="profileSharedCustomerProfile" path="profileSharedCustomer"
 										oninvalid="this.setCustomValidity('Profile Shared Customer must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')">
+											required="required" oninput="this.setCustomValidity('')" >
 											<option value="">Select Profile Shared with Customer</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
@@ -1181,12 +1217,30 @@ $('#logout').click(function () {
 										<td>
 											 <spring:select id="customerInterviewStatusProfile" multiple="false" path="customerInterviewStatus.id"   class="form-control dropdown-toggle text-left " 
 											 oninvalid="this.setCustomValidity('Customer Interview Status must not be empty')" 
-											required="required" oninput="this.setCustomValidity('')" >
+											required="required" oninput="this.setCustomValidity('')" onchange="showOrHideOfferProcessingStatus();" >
 						            </spring:select></td>
 										
 									</tr>
 									
+									<tr>
+										<td><spring:label path="offerProcessingStatus">Offer Processing Status<span style="color:red">*</span></spring:label></td>
 									
+									
+										<td>
+											 <spring:select id="offerProcessingStatusProfile" multiple="false" path="offerProcessingStatus.id"   class="form-control dropdown-toggle text-left " 
+											 oninvalid="this.setCustomValidity('Offer Processing Status must not be empty')" 
+											required="required" oninput="this.setCustomValidity('')">
+											<option value="">Select Offer Processing Status</option>
+											<option value="89">A</option>
+											<option value="90">B</option>
+											<option value="91">C</option>
+											<option value="92">D</option>
+											<option value="93">E</option>
+											<option value="94">F</option>
+											<option value="95">G</option>
+						            </spring:select></td>
+										
+									</tr> 
 									<tr>
 										<td><spring:label path="remarks">Remarks<span style="color:red">*</span></spring:label></td>
 									

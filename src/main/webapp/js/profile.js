@@ -105,6 +105,10 @@ function loadDetail(id){
 				 $("#profileSharedCustomerDateProfile").removeAttr('disabled');
 				 $("#customerInterviewStatusProfile").removeAttr('disabled');
 			 }
+			 $("#offerProcessingStatusProfile option:contains(" + data.offerProcessingStatus.configValue.value+ ")").attr('selected', 'selected');
+			 
+			 showOrHideOfferProcessingStatus();
+			
 			 if(null!=data.account2.accountName){
 				 $('#accountProfile').val(data.account2.accountName);
 			 }

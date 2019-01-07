@@ -50,7 +50,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 	@Autowired(required = true)
 	@Qualifier("tmpDAOUtil")
 	TMPDAOUtil tmpDAOUtil;
-	
+
 	@Autowired(required = true)
 	@Qualifier("tmpUtil")
 	TMPUtil tmpUtil;
@@ -145,6 +145,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setActivityOwner(rs.getString("ACTIVITY_OWNER"));
 		requirement.setActivityOwnerEmail(rs.getString("ACTIVITY_OWNER_EMAIL"));
 		requirement.setActualClosureDate(rs.getDate("ACTUAL_CLOSURE_DATE"));
+		requirement.setPlannedClosureDate(rs.getDate("PLANNED_CLOSURE_DATE"));
 		requirement.setActualOwner(rs.getString("ACTUAL_OWNER"));
 		requirement.setActualOwnerEmail(rs.getString("ACTUAL_OWNER_EMAIL"));
 		requirement.setBillingRate(rs.getDouble("BILLING_RATE"));
@@ -224,10 +225,10 @@ public class RequirementDAOImpl implements RequirementDAO {
 		StringBuffer sql = new StringBuffer(
 				"INSERT INTO REQUIREMENT (ID, CRITICALITY, SKILL_CATEGORY, PRIMARY_SKILL, JOB_DESCRIPTION, \r\n")
 				.append("LOCATION, CITY, BILLING_RATE, INTIMATION_DATE, INTIMATED_BY, INTIMATOR_EMAIL, INTIMATION_MODE, \r\n")
-				.append("REQUIREMENT_TYPE, EXPECTED_DOJ, ACTUAL_CLOSURE_DATE, SO, JO, \r\n")
+				.append("REQUIREMENT_TYPE, EXPECTED_DOJ, SO, JO, \r\n")
 				.append("REMARKS, IBG_CDG, IBU_CDU, ACCOUNT, PROJECT, CREATED_ON, CREATED_BY, BAND ,QUANTITY, PROJECT_DURATION, PID_CRMID_SO, YEAR_EXPERIENCE, \r\n")
 				.append("SKILL_CATEGORY2, SKILL_CATEGORY3, SKILL_CATEGORY4, STATUS, OPPORTUNITY_STATUS) \r\n")
-				.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		Connection conn = null;
 		int value;
@@ -278,14 +279,14 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setString(12,requirement.getIntimationModeAdd());
 		ps.setString(13, requirement.getRequirementTypeAdd());
 		ps.setDate(14, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getExpectedDOJ()));
-		ps.setDate(15, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getActualClosureDate()));
-		ps.setInt(16, requirement.getSo());
-		ps.setInt(17, requirement.getJo());
-		ps.setString(18, requirement.getRemarks());
+		//ps.setDate(15, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getActualClosureDate()));
+		ps.setInt(15, requirement.getSo());
+		ps.setInt(16, requirement.getJo());
+		ps.setString(17, requirement.getRemarks());
 		adminDAO.getRequirementAdminMappingValue(requirement.getIbg_cdg(), 4, userId);
-		ps.setInt(19, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId());
+		ps.setInt(18, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId());
 		adminDAO.getRequirementAdminMappingValue(requirement.getIbu_cdu(), 5, userId);
-		ps.setInt(20, configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
+		ps.setInt(19, configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
 		/*int accNewMappingId = adminDAO.getRequirementAdminAccountMapping(requirement.getAccount1(), 6, userId, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId(),
 				configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
 		int accId = configDAO.getAdminInfoKeyValueMapping(requirement.getAccount1()).getId();
@@ -295,22 +296,22 @@ public class RequirementDAOImpl implements RequirementDAO {
 		int projectId = configDAO.getAdminInfoKeyValueMapping(requirement.getProjectAdd()).getId();
 		ps.setInt(22, configDAO.getProjectMappingId(accountId,projectId).getId());*/
 		
-		//ps.setInt(21, Integer.parseInt(requirement.getAccount1()));
-		//ps.setInt(22, Integer.parseInt(requirement.getProjectAdd()));
-		ps.setInt(21, tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
-		ps.setInt(22, tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId))); 
-		ps.setTimestamp(23, tmpDAOUtil.getCurrentTimestamp());
-		ps.setString(24, userId);
-		ps.setString(25, requirement.getBand());
-		ps.setString(26, requirement.getQuantity());
-		ps.setString(27, requirement.getProjectDuration());
-		ps.setString(28, requirement.getPid_crmid_so());
-		ps.setString(29, requirement.getYearExperience());
-		ps.setString(30, requirement.getSkillCategoryAdd2());
-		ps.setString(31, requirement.getSkillCategoryAdd3());
-		ps.setString(32, requirement.getSkillCategoryAdd4());
-		ps.setInt(33, configDAO.getConfigKeyValueMapping("Profile Sourcing").getId());
-		ps.setInt(34, configDAO.getConfigKeyValueMapping("Open").getId());
+		//ps.setInt(20, Integer.parseInt(requirement.getAccount1()));
+		//ps.setInt(21, Integer.parseInt(requirement.getProjectAdd()));
+		ps.setInt(20, tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
+		ps.setInt(21, tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId)));
+		ps.setTimestamp(22, tmpDAOUtil.getCurrentTimestamp());
+		ps.setString(23, userId);
+		ps.setString(24, requirement.getBand());
+		ps.setString(25, requirement.getQuantity());
+		ps.setString(26, requirement.getProjectDuration());
+		ps.setString(27, requirement.getPid_crmid_so());
+		ps.setString(28, requirement.getYearExperience());
+		ps.setString(29, requirement.getSkillCategoryAdd2());
+		ps.setString(30, requirement.getSkillCategoryAdd3());
+		ps.setString(31, requirement.getSkillCategoryAdd4());
+		ps.setInt(32, configDAO.getConfigKeyValueMapping("Profile Sourcing").getId());
+		ps.setInt(33, configDAO.getConfigKeyValueMapping("Open").getId());
 
 	}
 
@@ -324,7 +325,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 				"UPDATE REQUIREMENT SET CRITICALITY=?, SKILL_CATEGORY =?, PRIMARY_SKILL=?, JOB_DESCRIPTION=?, \r\n")
 		.append("LOCATION=?, CITY=?, BILLING_RATE=?, INTIMATION_DATE=?, INTIMATED_BY=?, INTIMATOR_EMAIL=?, INTIMATION_MODE=?, \r\n")
 		.append("REQUIREMENT_TYPE=?, EXPECTED_DOJ=?, ACTUAL_CLOSURE_DATE=?, SO=?, JO=?, STATUS=?, ACTIVITY_OWNER=?, ACTIVITY_OWNER_EMAIL=?,\r\n")
-		.append("ACTUAL_OWNER=?, ACTUAL_OWNER_EMAIL=?, REMARKS=?, UPDATED_ON=?, BAND=?, YEAR_EXPERIENCE=?, QUANTITY=?, PROJECT_DURATION=?, IBG_CDG=?, IBU_CDU=?, PID_CRMID_SO=?, UPDATED_BY=?,OPPORTUNITY_STATUS=?  WHERE ID=?");
+		.append("ACTUAL_OWNER=?, ACTUAL_OWNER_EMAIL=?, REMARKS=?, UPDATED_ON=?, BAND=?, YEAR_EXPERIENCE=?, QUANTITY=?, PROJECT_DURATION=?, IBG_CDG=?, IBU_CDU=?, PID_CRMID_SO=?, UPDATED_BY=?,OPPORTUNITY_STATUS=?, PLANNED_CLOSURE_DATE=?  WHERE ID=?");
 
 		Connection conn = null;
 
@@ -389,7 +390,8 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setString(30,requirement.getPid_crmid_so());
 		ps.setString(31, userId);
 		ps.setInt(32, requirement.getOppurtunityStatus().getId());
-		ps.setString(33, requirement.getId());
+		ps.setDate(33, tmpDAOUtil.convertUtilDatetoSQLDate(requirement.getPlannedClosureDate()));
+		ps.setString(34, requirement.getId());
 	}
 
 	public int deleteRequirement(ArrayList<String> requirementId) {
@@ -462,10 +464,11 @@ public class RequirementDAOImpl implements RequirementDAO {
 			//projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
 			projectName = tmpDAOUtil.getProject(projectId).getProjectName();
 			
+			requirementId = getLatestRequirementId();
+			
 			incrementor = getLatestIdForAccountAndProject(accountId, projectId);
 			
 			System.out.println("accountName "+accountName+" projectName "+projectName +" requirementId "+requirementId);
-			
 			/*if(StringUtils.isNotBlank(requirementId)) {
 				String[] requirementIdParts = requirementId.split("_");
 				
@@ -829,12 +832,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 			rq.setOppurtunitystatus(rs.getString(8));
 			rq.setProfileshared(rs.getInt(9));
 			if(rs.getString(10)!=null){
-				String shortlist=rs.getString(10);			 			
-				String[] shortlistId = shortlist.split(",");
-				int count=shortlistId.length;
-				rq.setCustomershortlisted(String.valueOf(count));
+			String shortlist=rs.getString(10);			 			
+			String[] shortlistId = shortlist.split(",");
+			int count=shortlistId.length;
+			rq.setCustomershortlisted(String.valueOf(count));
 			}else{
-				rq.setCustomershortlisted("0");
+			rq.setCustomershortlisted("0");
 			}
 			int internalEvalInProg = rq.getProfileshared()-Integer.parseInt(rq.getCustomershortlisted());
 			
@@ -1209,7 +1212,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 	
 	public ArrayList<RequirementProfileMapping> getRequirementProfile(String requirementId){
 		
-		StringBuffer sql = new StringBuffer("SELECT PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER,"
+		StringBuffer sql = new StringBuffer("SELECT PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER,OFFER_PROCESSING_STATUS,"
 				+ "REMARKS FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID = ?");
 
 		Connection conn = null;
@@ -1252,6 +1255,7 @@ public class RequirementDAOImpl implements RequirementDAO {
 		requirement.setInternalEvaluationResult(configDAO.getConfigKeyValueMapping(rs.getInt("INTERNAL_EVALUATION_RESULT")));
 		requirement.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(rs.getInt("CUSTOMER_INTERVIEW_STATUS")));
 		requirement.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
+		requirement.setOfferStatus(configDAO.getConfigKeyValueMapping(rs.getString("OFFER_PROCESSING_STATUS")));
 		requirement.setRemarks(rs.getString("REMARKS"));
 		mapping.add(requirement);
 	   }
@@ -1406,8 +1410,6 @@ public ArrayList<Requirement>  populateShortlistedProfiles(ResultSet rs) throws 
 	return mapping;
 
 }
-
-
 
 }
 	

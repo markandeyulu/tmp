@@ -470,3 +470,42 @@ ALTER TABLE tmp.requirement MODIFY COLUMN YEAR_EXPERIENCE DOUBLE;
 ALTER TABLE tmp.profile MODIFY COLUMN YEARS_OF_EXPERIENCE DOUBLE;
 
 ALTER TABLE tmp.profile MODIFY COLUMN RELEVANT_EXPERIENCE DOUBLE;
+
+--04/jan/2019
+
+INSERT INTO `tmp`.`config_key` (`KEY`, `CREATED_BY`) VALUES ('Offer Processing Status', '1');
+
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('A', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('B', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('C', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('D', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('E', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('F', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('G', '1');
+
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '89', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '90', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '91', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '92', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '93', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '94', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('14', '95', '1');
+
+INSERT INTO `tmp`.`config_value` (`ID`, `VALUE`, `CREATED_BY`) VALUES ('96', 'Abandoned', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('6', '96', '1');
+
+ALTER TABLE requirement
+ADD COLUMN PLANNED_CLOSURE_DATE date DEFAULT NULL;
+
+
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('Hold Opportunity', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('Lost Opportunity', '1');
+INSERT INTO `tmp`.`config_value` (`VALUE`, `CREATED_BY`) VALUES ('Abandoned Opportunity', '1');
+
+
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('5', '97', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('5', '98', '1');
+INSERT INTO `tmp`.`config_key_value_mapping` (`CONFIG_KEY_ID`, `CONFIG_VALUE_ID`, `CREATED_BY`) VALUES ('5', '99', '1');
+
+ALTER TABLE requirement_profile_mapping
+ADD COLUMN OFFER_PROCESSING_STATUS int DEFAULT NULL;

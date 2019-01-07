@@ -274,6 +274,33 @@ $("#reqtable tr").each(function() {
 									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
 								</span>
 							</div>
+							<div id="rcorners3" class="w3-panel w3-card"
+								style="">
+								<h6>Hold Opportunity</h6>
+								<p></p>
+
+								<span>
+									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+								</span>
+							</div>
+							<div id="rcorners3" class="w3-panel w3-card"
+								style="margin-left: 2%;">
+								<h6>Abandoned Opportunity</h6>
+								<p></p>
+
+								<span>
+									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+								</span>
+							</div>
+							<div id="rcorners3" class="w3-panel w3-card"
+								style="margin-left: 2%;">
+								<h6>Lost Opportunity</h6>
+								<p></p>
+
+								<span>
+									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+								</span>
+							</div>
 						</div>
 					</div>
 

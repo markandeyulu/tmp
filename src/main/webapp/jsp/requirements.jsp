@@ -175,7 +175,17 @@ $(document).ready(function () {
 	        });
 			  }
 	 });
-	 
+	 $("#oppurtunityNew").change(function(){
+		 var dropdown_id = $('#oppurtunityNew').val();
+		 if(dropdown_id=="32"){
+				document.getElementById("statusNew").value="98";
+		}else if(dropdown_id=="33"){
+			document.getElementById("statusNew").value="97";
+		}else if(dropdown_id=="96"){
+			document.getElementById("statusNew").value="99";
+		}
+			
+	 });
 	 
 	 $("#reqtable3 #checkall").click(function () {
 	        if ($("#reqtable3 #checkall").is(':checked')) {
@@ -808,7 +818,7 @@ $('#logout').click(function () {
 										  </spring:select>	 --%>
 										  
 										  	<spring:input type="text" class="form-control" id="skillCategoryAdd1" path="skillCategoryAdd1" placeholder="Enter Skill Category.." />
-										 </div>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-25">
@@ -980,16 +990,16 @@ $('#logout').click(function () {
 										</spring:select>
 									</div>
 								</div>
-									<div class="row">
+									<%-- <div class="row">
 									<div class="col-25">
-										<spring:label path="actualClosureDate">Projected Closure Date</spring:label>
+										<spring:label path="actualClosureDate">Planned Closure Date</spring:label>
 									</div>
 									<div class="col-75">
 										<spring:input type="text" class="form-control"
 											id="actualClosureDate" path="actualClosureDate"
 											placeholder="Enter Actual/Projected Closure Date.."/>
 									</div>
-								</div>
+								</div> --%>
 								
 								<div class="row">
 									<Button name="submit" class="btn btn-md button1"
@@ -1062,16 +1072,24 @@ $('#logout').click(function () {
                           oninvalid="this.setCustomValidity('Please select type of requirement')" 
 								required="required"		oninput="this.setCustomValidity('')">
 						</spring:select></td>
-                        </tr>      
+                        </tr>
+                        <tr>
+                          <td><spring:label path="plannedClosureDate">Planned Closure Date</spring:label></td>
+                          <td><spring:input class="form-control" id="plannedClosureDate" path="plannedClosureDate" type="text"/></td>
+                    </tr>      
                        <tr>
                           <td><spring:label path="actualClosureDate">Actual Closure Date</spring:label></td>
                           <td><spring:input class="form-control" id="actualClosureDateNew" path="actualClosureDate" type="text"/></td>
                     </tr>
-                     <tr>
+                    <tr>
+                  <td><spring:label path="expectedDOJ">Customer Expected DOJ<span style="color:red">*</span></spring:label></td>
+                  <td><spring:input class="form-control" id="expectedDOJ" path="expectedDOJ" type="text" required="required"	/></td>
+              </tr>
+                     <%-- <tr>
                           <td><spring:label path="jo">JO<span style="color:red">*</span></spring:label> </td>
                           <td><spring:input class="form-control" id="joNew" path="jo" type="text" oninvalid="this.setCustomValidity('JO must not be empty')" 
 								required="required"		oninput="this.setCustomValidity('')" onkeypress='validate(event)'/></td>
-                        </tr>      
+                        </tr>  --%>     
                        <tr>
                           <td><spring:label path="activityOwner">Activity Owner</spring:label></td>
                           <td><spring:input class="form-control" id="activityOwner" path="activityOwner" type="text" oninput="this.setCustomValidity('')"/></td>
@@ -1184,10 +1202,15 @@ $('#logout').click(function () {
 						required="required"				oninput="this.setCustomValidity('')">
 						</spring:select></td>
               </tr>
-               <tr>
+              <tr>
+                          <td><spring:label path="jo">JO<span style="color:red">*</span></spring:label> </td>
+                          <td><spring:input class="form-control" id="joNew" path="jo" type="text" oninvalid="this.setCustomValidity('JO must not be empty')" 
+								required="required"		oninput="this.setCustomValidity('')" onkeypress='validate(event)'/></td>
+                        </tr>
+               <%-- <tr>
                   <td><spring:label path="expectedDOJ">Customer Expected DOJ<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="expectedDOJ" path="expectedDOJ" type="text" required="required"	/></td>
-              </tr>
+              </tr> --%>
               <tr>
                   <td><spring:label path="so">SO<span style="color:red">*</span></spring:label></td>
                   <td><spring:input class="form-control" id="soNew" path="so" type="text" oninvalid="this.setCustomValidity('SO must not be empty')" 
@@ -1196,7 +1219,7 @@ $('#logout').click(function () {
                <tr>
                    <td><spring:label path="status">Status</spring:label> </td>
                    <td>
-                   <spring:select id="statusNew" multiple="false" path="status.id"   class="form-control dropdown-toggle text-left " Style="width:100%">
+                   <spring:select id="statusNew" multiple="false" path="status.id"   class="form-control dropdown-toggle text-left " Style="width:100%" >
 						</spring:select></td>
                </tr>      
                 <tr>

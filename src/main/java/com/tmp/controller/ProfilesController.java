@@ -164,6 +164,7 @@ public class ProfilesController {
 		model.addObject("profileSourceJson",tmpUtil.getConfigKeyValues(7));
 		model.addObject("initialEvaluationResultJson",tmpUtil.getConfigKeyValues(8));
 		model.addObject("customerInterviewStatusJson",tmpUtil.getConfigKeyValues(9));
+		model.addObject("offerProcessingstatusJson",tmpUtil.getConfigKeyValues(14));
 		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
 		model.addObject("profilesJson", tmpUtil.getProfiles());
 		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));

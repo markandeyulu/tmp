@@ -28,6 +28,7 @@ public class Requirement implements Serializable {
 	private ConfigKeyValueMapping requirementType;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date expectedDOJ;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date actualClosureDate;
+	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date plannedClosureDate;
 	private int so;
 	private int jo;
 	private Profile shortlistedProfile_id;
@@ -407,6 +408,14 @@ public class Requirement implements Serializable {
 		this.actualClosureDate = actualClosureDate;
 	}
 
+	public java.util.Date getPlannedClosureDate() {
+		return plannedClosureDate;
+	}
+
+	public void setPlannedClosureDate(java.util.Date plannedClosureDate) {
+		this.plannedClosureDate = plannedClosureDate;
+	}
+	
 	public int getSo() {
 		return so;
 	}

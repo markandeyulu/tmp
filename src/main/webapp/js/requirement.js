@@ -23,6 +23,9 @@
 		    $("#actualClosureDateNew,#actualClosureDate").datepicker({
 		    	  dateFormat: "yy-mm-dd"
 		    });
+		    $("#plannedClosureDate").datepicker({
+		    	  dateFormat: "yy-mm-dd"
+		    });
 		  });
 
 	  
@@ -84,7 +87,7 @@ function loadDetail(id){
 			$("#criticalityNew option:contains(" + data.criticality.configValue.value + ")").attr('selected', 'selected');
 			//$('#criticalityNew').val(data.criticality.configValue.value);
 			//$("#skillCategoryNew option:contains(" + data.skillCategory.configValue.value + ")").attr('selected', 'selected');
-			 //$('#skillCategoryNew').val(data.skillCategory.configValue.value);
+			// $('#skillCategoryNew').val(data.skillCategory.configValue.value);
 			 $('#skillCategoryNew').val(data.skillCategory);
 			//$("#primarySkillNew option:contains(" + data.primarySkill.configValue.value + ")").attr('selected', 'selected');
 			// $('#primarySkillNew').val(data.primarySkill.configValue.value);
@@ -103,6 +106,7 @@ function loadDetail(id){
 			// $('#requirementTypeNew').val(data.requirementType.configValue.value);
 			$('#expectedDOJ').val(data.expectedDOJ);
 			$('#actualClosureDateNew').val(data.actualClosureDate);
+			$('#plannedClosureDate').val(data.plannedClosureDate);
 			$('#soNew').val(data.so);
 			$('#joNew').val(data.jo);
 

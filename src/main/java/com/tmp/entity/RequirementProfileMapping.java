@@ -13,6 +13,7 @@ public class RequirementProfileMapping implements Serializable {
 	private Profile profileId;
 	private ConfigKeyValueMapping internalEvaluationResult;
 	private ConfigKeyValueMapping customerInterviewStatus;
+	private ConfigKeyValueMapping offerStatus;
 	private String remarks;
 	private java.util.Date createdOn;
 	private User createdBy;
@@ -145,6 +146,14 @@ public class RequirementProfileMapping implements Serializable {
 
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public ConfigKeyValueMapping getOfferStatus() {
+		return offerStatus;
+	}
+
+	public void setOfferStatus(ConfigKeyValueMapping offerStatus) {
+		this.offerStatus = offerStatus;
 	}
 
 }

@@ -85,7 +85,8 @@ public class Profile implements Serializable {
 	private ConfigKeyValueMapping  initialEvaluationResult; 
 	private String profileSharedCustomer; 
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date profileSharedCustomerDate; 
-	private ConfigKeyValueMapping  customerInterviewStatus; 
+	private ConfigKeyValueMapping  customerInterviewStatus;
+	private ConfigKeyValueMapping  offerProcessingStatus;
 	private String remarks;
 	private String primarySkillAdd;
 	private String profileSourceAdd;
@@ -388,6 +389,14 @@ public class Profile implements Serializable {
 
 	public void setCustomerInterviewStatusAdd(String customerInterviewStatusAdd) {
 		this.customerInterviewStatusAdd = customerInterviewStatusAdd;
+	}
+
+	public ConfigKeyValueMapping getOfferProcessingStatus() {
+		return offerProcessingStatus;
+	}
+
+	public void setOfferProcessingStatus(ConfigKeyValueMapping offerProcessingStatus) {
+		this.offerProcessingStatus = offerProcessingStatus;
 	}
 	
 	

@@ -447,7 +447,7 @@ public class TMPUtil {
 		int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
 		ArrayList<RequirementProfileMapping> profiles = null;
 
-		if(reqStatus == 15 || reqStatus == 16 || reqStatus == 17 || reqStatus == 18) {
+		if(reqStatus == 15 || reqStatus == 16 || reqStatus == 17 || reqStatus == 18 || reqStatus==19) {
 			profiles = requirementDAO.getRequirementProfile(profile.getReqRefNo());
 		}
 		return profilesDAO.updateProfile(profile,userId,reqStatus,profiles);
@@ -501,6 +501,7 @@ public class TMPUtil {
 		return profilesDAO.insertProfileMapping(profile,refNo, userId);
 	}
 	
+	@Deprecated
 	public void updateRequirementStatus(Profile profile, String refNo, String userId) {
 		profilesDAO.updateRequirementStatus(profile.getId(),refNo,60, "No", 61, userId);
 	}
@@ -854,5 +855,5 @@ public class TMPUtil {
 		return generatedKey;
 		
 	}
-
+	
 }
