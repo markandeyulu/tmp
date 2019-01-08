@@ -280,7 +280,7 @@ $("#reqtable tr").each(function() {
 								<p></p>
 
 								<span>
-									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue7" style="float: right; margin-top: 4%;"></h1>
 								</span>
 							</div>
 							<div id="rcorners3" class="w3-panel w3-card"
@@ -289,7 +289,7 @@ $("#reqtable tr").each(function() {
 								<p></p>
 
 								<span>
-									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue8" style="float: right; margin-top: 4%;"></h1>
 								</span>
 							</div>
 							<div id="rcorners3" class="w3-panel w3-card"
@@ -298,7 +298,7 @@ $("#reqtable tr").each(function() {
 								<p></p>
 
 								<span>
-									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue10" style="float: right; margin-top: 4%;"></h1>
 								</span>
 							</div>
 						</div>
@@ -484,6 +484,9 @@ var primarySkillJson=${primarySkillJson};
 	$("#dvalue4").text(myObj.custevalcount);
 	$("#dvalue5").text(myObj.offercount);
 	$("#dvalue6").text(myObj.boardingcount);
+	$("#dvalue7").text(myObj.holdOpportunityCount);
+	$("#dvalue8").text(myObj.abandonedOpportunityCount);
+	$("#dvalue10").text(myObj.lostOpportunityCount);
 	$("#dvalue9").text(myObj.totalcount);
 	
 	

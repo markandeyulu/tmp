@@ -17,6 +17,9 @@ public class DashboardRequirement implements Serializable {
 	private int CustomerEvaluation;
 	private int OfferProcessing;
 	private int Onboarded;
+	private int holdOpportunity;
+	private int abandonedOpportunity;
+	private int lostOpportunity;
 	private int PositionsLost;
 	private int TotalPositions;
 	private int TotalActive;
@@ -27,6 +30,9 @@ public class DashboardRequirement implements Serializable {
 	private int custevalcount;
 	private int offercount;
 	private int boardingcount;
+	private int holdOpportunityCount;
+	private int abandonedOpportunityCount;
+	private int lostOpportunityCount;
 	private int totalcount;
 
 	private String account;
@@ -176,6 +182,42 @@ public class DashboardRequirement implements Serializable {
 	}
 	public void setTotalActive(int totalActive) {
 		TotalActive = totalActive;
+	}
+	public int getHoldOpportunity() {
+		return holdOpportunity;
+	}
+	public void setHoldOpportunity(int holdOpportunity) {
+		this.holdOpportunity = holdOpportunity;
+	}
+	public int getAbandonedOpportunity() {
+		return abandonedOpportunity;
+	}
+	public void setAbandonedOpportunity(int abandonedOpportunity) {
+		this.abandonedOpportunity = abandonedOpportunity;
+	}
+	public int getLostOpportunity() {
+		return lostOpportunity;
+	}
+	public void setLostOpportunity(int lostOpportunity) {
+		this.lostOpportunity = lostOpportunity;
+	}
+	public int getHoldOpportunityCount() {
+		return holdOpportunityCount;
+	}
+	public void setHoldOpportunityCount(int holdOpportunityCount) {
+		this.holdOpportunityCount = holdOpportunityCount;
+	}
+	public int getAbandonedOpportunityCount() {
+		return abandonedOpportunityCount;
+	}
+	public void setAbandonedOpportunityCount(int abandonedOpportunityCount) {
+		this.abandonedOpportunityCount = abandonedOpportunityCount;
+	}
+	public int getLostOpportunityCount() {
+		return lostOpportunityCount;
+	}
+	public void setLostOpportunityCount(int lostOpportunityCount) {
+		this.lostOpportunityCount = lostOpportunityCount;
 	}
 
 
