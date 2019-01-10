@@ -52,6 +52,9 @@ public class Requirement implements Serializable {
 	private int custevalcount;
 	private int offercount;
 	private int boardingcount;
+	private int holdOpporCount;
+	private int abandonedOpporCount;
+	private int lostOppurCount;
 	private int totalcount;
 	private String projectAdd;
 	private String account1;
@@ -633,6 +636,30 @@ public class Requirement implements Serializable {
 
 	public void setProjectAdd(String projectAdd) {
 		this.projectAdd = projectAdd;
+	}
+
+	public int getHoldOpporCount() {
+		return holdOpporCount;
+	}
+
+	public void setHoldOpporCount(int holdOpporCount) {
+		this.holdOpporCount = holdOpporCount;
+	}
+
+	public int getAbandonedOpporCount() {
+		return abandonedOpporCount;
+	}
+
+	public void setAbandonedOpporCount(int abandonedOpporCount) {
+		this.abandonedOpporCount = abandonedOpporCount;
+	}
+
+	public int getLostOppurCount() {
+		return lostOppurCount;
+	}
+
+	public void setLostOppurCount(int lostOppurCount) {
+		this.lostOppurCount = lostOppurCount;
 	}
 
 

@@ -217,96 +217,103 @@ $("#reqtable tr").each(function() {
 				<!-- Icon Cards-->
 
 				<div class="row col-md-12" style="margin-bottom: 3%;">
-					<div class="col-md-10">
+					<div>
 						<div class=" row w3-container">
+						<div id="dash1" style="margin-bottom: 3%; display:inline-block; width:100%">
 
-							<div id="rcorners3" class="w3-panel w3-card" style="">
+							<div id="rcorners3" class="w3-panel w3-card" style="display:inline-block;">
 								<h6>Lead Generation</h6>
 								<p></p>
 								<!-- <div id="hoverview" class="w3-third w3-center w3-card" style="background:#9b0f23;"> 
       <button data-toggle="modal" data-target="#Modelleadgeneration" class="w3-button w3-black w3-round-xxlarge" style="margin-top:10px;">View</button> 
     </div> -->
 								<div style="height: 50%;">
-									<h1 id="dvalue1" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue1" style="float: right; margin-top: 8%;"></h1>
 								</div>
 
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="margin-left: 2%;">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Profile Sourcing</h6>
 
 								<div>
-									<h1 id="dvalue2" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue2" style="float: right; margin-top: 7%;"></h1>
 								</div>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="margin-left: 2%;">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Technical Evaluations</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue3" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue3" style="float: right; margin-top: -5%;"></h1>
 								</span>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card" style="">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Customer Evaluations</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue4" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue4" style="float: right; margin-top: -4%;"></h1>
 								</span>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="margin-left: 2%;">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Offer Processing</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue5" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue5" style="float: right; margin-top: 8%;"></h1>
 								</span>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="margin-left: 2%;">
+							</div>
+							<div id="dash2" style="margin-bottom: 3%;">
+							<div id="rcorners3" class="w3-panel w3-card" style="display:inline-block;">
 								<h6>Onboarded</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue6" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue6" style="float: right; margin-top: 8%;"></h1>
 								</span>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Hold Opportunity</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue7" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue7" style="float: right; margin-top: 8%;"></h1>
 								</span>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="margin-left: 2%;">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Abandoned Opportunity</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue8" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue8" style="float: right; margin-top: -4%;"></h1>
 								</span>
 							</div>
-							<div id="rcorners3" class="w3-panel w3-card"
-								style="margin-left: 2%;">
+							<div id="rcorners3" class="w3-panel w3-card" style="margin-left: 2%; display:inline-block;">
 								<h6>Lost Opportunity</h6>
 								<p></p>
 
 								<span>
-									<h1 id="dvalue10" style="float: right; margin-top: 4%;"></h1>
+									<h1 id="dvalue10" style="float: right; margin-top: 8%;"></h1>
 								</span>
+							</div>
+							<!-- <div class="col-md-2"> -->
+						<!-- <div id="rcorners2" class="w3-panel w3-card" style="display: inline-block;"> -->
+						<div id="rcorners2" class="w3-panel w3-card" style="margin-bottom:1%; margin-left: 2%; display:inline-block; width:17%">
+							<h3 class="tot" style="font-weight:bold; margin-left: 3%; margin-top: -19%; ">Total</h3>
+							<p></p>
+
+							<span>
+								<h2 class="totval" id="dvalue9" style="font-weight:bold"></h2>
+							</span>
+						</div>
+					<!-- </div> -->
 							</div>
 						</div>
 					</div>
 
-					<div class="col-md-2">
-						<div id="rcorners2" class="w3-panel w3-card"
-							style="display: inline-block;">
+					<!-- <div class="col-md-2">
+						<div id="rcorners2" class="w3-panel w3-card" style="display: inline-block;">
 							<h3 class="tot" style="">Total</h3>
 							<p></p>
 
@@ -314,7 +321,7 @@ $("#reqtable tr").each(function() {
 								<h1 class="totval" id="dvalue9" style=""></h1>
 							</span>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="modal fade" id="Modelleadgeneration" tabindex="-1"
 					role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
