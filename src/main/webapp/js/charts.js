@@ -1,15 +1,4 @@
 $(document).ready(function(){
-	$("#treeChartModal").dialog({
-	      autoOpen: false,
-	      show: {
-	       
-	        duration: 1000
-	      },
-	      hide: {
-	        
-	        duration: 1000
-	      }
-	    });
 	
 	var barChartContent=[];
 	var pieChartContent=[];
@@ -154,7 +143,7 @@ $(document).ready(function(){
 				}
 			}
 		});
-		 $("#treeChartModal").dialog("open");
+		
 	});
 
 	function buildTreeGraph() {

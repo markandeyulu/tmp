@@ -547,9 +547,9 @@ $('#logout').click(function () {
 					
 					<Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Skill-set Bar Chart</Button>
 					
-					<Button name="pieChart" id="pieChart" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Pie Chart</Button>
+					<Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Pie Chart</Button>
 					
-					<Button name="treeChart" id="treeChart" class="btn btn-md button1"  style="background-color:#b30000;color:white;" type="button">Associate-Hierarchy Tree Chart</Button>
+					<Button name="treeChart" id="treeChart" data-target="#treeChartModal" data-toggle="modal" class="btn btn-md button1"  style="background-color:#b30000;color:white;" type="button">Associate-Hierarchy Tree Chart</Button>
 					
 					<!-- <div id="addReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
                     </div>
@@ -560,33 +560,48 @@ $('#logout').click(function () {
 					<div id="reqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
                     </div>
 				
-				<!-- <div class="modal fade" id="treeChartModal" tabindex="-1" role="dialog"
-					aria-labelledby="modalLabel" aria-hidden="true"> -->
-				<!-- <div class="modal-dialog" style="height: 600px; width: 900px ; font-size: 12px;"> -->
-					<!-- <div class="modal-content"> -->
-						<!-- <div class="modal-header" style="background-color: #b30000;">
+				<div class="modal fade" id="treeChartModal" tabindex="-1" role="dialog"
+					aria-labelledby="modalLabel" aria-hidden="true">
+				<div class="modal-dialog" style="width: 1000px ; font-size: 12px;">
+					<div class="modal-content">
+						<div class="modal-header" style="background-color: #b30000;">
 							<button type="button" class="close" data-dismiss="modal"
 								style="background-color: white;" onClick="window.location.reload();">
 								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 							</button>
-							<h3 class="modal-title" id="lineModalLabel" style="color: white;">BAR</h3>
-						</div> -->
-						<!-- <div class="modal-body"> -->
-							<!-- <div class="container" style="height: 500px; width: 800px;">
+							<h3 class="modal-title" id="lineModalLabel" style="color: white;">TREE</h3>
+						</div>
+						<div class="modal-body">
+							
 									<div class="chart Treant Treant-loaded" id="collapsable-chart"> 
-							</div>
-						</div> -->
-					<!-- </div> -->
-			<!-- </div> -->
-			<!-- </div> -->	
-			<!-- </div> -->
-			<div id="treeChartModal" title="Basic dialog">
-  				<div class="chart Treant Treant-loaded" id="collapsable-chart"> 
-  				</div>
+							
+						</div>
+					</div>
+					</div>
+				</div>	
+				</div>
+			<div class="modal fade" id="pieChartModal" tabindex="-1" role="dialog"
+					aria-labelledby="modalLabel" aria-hidden="true">
+				<div class="modal-dialog" style="height: 600px; width: 800px ; font-size: 12px;">
+					<div class="modal-content">
+						<div class="modal-header" style="background-color: #b30000;">
+							<button type="button" class="close" data-dismiss="modal"
+								style="background-color: white;" onClick="window.location.reload();">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<h3 class="modal-title" id="lineModalLabel" style="color: white;">PIE</h3>
+						</div>
+						<div class="modal-body">
+								<div id="resizable">
+									<div id="chartContainer" style="height: 400px; width: 700px;"></div> 
+								</div>
+						</div>
+					</div>
+			</div>
 			</div>
 			<div class="modal fade" id="barChartModal" tabindex="-1" role="dialog"
 					aria-labelledby="modalLabel" aria-hidden="true">
-				<div class="modal-dialog" style="height: 600px; width: 900px ; font-size: 12px;">
+				<div class="modal-dialog" style="height: 600px; width: 800px ; font-size: 12px;">
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
 							<button type="button" class="close" data-dismiss="modal"
@@ -596,11 +611,9 @@ $('#logout').click(function () {
 							<h3 class="modal-title" id="lineModalLabel" style="color: white;">BAR</h3>
 						</div>
 						<div class="modal-body">
-							<div class="container" style="height: 500px; width: 800px;">
 								<div id="resizable">
 									<div id="chartContainer1" style="height: 400px; width: 700px;"></div> 
 								</div>
-							</div>
 						</div>
 					</div>
 			</div>
