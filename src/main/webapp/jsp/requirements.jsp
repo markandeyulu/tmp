@@ -10,6 +10,10 @@
 <script src="js/jquery.form-validator.min.js"></script>
 <script src="js/jquery.table2excel.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
+<script src="js/jquery.canvasjs.min.js"></script>
+<script src="js/jquery.easing.min.js"></script>
+<script src="js/raphael.js"></script>
+<script src="js/Treant.js"></script>
 <script	src="js/bootstrap3-typeahead.min.js"></script>
 <script	src="js/bootstrap.min.js"></script>
 <script	src="js/bootstrap-multiselect.js"></script>
@@ -19,14 +23,19 @@
 <script src="js/location.js"></script>
 <script src="js/dropdown.js"></script>
 <script src="js/requirement.js"></script>
+<script src="js/charts.js"></script>
 
 <link rel="stylesheet"	href="css/jquery.dataTables.min.css">
 <link rel="stylesheet"	href="css/bootstrap-3.3.6.min.css" />
 <link rel="stylesheet"	href="css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet"	href="css/w3.css"/>
 <link rel="stylesheet" type="text/css" href="css/iautResource.css" />
-<link href="css/jquery-ui.css" rel="stylesheet">
-<link href="css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet"	href="css/Treant.css"/>
+<link rel="stylesheet"	href="css/collapsable.css"/>
+<link rel="stylesheet"	href="css/perfect-scrollbar.css"/>
+<link href="css/jquery-ui.css" rel="stylesheet"/>
+<link href="css/font-awesome.min.css" rel="stylesheet"/>
+
 <%
 	response.setHeader("Pragma","no-cache"); 
 	response.setHeader("Cache-Control","no-store"); 
@@ -145,11 +154,13 @@ $(document).ready(function () {
 	  	
       
     });
-	 $('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
-    	 var row = $(this).closest('tr');
+	
+	$('#reqtable3 tbody').on('click', 'input[type="checkbox"]', function(e){
+  	 	var row = $(this).closest('tr');
 		row.addClass('selected');
-	   	});
-	 $('#deleteReqRow').click(function (){
+  	});
+ 
+	$('#deleteReqRow').click(function (){
 		    var dataArr = [];
 		    $.each($("#reqtable3 tr.selected"),function(){
 		       dataArr.push($(this).find('td').eq(1).text());
@@ -534,6 +545,12 @@ $('#logout').click(function () {
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#uploadModal">Bulk Upload</button>
 					
+					<Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Skill-set Bar Chart</Button>
+					
+					<Button name="pieChart" id="pieChart" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Pie Chart</Button>
+					
+					<Button name="treeChart" id="treeChart" class="btn btn-md button1"  style="background-color:#b30000;color:white;" type="button">Associate-Hierarchy Tree Chart</Button>
+					
 					<!-- <div id="addReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
                     </div>
 					<div id="deleteReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
@@ -542,6 +559,51 @@ $('#logout').click(function () {
 					</div> -->
 					<div id="reqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
                     </div>
+				
+				<!-- <div class="modal fade" id="treeChartModal" tabindex="-1" role="dialog"
+					aria-labelledby="modalLabel" aria-hidden="true"> -->
+				<!-- <div class="modal-dialog" style="height: 600px; width: 900px ; font-size: 12px;"> -->
+					<!-- <div class="modal-content"> -->
+						<!-- <div class="modal-header" style="background-color: #b30000;">
+							<button type="button" class="close" data-dismiss="modal"
+								style="background-color: white;" onClick="window.location.reload();">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<h3 class="modal-title" id="lineModalLabel" style="color: white;">BAR</h3>
+						</div> -->
+						<!-- <div class="modal-body"> -->
+							<!-- <div class="container" style="height: 500px; width: 800px;">
+									<div class="chart Treant Treant-loaded" id="collapsable-chart"> 
+							</div>
+						</div> -->
+					<!-- </div> -->
+			<!-- </div> -->
+			<!-- </div> -->	
+			<!-- </div> -->
+			<div id="treeChartModal" title="Basic dialog">
+  				<div class="chart Treant Treant-loaded" id="collapsable-chart"> 
+  				</div>
+			</div>
+			<div class="modal fade" id="barChartModal" tabindex="-1" role="dialog"
+					aria-labelledby="modalLabel" aria-hidden="true">
+				<div class="modal-dialog" style="height: 600px; width: 900px ; font-size: 12px;">
+					<div class="modal-content">
+						<div class="modal-header" style="background-color: #b30000;">
+							<button type="button" class="close" data-dismiss="modal"
+								style="background-color: white;" onClick="window.location.reload();">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<h3 class="modal-title" id="lineModalLabel" style="color: white;">BAR</h3>
+						</div>
+						<div class="modal-body">
+							<div class="container" style="height: 500px; width: 800px;">
+								<div id="resizable">
+									<div id="chartContainer1" style="height: 400px; width: 700px;"></div> 
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
 			</div>
 		<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
 			aria-labelledby="modalLabel" aria-hidden="true">

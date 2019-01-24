@@ -2,6 +2,7 @@ package com.tmp.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tmp.entity.Departments;
+import com.tmp.entity.Hierarchy;
 import com.tmp.entity.ReqBulk;
 import com.tmp.entity.Requirement;
 import com.tmp.entity.RequirementProfileMapping;
@@ -42,6 +45,79 @@ public class RequirementController {
 	public Requirements getRequirements(@PathVariable("status") String status, @RequestParam("location") String location,
 			@RequestParam("account") String account)throws IOException {
 		return tmpUtil.getRequirements(location, account, status);
+	}
+	
+	@RequestMapping(value = "/getPieChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
+	public @ResponseBody List<Departments> getPieChartDataJson()throws IOException {
+		System.out.println("getPieChartDataJson Called");
+		Departments dept1=new Departments("1","30","Java");
+		Departments dept2=new Departments("2","10","PL/SQL");
+		Departments dept3=new Departments("3","15",".Net");
+		Departments dept4=new Departments("4","06","MainFrame");
+		Departments dept5=new Departments("5","07","Python");
+		Departments dept6=new Departments("6","08","Angular");
+		Departments dept7=new Departments("7","10","Automation");
+		Departments dept8=new Departments("8","05","Support");
+		List<Departments> depts = new ArrayList<Departments>();
+		
+		depts.add(dept1);
+		depts.add(dept2);
+		depts.add(dept3);
+		depts.add(dept4);
+		depts.add(dept5);
+		depts.add(dept6);
+		depts.add(dept7);
+		depts.add(dept8);
+		
+		return depts;
+	}
+	
+	@RequestMapping(value = "/getBarChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
+	public @ResponseBody List<Departments> getBarChartDataJson()throws IOException {
+
+		System.out.println("getBarChartDataJson Called");
+		Departments dept1=new Departments("1","30","Java");
+		Departments dept2=new Departments("2","10","PL/SQL");
+		Departments dept3=new Departments("3","15",".Net");
+		Departments dept4=new Departments("4","06","MainFrame");
+		Departments dept5=new Departments("5","07","Python");
+		Departments dept6=new Departments("6","08","Angular");
+		Departments dept7=new Departments("7","10","Automation");
+		Departments dept8=new Departments("8","05","Support");
+		List<Departments> depts = new ArrayList<Departments>();
+		
+		depts.add(dept1);
+		depts.add(dept2);
+		depts.add(dept3);
+		depts.add(dept4);
+		depts.add(dept5);
+		depts.add(dept6);
+		depts.add(dept7);
+		depts.add(dept8);
+		
+		return depts;
+	}
+	
+	@RequestMapping(value = "/getTreeChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
+	public @ResponseBody List<Hierarchy> getTreeChartDataJson()throws IOException {
+		Hierarchy h1= new Hierarchy("1","RamKrishna Rao",   "","false");
+		Hierarchy h2= new Hierarchy("2","Arnold Santiago",       "1","false");
+		Hierarchy h3= new Hierarchy("3","Kannan Kasturirajan",   "1","false");
+		Hierarchy h4= new Hierarchy("4","Padmaganesh KN",        "1","false");
+		Hierarchy h5= new Hierarchy("5","Raju Lakshman",         "3","false");
+		Hierarchy h6= new Hierarchy("6","Rikky shah",            "3","false");
+		Hierarchy h7= new Hierarchy("7","Umapathy Jangala",      "3","false");
+		
+		List<Hierarchy> hierchy = new ArrayList<Hierarchy>();
+		hierchy.add(h1);
+		hierchy.add(h2);
+		hierchy.add(h3);
+		hierchy.add(h4);
+		hierchy.add(h5);
+		hierchy.add(h6);
+		hierchy.add(h7);
+		
+		return hierchy;
 	}
 
 	public TMPUtil getTmpUtil() {

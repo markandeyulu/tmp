@@ -48,6 +48,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-dbcp-1.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
