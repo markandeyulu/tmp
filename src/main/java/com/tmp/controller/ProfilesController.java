@@ -1,6 +1,7 @@
 package com.tmp.controller;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,8 +33,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tmp.dao.ConfigDAO;
+import com.tmp.entity.Associate;
 import com.tmp.entity.Profile;
 import com.tmp.service.ProfileService;
+import com.tmp.util.CandidateExcelRead;
 import com.tmp.util.TMPUtil;
 @Controller
 public class ProfilesController {
@@ -50,8 +53,19 @@ public class ProfilesController {
 	@Qualifier("profileService")
 	ProfileService profileService;
 	
+	@Autowired(required = true)
+	@Qualifier("candidateExcelRead")
+	CandidateExcelRead candidateExcelRead;
 	
-	
+		
+	public CandidateExcelRead getCandidateExcelRead() {
+		return candidateExcelRead;
+	}
+
+	public void setCandidateExcelRead(CandidateExcelRead candidateExcelRead) {
+		this.candidateExcelRead = candidateExcelRead;
+	}
+
 	/**
 	 * @return the profileService
 	 */
@@ -120,32 +134,6 @@ public class ProfilesController {
 		
 		int addMessage = tmpUtil.createProfile(profile, userId);
 		model.setViewName("redirect:profiles?fromCreateProfile="+addMessage);
-		/*if(session != null && !session.isNew()) {
-			   //do something here
-			} else {
-			    model.setViewName("login");
-			}
-		model.addObject("profiles", new Profile());
-		model.addObject("profileSourceJson",tmpUtil.getConfigKeyValues(7));
-		model.addObject("initialEvaluationResultJson",tmpUtil.getConfigKeyValues(8));
-		model.addObject("customerInterviewStatusJson",tmpUtil.getConfigKeyValues(9));
-		model.addObject("primarySkillJson",tmpUtil.getConfigKeyValues(11));
-		model.addObject("addMessage", tmpUtil.createProfile(profile, userId));
-		model.addObject("deleteMessage", 4);
-		model.addObject("updateMessage", 4);
-		model.addObject("profilesJson", tmpUtil.getProfiles());
-		model.addObject("accountValuesJson", tmpUtil.getAccountDetails(userId));
-		model.addObject("projectValuesJson", tmpUtil.getProjectDetails(userId));
-		model.addObject("criticalJson",tmpUtil.getConfigKeyValues(1));
-		model.addObject("locationJson",tmpUtil.getConfigKeyValues(2));
-		model.addObject("intimationModeJson",tmpUtil.getConfigKeyValues(3));
-		model.addObject("requirementTypeJson",tmpUtil.getConfigKeyValues(4));
-		model.addObject("positionStatusJson",tmpUtil.getConfigKeyValues(5));
-		model.addObject("opportunityStatusJson",tmpUtil.getConfigKeyValues(6));
-		model.addObject("skillCategoryJson",tmpUtil.getConfigKeyValues(10));
-		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
-		model.addObject("accountValuesJson", tmpUtil.getAccountList());
-		model.addObject("projectValuesJson", tmpUtil.getProjectList());*/
 		return model;
 	}
 	
@@ -200,6 +188,22 @@ public class ProfilesController {
 		tmpUtil.deleteProfile(profileId);
 		 return "Successfully the profile has been deleted!!";
 	}
+	
+	@RequestMapping(value="/candidateUpload", method = RequestMethod.POST, produces="text/plain")
+	public  @ResponseBody void candidateBulkUpload(@RequestParam("file") String file, HttpServletRequest request) {
+		String userId = null;
+		String files = null;
+		HttpSession session = request.getSession();
+		userId = session.getAttribute("user").toString();
+		files = new File("D:\\", file).getAbsolutePath();
+		ArrayList<Associate> candidateList = null;
+		if (!files.isEmpty()) {
+			candidateList = candidateExcelRead.getCandidateListFromExcel(files);
+			candidateExcelRead.insertResourceList(candidateList, userId, "Siva");
+		}else
+			System.out.println("Upload file is empty!!");
+	}
+	
 	@RequestMapping(value="uploadFile",  method = RequestMethod.POST, produces="text/plain")
 	public @ResponseBody String uploadFileHandlerProfile(@RequestParam("file") String file, HttpServletRequest request) {
 		String file1 = null;

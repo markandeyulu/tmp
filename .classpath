@@ -48,5 +48,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.mail-1.4.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PlatformCommon.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

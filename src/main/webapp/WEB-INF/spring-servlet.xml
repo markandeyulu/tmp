@@ -53,6 +53,13 @@
 	<bean id="dashboardDAO" class="com.tmp.dao.impl.DashboardDAOImpl">
     	 <property name="dataSource" ref="dataSource" />
 	</bean>
+	<!-- <bean id="requirementDAO" class="com.tmp.dao.impl.RequirementDAOImpl">
+    	<property name="dataSource" ref="dataSource" />
+	</bean> -->	
+	<bean id="candidateDAO" class="com.tmp.dao.impl.CandidateDAOImpl">
+    	<property name="dataSource" ref="dataSource" />
+	</bean>
+	
 	<bean id="tmpUtil" class="com.tmp.util.TMPUtil">
 		<property name="loginDAO" ref="loginDAO" />
 		<property name="requirementDAO" ref="requirementDAO" />
@@ -61,18 +68,26 @@
 		<property name="profilesDAO" ref="profilesDAO" />
 		<property name="reportDAO" ref="reportDAO" />
 		<property name="dashboardDAO" ref="dashboardDAO" />
+		<!-- <property name="candidateDAO" ref="candidateDAO" /> -->
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
 	 <bean id="loginController" class="com.tmp.controller.LoginController">
     	<property name="tmpUtil" ref="tmpUtil" />
 	</bean>
+	<bean id="candidateExcelRead" class="com.tmp.util.CandidateExcelRead">
+    	<property name="candidateDAO" ref="candidateDAO" />
+	</bean>
+	
 	<bean id="profilesController" class="com.tmp.controller.ProfilesController">
     	<property name="tmpUtil" ref="tmpUtil" />
+    	<property name="candidateExcelRead" ref="candidateExcelRead" />
 	</bean>
 	<bean id="requirementController" class="com.tmp.controller.RequirementController">
     	<property name="tmpUtil" ref="tmpUtil" />
     	<property name="bulkUploadUtil" ref="bulkUploadUtil" />
+    	<property name="scheduler" ref="scheduler" />
+    	
 	</bean>
 	<bean id="reportController" class="com.tmp.controller.ReportController">
     	<property name="reportService" ref="reportService" />
@@ -87,6 +102,11 @@
 		<property name="requirementDAO" ref="requirementDAO" />
 		<property name="tmpUtil" ref="tmpUtil" />
 	</bean>
+	 <bean id="scheduler" class="com.tmp.scheduler.SchedulerDAO">
+	 	<property name="configDAO" ref="configDAO" />
+	 	<property name="tmpDAOUtil" ref="tmpDAOUtil" />
+	 	<property name="dataSource" ref="dataSource" />
+	</bean> 
 	
 	<mvc:annotation-driven />          
 	<mvc:resources mapping="/css/**" location="/css/"/>

@@ -280,7 +280,25 @@ table.dataTable thead th:first-child {
 	     			} 
 	            });
 	    });
-	    	
+
+$('#candidateUpload').on('click', function(e){
+	    		
+		    	var filename = $('input[type=file]').val().split('\\').pop();
+		    	    $.ajax({
+		                type: 'POST',           
+		       		 url: "/ResourceManagementApp/candidateUpload.action",
+		       		 data: { "file": filename },
+		       		    success: function(e){ 
+		       		    	$('#fileId').html(e); 
+		     			},
+		     			complete:function(){
+		     				document.getElementById("file").value = null;
+		     				//$("#candidateUpload").attr("disabled",false);
+		     				$("#fileId").fadeOut(5000);
+		     				$("#candidateUpload").prop("disabled", false);
+		     			} 
+		            });
+		    });
 	     
  var addMessage = ${addMessage};
 	if (undefined != addMessage) {
@@ -534,6 +552,11 @@ $('#logout').click(function () {
 	<button	style="margin-left: 0%; background-color: #b30000; color: white;"
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#uploadModal">Bulk Upload</button>
+					<%-- <spring:form name='candidateUpload' action="candidateUpload"  method="POST"> --%>
+	<button	style="margin-left: 0%; background-color: #b30000; color: white;" type="button"
+		data-target="#uploadCandidate" class="btn btn-md button1" data-toggle="modal">Candidate Upload</button>
+					
+<%-- </spring:form> --%>
 	<!-- <div id="addProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
 					</div>
 	<div id="deleteProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
@@ -545,6 +568,41 @@ $('#logout').click(function () {
 			
 			
 		</div>
+		
+		<div class="modal fade" id="uploadCandidate" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 80%; font-size: 12px;">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color: #b30000;">
+				<button type="button" id="reload" class="close" data-dismiss="modal" style="background-color: white;">
+					<a class="button" onclick="window.location.reload()" href="#">x</a>
+				</button>
+				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Upload Candidate File</h3>
+			</div>
+			<div class="modal-body">
+				<div class="container" id="modelreload">
+					<div style="width: 60%; margin-left: 8%;">
+						<div class="card-body" id="uploadDiv">
+							<form enctype="multipart/form-data" >
+								<div class="form-group">
+									<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
+									<p>File to upload:<span style="color:red">*</span><input type="file" name="file" id="file"><br /></p>
+									<tr>
+										<td><Button type="button" id="candidateUpload" name="Upload" class="btn btn-md button1"
+												style="background-color: #cc0000; color: white; float: right; margin-right: 7%;" type="submit">
+													Upload File
+											</Button>
+										</td>			
+									</tr>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
 			aria-labelledby="modalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width: 80%; font-size: 12px;">

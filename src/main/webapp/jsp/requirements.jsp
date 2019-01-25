@@ -288,6 +288,24 @@ $(document).ready(function () {
 	            });
 	    });
 	 
+	 $('#scheduleEmailId').on('click', function(e){
+	 		
+ 	    $.ajax({
+             type: 'POST',           
+    		 url: "/ResourceManagementApp/scheduleService.action",
+    		    success: function(e){ 
+    		    	$('#fileId1').text(e); 
+  			},error: function(e){ 
+    		    	$('#fileId1').text(e); 
+  			},
+  			complete:function(){
+  				//$("#uploadFile").attr("disabled",false);
+  				$("#fileId1").fadeOut(5000);
+  				$("#scheduleEmailId").prop("disabled", false);
+  			} 
+         });
+	 });
+	 
 	 /* $("#btnReset").bind("click", function () {
 	            $("#projectNew")[0].selectedIndex = 0;
 	            $("#accountNew")[0].selectedIndex = 0;
@@ -549,7 +567,11 @@ $('#logout').click(function () {
 					
 					<Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Pie Chart</Button>
 					
-					<Button name="treeChart" id="treeChart" data-target="#treeChartModal" data-toggle="modal" class="btn btn-md button1"  style="background-color:#b30000;color:white;" type="button">Associate-Hierarchy Tree Chart</Button>
+					<Button name="treeChart" id="treeChart" data-target="#treeChartModal" data-toggle="modal" class="btn btn-md button1"  style="background-color:#b30000;color:white;display:none" type="button">Associate-Hierarchy Tree Chart</Button>
+					
+					<button	style="margin-left: 0%; background-color: #b30000; color: white;"
+					type="button" class="btn btn-md button1" data-toggle="modal"
+					data-target="#scheduleModal">Scheduler</button>
 					
 					<!-- <div id="addReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
                     </div>
@@ -657,6 +679,46 @@ $('#logout').click(function () {
 				</div>
 			</div>
 		</div>	
+		
+		<div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog"
+			aria-labelledby="modalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width: 80%; font-size: 12px;">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #b30000;">
+						<button type="button" id="reload" class="close" data-dismiss="modal"
+							style="background-color: white;">
+							<!-- <span aria-hidden="true">×</span><span class="sr-only" onclick="window.location.reload()">Close</span> -->
+							<a class="button" onclick="window.location.reload()" href="#">x</a>
+							
+						</button>
+						<h3 class="modal-title" id="lineModalLabel" style="color: white;">Scheduling Email</h3>
+					</div>
+					<div class="modal-body">
+						<div class="container" id="modelreload">
+							<div style="width: 60%; margin-left: 8%;">
+								<div class="card-body">
+									<form enctype="multipart/form-data" >
+										<div class="form-group">
+											<div id="fileId1"></div>
+											<tr>
+												<td><Button type="button" id="scheduleEmailId" name="schedule"
+														class="btn btn-md button1"
+														style="background-color: #cc0000; color: white; float: right; margin-right: 7%;"
+														type="submit">Click to Schedule Email</Button></td>
+														
+											</tr>
+
+										</div>
+									</form>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+		
 		<div class="modal fade" id="mappingmodel" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog" style="width:60%;">
 	<div class="modal-content">

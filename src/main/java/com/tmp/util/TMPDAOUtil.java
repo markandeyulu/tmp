@@ -230,6 +230,7 @@ public int insertProject(int accountId, String projectName) {
 		return generatedKey;
 	}
 	
+	
 	public int getAccountByName(String accountName) {
 		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.account_master WHERE LOWER(ACCOUNT_NAME) like ? ");
 			
@@ -270,6 +271,7 @@ public int insertProject(int accountId, String projectName) {
 		}
 		return accountId;
 	}
+	
 	
 	public int getProjectIdByName(String projectName , int accountId) {
 		

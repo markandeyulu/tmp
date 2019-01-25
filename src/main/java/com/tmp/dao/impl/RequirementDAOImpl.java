@@ -956,9 +956,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 
 			while(rs.next()){
 				Project rq = new Project();
-				rq.setProjectId((rs.getInt(1)));
-				rq.setProjectName((rs.getString(2)));
-				rq.setAccountId(rs.getInt(3));
+				rq.setId((rs.getInt(1)));
+				rq.setProjectName((rs.getString(3)));
+				rq.setAccountId(rs.getInt(7));
 				
 				tmp.add(rq);
 			}rs.close();

@@ -89,7 +89,15 @@ public class Requirement implements Serializable {
 	private String customershortlisted;
 	private String oppurtunitystatus;
 	private int shortlistProfileId;
+	private int userId;
 	
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	
 	public int getInternalEvaluation1() {
 		return internalEvaluation1;

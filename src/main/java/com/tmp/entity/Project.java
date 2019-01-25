@@ -7,6 +7,7 @@ public class Project implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private int id;
 	private int projectId;
 	private String projectName;
 	private int accountId;
@@ -27,6 +28,12 @@ public class Project implements Serializable {
 	}
 	public void setAccountId(int accountId) {
 		this.accountId = accountId;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	
