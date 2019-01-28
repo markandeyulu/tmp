@@ -16,6 +16,7 @@ import com.mysql.jdbc.Statement;
 import com.tmp.dao.CandidateDAO;
 import com.tmp.entity.Associate;
 import com.tmp.entity.AssociateProject;
+import com.tmp.entity.Departments;
 import com.tmp.entity.IBU;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Project;
@@ -150,6 +151,43 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		return generatedKey;
 	}
 
+	public ArrayList<Departments> getPieChartData() {
+		StringBuffer sql = new StringBuffer("SELECT SKILL.SKILL_NAME AS SKILL, COUNT(ASSOCIATE.PRIMARY_SKILL_ID) AS COUNT FROM \r\n")
+				.append("ASSOCIATE, SKILL WHERE ASSOCIATE.PRIMARY_SKILL_ID = SKILL.ID \r\n")
+				.append(" GROUP BY ASSOCIATE.PRIMARY_SKILL_ID");
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String primarySkillName = "";
+		int skillCount = 0;
+		int recordCount = 0;
+		ArrayList<Departments> departmentList = new ArrayList<Departments>();
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			
+			Departments department = null;
+			
+			while(rs.next()) {
+				skillCount = rs.getInt("COUNT");
+				primarySkillName = rs.getString("SKILL");
+				recordCount++;
+				department = new Departments(recordCount+"", skillCount+"", primarySkillName);
+				departmentList.add(department);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			if (conn != null) {
+				closeDBObjects(conn, null, ps);
+			}
+		}
+		return departmentList;
+	}
+	
 	public void populateCandidateDetailsForInsert(PreparedStatement ps, Associate candidate, String userId) {
 
 		if (ps != null) {

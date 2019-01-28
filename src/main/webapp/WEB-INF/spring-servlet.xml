@@ -87,6 +87,7 @@
     	<property name="tmpUtil" ref="tmpUtil" />
     	<property name="bulkUploadUtil" ref="bulkUploadUtil" />
     	<property name="scheduler" ref="scheduler" />
+    	<property name="candidateDAO" ref="candidateDAO" />
     	
 	</bean>
 	<bean id="reportController" class="com.tmp.controller.ReportController">

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import com.tmp.entity.Associate;
+import com.tmp.entity.Departments;
 
 public interface CandidateDAO {
 	public void setDataSource(DataSource dataSource);
@@ -19,4 +20,5 @@ public interface CandidateDAO {
 	public int getProjectAccountDetails(String projectId);
 	public int insertAssociateProjectDetails(int associateId, int projectId, Associate candidate);
 	public int isResourceExist(Associate associate, String userId, String userName);
+	public ArrayList<Departments> getPieChartData();
 }

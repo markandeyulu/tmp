@@ -56,6 +56,7 @@
 			</fileset>
 		</copy>
 		<delete dir="${work.home}/classes" />
+		<delete file="${work.home}/dist/ResourceManagementApp.war" />
 	</target>
 
 	<target name="clean">

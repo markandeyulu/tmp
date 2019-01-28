@@ -1,6 +1,7 @@
 package com.tmp.controller;
 
 import java.io.IOException;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tmp.dao.CandidateDAO;
 import com.tmp.email.EmailService;
 import com.tmp.entity.Departments;
 import com.tmp.entity.Hierarchy;
@@ -57,6 +59,18 @@ public class RequirementController {
 	@Qualifier("scheduler")
 	SchedulerDAO scheduler;
 	
+	@Autowired(required = true)
+	@Qualifier("candidateDAO")
+	CandidateDAO candidateDAO;
+	
+	public CandidateDAO getCandidateDAO() {
+		return candidateDAO;
+	}
+
+	public void setCandidateDAO(CandidateDAO candidateDAO) {
+		this.candidateDAO = candidateDAO;
+	}
+
 	@RequestMapping(value = "/requirements/{status}", method = RequestMethod.GET, produces = {"application/json" }, consumes = {"application/json" })
 	@ResponseBody
 	public Requirements getRequirements(@PathVariable("status") String status, @RequestParam("location") String location,
@@ -65,28 +79,34 @@ public class RequirementController {
 	}
 	
 	@RequestMapping(value = "/getPieChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
-	public @ResponseBody List<Departments> getPieChartDataJson()throws IOException {
+	public @ResponseBody List<Departments> getPieChartDataJson(String id, String primarySkillId, String primarySkillName)throws IOException {
 		System.out.println("getPieChartDataJson Called");
-		Departments dept1=new Departments("1","30","Java");
-		Departments dept2=new Departments("2","10","PL/SQL");
+		
+		
+		
+		Departments department = new Departments(id, primarySkillId, primarySkillName);
+		
+		/*Departments dept2=new Departments("2","10","PL/SQL");
 		Departments dept3=new Departments("3","15",".Net");
 		Departments dept4=new Departments("4","06","MainFrame");
 		Departments dept5=new Departments("5","07","Python");
 		Departments dept6=new Departments("6","08","Angular");
 		Departments dept7=new Departments("7","10","Automation");
-		Departments dept8=new Departments("8","05","Support");
-		List<Departments> depts = new ArrayList<Departments>();
+		Departments dept8=new Departments("8","05","Support");*/
+		//List<Departments> depts = new ArrayList<Departments>();
 		
-		depts.add(dept1);
+		//candidateDAO.getPieChartData();
+		
+		/*depts.add(dept1);
 		depts.add(dept2);
 		depts.add(dept3);
 		depts.add(dept4);
 		depts.add(dept5);
 		depts.add(dept6);
-		depts.add(dept7);
-		depts.add(dept8);
+		depts.add(dept7);*/
+		//depts.add(department);
 		
-		return depts;
+		return candidateDAO.getPieChartData();
 	}
 	
 	@RequestMapping(value = "/getBarChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
