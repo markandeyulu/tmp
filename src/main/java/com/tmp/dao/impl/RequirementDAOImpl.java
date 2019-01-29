@@ -734,11 +734,18 @@ public class RequirementDAOImpl implements RequirementDAO {
 				temp1.setOffercount(count);;
 			}else if(status.equals("Onboarding")){
 				temp1.setBoardingcount(count);
+			}else if(status.equals("Lost Opportunity")) {
+				temp1.setLostOppurCount(count);
+			}else if(status.equals("Abandoned Opportunity")) {
+				temp1.setAbandonedOpporCount(count);
+			}else if(status.equals("Hold Opportunity")) {
+				temp1.setHoldOpporCount(count);
 			}
 		}
 
 		temp1.setTotalcount(temp1.getLeadcount()+temp1.getProfilecount()+temp1.getTechevalcount()
-				+temp1.getCustevalcount()+temp1.getOffercount()+temp1.getBoardingcount());
+				+temp1.getCustevalcount()+temp1.getOffercount()+temp1.getBoardingcount()+temp1.getAbandonedOpporCount()+
+				temp1.getLostOppurCount()+temp1.getHoldOpporCount());
 
 		return temp1;
 

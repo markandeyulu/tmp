@@ -70,8 +70,14 @@ public class DashboardDAOImpl implements DashboardDAO{
 				temp.setOfferProcessing(count);
 			}else if(status.equals("Onboarding")){
 				temp.setOnboarded(count);
-			}else if(status.equals("Lost")){
+			}else if(status.equals("Lost")) {
 				temp.setPositionsLost(count);
+			}else if(status.equals("Lost Opportunity")){
+				temp.setLostOpportunity(count);
+			}else if(status.equals("Abandoned Opportunity")) {
+				temp.setAbandonedOpportunity(count);
+			}else if(status.equals("Hold Opportunity")) {
+				temp.setHoldOpportunity(count);
 			}
 		}
 
@@ -246,6 +252,12 @@ public class DashboardDAOImpl implements DashboardDAO{
 				temp.setOnboarded(count);
 			}else if(status.equals("Lost")){
 				temp.setPositionsLost(count);
+			}else if(status.equals("Lost Opportunity")) {
+				temp.setLostOpportunity(count);
+			}else if(status.equals("Abandoned Opportunity")) {
+				temp.setAbandonedOpportunity(count);
+			}else if(status.equals("Hold Opportunity")) {
+				temp.setHoldOpportunity(count);
 			}
 		}
 
@@ -254,7 +266,8 @@ public class DashboardDAOImpl implements DashboardDAO{
 		for(DashboardRequirement obj:listDashboardRequirement)
 		{
 			
-			obj.setTotalPositions(obj.getLeadGeneration()+obj.getProfileSourcing()+obj.getInternalEvaluation()+obj.getCustomerEvaluation()+obj.getOfferProcessing());
+			obj.setTotalPositions(obj.getLeadGeneration()+obj.getProfileSourcing()+obj.getInternalEvaluation()+obj.getCustomerEvaluation()+obj.getOfferProcessing()+
+			obj.getAbandonedOpportunityCount()+obj.getHoldOpportunityCount()+obj.getLostOpportunityCount());
 			obj.setTotalActive(obj.getLeadGeneration()+obj.getProfileSourcing()+obj.getInternalEvaluation()+obj.getCustomerEvaluation()+obj.getOfferProcessing()+obj.getOnboarded());
 		}	
 

@@ -205,9 +205,9 @@ background: #b3b3b3;
 	color:white;
     padding: 15px; 
   /*   width: 190px; */
-    height: 130px;
+    height: 105px;
 	vertical-align:bottom;
-	display:inline-block; width:13%;margin-left:0.3%
+	display:inline-block; width:17%;margin-left:0.35%;margin-bottom:8px;
 }
 
 #hoverview{

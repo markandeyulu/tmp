@@ -188,6 +188,45 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		return departmentList;
 	}
 	
+	public ArrayList<Departments> getBarChartData(){
+		
+		StringBuffer sql = new StringBuffer("select project_account_master.CUSTOMER_NAME as Account, count(associate.PROJECT_ID) ")
+				.append("as count from associate, project_account_master where associate.PROJECT_ID = project_account_master.ID\r\n")
+				.append("group by associate.PROJECT_ID;");
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		String accountName = "";
+		int accountCount = 0;
+		int recordCount = 0;
+		ArrayList<Departments> departmentList = new ArrayList<Departments>();
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			
+			Departments department = null;
+			
+			while(rs.next()) {
+				accountCount = rs.getInt("COUNT");
+				accountName = rs.getString("Account");
+				recordCount++;
+				department = new Departments(recordCount+"", accountCount+"", accountName);
+				departmentList.add(department);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			if (conn != null) {
+				closeDBObjects(conn, null, ps);
+			}
+		}
+		return departmentList;
+	}
+	
 	public void populateCandidateDetailsForInsert(PreparedStatement ps, Associate candidate, String userId) {
 
 		if (ps != null) {

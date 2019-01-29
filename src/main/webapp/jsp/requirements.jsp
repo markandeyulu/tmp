@@ -496,7 +496,7 @@ $('#logout').click(function () {
 			<div class=" row w3-container" id="blockref">
 
 				<div id="rcorners5" class="w3-panel w3-card chcol_1"
-					style="margin-left: 2%;">
+					style="">
 					<h6>Lead Generation</h6>
 					<p></p>
 					<!-- <div id="hoverview" class="w3-third w3-center w3-card" style="background:#9b0f23;"> 
@@ -520,14 +520,14 @@ $('#logout').click(function () {
 					<h6>Technical Evaluations</h6>
 					<p></p>
 					<span>
-						<h1 id="dvalue3" style="float: right; margin-top: 4%;"></h1>
+						<h1 id="dvalue3" style="float: right; margin-top: 18%;"></h1>
 					</span>
 				</div>
 				<div id="rcorners5" class="w3-panel w3-card chcol_4" style="">
 					<h6>Customer Evaluations</h6>
 					<p></p>
 					<span>
-						<h1 id="dvalue4" style="float: right; margin-top: 4%;"></h1>
+						<h1 id="dvalue4" style="float: right; margin-top: 18%;"></h1>
 					</span>
 				</div>
 				<div id="rcorners5" class="w3-panel w3-card chcol_5" style="">
@@ -544,11 +544,35 @@ $('#logout').click(function () {
 						<h1 id="dvalue6" style="float: right; margin-top: 18%;"></h1>
 					</span>
 				</div>
-				<div id="rcorners5" class="w3-panel w3-card" style="">
+				<div id="rcorners5" class="w3-panel w3-card" style="display:inline-block;">
+								<h6>Hold Opportunity</h6>
+								<p></p>
+
+								<span>
+									<h1 id="dvalue7" style="float: right; margin-top: 18%;"></h1>
+								</span>
+							</div>
+							<div id="rcorners5" class="w3-panel w3-card" style="display:inline-block;">
+								<h6>Abandoned Opportunity</h6>
+								<p></p>
+
+								<span>
+									<h1 id="dvalue8" style="float: right; margin-top: 18%;"></h1>
+								</span>
+							</div>
+							<div id="rcorners5" class="w3-panel w3-card" style="display:inline-block;">
+								<h6>Lost Opportunity</h6>
+								<p></p>
+
+								<span>
+									<h1 id="dvalue10" style="float: right; margin-top: 18%;"></h1>
+								</span>
+							</div>
+				<div id="rcorners5" class="w3-panel w3-card" style="background-color:white; color:#0873a5;">
 					<h3>Total</h3>
 					<p></p>
 					<span>
-						<h1 id="dvalue9" style="float: right; margin-top: 4%;"></h1>
+						<h1 id="dvalue9" style="float: right; margin-top: 18%;"></h1>
 					</span>
 				</div>
 			</div>
@@ -563,9 +587,9 @@ $('#logout').click(function () {
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#uploadModal">Bulk Upload</button>
 					
-					<Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Skill-set Bar Chart</Button>
+					<Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Bar Chart</Button>
 					
-					<Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Pie Chart</Button>
+					<Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Skill-set Pie Chart</Button>
 					
 					<Button name="treeChart" id="treeChart" data-target="#treeChartModal" data-toggle="modal" class="btn btn-md button1"  style="background-color:#b30000;color:white;display:none" type="button">Associate-Hierarchy Tree Chart</Button>
 					
@@ -1522,6 +1546,9 @@ $('#logout').click(function () {
 			$("#dvalue5").text(myObjObj.offercount);
 			$("#dvalue6").text(myObjObj.boardingcount);
 			$("#dvalue9").text(myObjObj.totalcount);
+			$("#dvalue7").text(myObjObj.holdOpporCount);
+			$("#dvalue8").text(myObjObj.abandonedOpporCount);
+			$("#dvalue10").text(myObjObj.lostOppurCount);
 		</script> 
 <script>
         $('#btnAvenger').click(function (e) {

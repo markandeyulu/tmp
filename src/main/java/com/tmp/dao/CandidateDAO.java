@@ -21,4 +21,5 @@ public interface CandidateDAO {
 	public int insertAssociateProjectDetails(int associateId, int projectId, Associate candidate);
 	public int isResourceExist(Associate associate, String userId, String userName);
 	public ArrayList<Departments> getPieChartData();
+	public ArrayList<Departments> getBarChartData();
 }

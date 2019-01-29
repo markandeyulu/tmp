@@ -57,7 +57,7 @@ public class TMPDAOUtil {
 		return account;
 	}
 	public Project getProject(int projectId) {
-		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.projects WHERE PROJECT_ID=? ");
+		StringBuffer sql = new StringBuffer("SELECT * FROM tmp.projects WHERE ID=? ");
 			
 		Connection conn = null;
 		Project project =null;
@@ -71,7 +71,7 @@ public class TMPDAOUtil {
 				if (rs.next()) {
 					project = new Project();
 					project.setAccountId(rs.getInt("ACC_ID"));
-					project.setProjectId(rs.getInt("PROJECT_ID"));
+					project.setProjectId(rs.getInt("ID"));
 					project.setProjectName(rs.getString("PROJECT_NAME"));
 				}
 			}

@@ -82,30 +82,6 @@ public class RequirementController {
 	public @ResponseBody List<Departments> getPieChartDataJson(String id, String primarySkillId, String primarySkillName)throws IOException {
 		System.out.println("getPieChartDataJson Called");
 		
-		
-		
-		Departments department = new Departments(id, primarySkillId, primarySkillName);
-		
-		/*Departments dept2=new Departments("2","10","PL/SQL");
-		Departments dept3=new Departments("3","15",".Net");
-		Departments dept4=new Departments("4","06","MainFrame");
-		Departments dept5=new Departments("5","07","Python");
-		Departments dept6=new Departments("6","08","Angular");
-		Departments dept7=new Departments("7","10","Automation");
-		Departments dept8=new Departments("8","05","Support");*/
-		//List<Departments> depts = new ArrayList<Departments>();
-		
-		//candidateDAO.getPieChartData();
-		
-		/*depts.add(dept1);
-		depts.add(dept2);
-		depts.add(dept3);
-		depts.add(dept4);
-		depts.add(dept5);
-		depts.add(dept6);
-		depts.add(dept7);*/
-		//depts.add(department);
-		
 		return candidateDAO.getPieChartData();
 	}
 	
@@ -113,26 +89,9 @@ public class RequirementController {
 	public @ResponseBody List<Departments> getBarChartDataJson()throws IOException {
 
 		System.out.println("getBarChartDataJson Called");
-		Departments dept1=new Departments("1","30","Java");
-		Departments dept2=new Departments("2","10","PL/SQL");
-		Departments dept3=new Departments("3","15",".Net");
-		Departments dept4=new Departments("4","06","MainFrame");
-		Departments dept5=new Departments("5","07","Python");
-		Departments dept6=new Departments("6","08","Angular");
-		Departments dept7=new Departments("7","10","Automation");
-		Departments dept8=new Departments("8","05","Support");
-		List<Departments> depts = new ArrayList<Departments>();
-		
-		depts.add(dept1);
-		depts.add(dept2);
-		depts.add(dept3);
-		depts.add(dept4);
-		depts.add(dept5);
-		depts.add(dept6);
-		depts.add(dept7);
-		depts.add(dept8);
-		
-		return depts;
+	
+		return candidateDAO.getBarChartData();
+		 
 	}
 	
 	@RequestMapping(value = "/getTreeChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
