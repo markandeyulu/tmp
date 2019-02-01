@@ -93,6 +93,10 @@
 	<bean id="reportController" class="com.tmp.controller.ReportController">
     	<property name="reportService" ref="reportService" />
 	</bean>
+	<bean id="chartController" class="com.tmp.controller.ChartController">
+    	<property name="tmpUtil" ref="tmpUtil" />
+    	<property name="candidateDAO" ref="candidateDAO" />
+	</bean>
 	<bean id="tmpDAOUtil" class="com.tmp.util.TMPDAOUtil">
 	 	<property name="dataSource" ref="dataSource" />
 	</bean>

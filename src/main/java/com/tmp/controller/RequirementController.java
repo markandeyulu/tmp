@@ -78,7 +78,7 @@ public class RequirementController {
 		return tmpUtil.getRequirements(location, account, status);
 	}
 	
-	@RequestMapping(value = "/getPieChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
+	/*@RequestMapping(value = "/getPieChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
 	public @ResponseBody List<Departments> getPieChartDataJson(String id, String primarySkillId, String primarySkillName)throws IOException {
 		System.out.println("getPieChartDataJson Called");
 		
@@ -92,7 +92,7 @@ public class RequirementController {
 	
 		return candidateDAO.getBarChartData();
 		 
-	}
+	}*/
 	
 	@RequestMapping(value = "/getTreeChartDataJson", method = RequestMethod.GET, produces = {"application/json" })
 	public @ResponseBody List<Hierarchy> getTreeChartDataJson()throws IOException {

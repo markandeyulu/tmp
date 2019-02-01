@@ -863,3 +863,6 @@ span.multiselect-native-select select {
 }
 
 
+.chart-dropdown{
+	width: 270px;
+}

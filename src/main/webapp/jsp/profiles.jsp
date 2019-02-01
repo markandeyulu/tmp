@@ -506,6 +506,7 @@ $('#logout').click(function () {
 						<li><a id="black" href="requirements.html" style="margin-right:0px;color:white;height:43px;">Requirements</a></li>
 						<li class="active"><a href="#" style="margin-right:0px;background-color:white;color:black;height:45px;">Profiles</a></li>
 						<li><a id="black" href="reports.html" style="margin-right:0px;color:white;height:43px;">Reports</a></li>
+						<li><a id="black" href="charts.html" style="margin-right: 0px; color: white; height: 43px;">Charts</a></li>
 					</ul>
 				</div>
 	</div>

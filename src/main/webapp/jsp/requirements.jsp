@@ -427,6 +427,8 @@ $('#logout').click(function () {
 						style="margin-right: 0px; color: white; height: 43px;">Profiles</a></li>
 					<li><a id="black" href="reports.html"
 						style="margin-right: 0px; color: white; height: 43px;">Reports</a></li>
+						<li><a id="black" href="charts.html"
+					style="margin-right: 0px; color: white; height: 43px;">Charts</a></li>
 				</ul>
 			</div>
 		</div>
@@ -587,10 +589,10 @@ $('#logout').click(function () {
 					type="button" class="btn btn-md button1" data-toggle="modal"
 					data-target="#uploadModal">Bulk Upload</button>
 					
-					<Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Bar Chart</Button>
+					<!-- <Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Bar Chart</Button> -->
 					
-					<Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Skill-set Pie Chart</Button>
-					
+					<!-- <Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Skill-set Pie Chart</Button>
+					 -->
 					<Button name="treeChart" id="treeChart" data-target="#treeChartModal" data-toggle="modal" class="btn btn-md button1"  style="background-color:#b30000;color:white;display:none" type="button">Associate-Hierarchy Tree Chart</Button>
 					
 					<button	style="margin-left: 0%; background-color: #b30000; color: white;"
@@ -626,7 +628,7 @@ $('#logout').click(function () {
 					</div>
 				</div>	
 				</div>
-			<div class="modal fade" id="pieChartModal" tabindex="-1" role="dialog"
+			<!-- <div class="modal fade" id="pieChartModal" tabindex="-1" role="dialog"
 					aria-labelledby="modalLabel" aria-hidden="true">
 				<div class="modal-dialog" style="height: 600px; width: 800px ; font-size: 12px;">
 					<div class="modal-content">
@@ -644,8 +646,8 @@ $('#logout').click(function () {
 						</div>
 					</div>
 			</div>
-			</div>
-			<div class="modal fade" id="barChartModal" tabindex="-1" role="dialog"
+			</div> -->
+			<!-- <div class="modal fade" id="barChartModal" tabindex="-1" role="dialog"
 					aria-labelledby="modalLabel" aria-hidden="true">
 				<div class="modal-dialog" style="height: 600px; width: 800px ; font-size: 12px;">
 					<div class="modal-content">
@@ -663,7 +665,7 @@ $('#logout').click(function () {
 						</div>
 					</div>
 			</div>
-			</div>
+			</div> -->
 		<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
 			aria-labelledby="modalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width: 80%; font-size: 12px;">

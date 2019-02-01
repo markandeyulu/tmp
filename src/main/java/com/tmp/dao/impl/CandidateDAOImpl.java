@@ -8,19 +8,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+
 import javax.sql.DataSource;
-import org.apache.commons.lang3.StringUtils;
+
 import com.mysql.jdbc.Statement;
 import com.tmp.dao.CandidateDAO;
 import com.tmp.entity.Associate;
-import com.tmp.entity.AssociateProject;
 import com.tmp.entity.Departments;
-import com.tmp.entity.IBU;
-import com.tmp.entity.Profile;
-import com.tmp.entity.Project;
-import com.tmp.entity.ProjectAccountMaster;
 
 /**
  * This class used to insert candidate details into table
@@ -28,7 +23,6 @@ import com.tmp.entity.ProjectAccountMaster;
  * @author AJ00561494
  *
  */
-
 public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 	private DataSource dataSource;
@@ -151,10 +145,19 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		return generatedKey;
 	}
 
-	public ArrayList<Departments> getPieChartData() {
+	public ArrayList<Departments> getSkillChartData(String location) {
+		String whereClause = "";
+
+		if (!location.equalsIgnoreCase("na")) {
+			whereClause = " ASSOCIATE.ONSITE_OFFSHORE=? AND ";
+		}
 		StringBuffer sql = new StringBuffer("SELECT SKILL.SKILL_NAME AS SKILL, COUNT(ASSOCIATE.PRIMARY_SKILL_ID) AS COUNT FROM \r\n")
-				.append("ASSOCIATE, SKILL WHERE ASSOCIATE.PRIMARY_SKILL_ID = SKILL.ID \r\n")
+				.append("ASSOCIATE, SKILL WHERE "
+						+ whereClause
+						+ "ASSOCIATE.PRIMARY_SKILL_ID = SKILL.ID \r\n")
 				.append(" GROUP BY ASSOCIATE.PRIMARY_SKILL_ID");
+		
+		System.out.println("sql query is "+sql.toString());
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -166,6 +169,10 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		try {
 			conn = dataSource.getConnection();
 			ps = conn.prepareStatement(sql.toString());
+			
+			if(!location.equalsIgnoreCase("na"))
+				ps.setString(1, location);
+			
 			rs = ps.executeQuery();
 			
 			Departments department = null;
@@ -178,7 +185,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				departmentList.add(department);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			if (conn != null) {
@@ -188,10 +194,16 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		return departmentList;
 	}
 	
-	public ArrayList<Departments> getBarChartData(){
+	public ArrayList<Departments> getAccountChartData(String location){
+		
+		String whereClause = "";
+		if(!location.equalsIgnoreCase("na"))
+			whereClause = " associate.ONSITE_OFFSHORE=? AND ";
 		
 		StringBuffer sql = new StringBuffer("select project_account_master.CUSTOMER_NAME as Account, count(associate.PROJECT_ID) ")
-				.append("as count from associate, project_account_master where associate.PROJECT_ID = project_account_master.ID\r\n")
+				.append("as count from associate, project_account_master where "
+						+ whereClause
+						+ "associate.PROJECT_ID = project_account_master.ID\r\n")
 				.append("group by associate.PROJECT_ID;");
 		
 		Connection conn = null;
@@ -205,6 +217,10 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		try {
 			conn = dataSource.getConnection();
 			ps = conn.prepareStatement(sql.toString());
+			
+			if(!location.equalsIgnoreCase("na"))
+				ps.setString(1, location);
+			
 			rs = ps.executeQuery();
 			
 			Departments department = null;
@@ -217,7 +233,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				departmentList.add(department);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			if (conn != null) {
@@ -254,7 +269,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				ps.setInt(21, candidate.getProjId());
 
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -283,7 +297,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 
@@ -304,7 +317,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ProjectAccountMaster pam = null;
 		int pId = 0;
 
 		try {
@@ -320,7 +332,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 
@@ -354,7 +365,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 
@@ -398,7 +408,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			closeDBObjects(conn, rs, ps);
@@ -443,7 +452,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			closeDBObjects(conn, rs, ps);
@@ -483,7 +491,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			closeDBObjects(conn, rs, ps);

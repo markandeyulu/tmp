@@ -1,5 +1,29 @@
 $(document).ready(function(){
+	$('.multiselect-ui').multiselect({
+		includeSelectAllOption: true
+	});
 	
+	
+	
+	var accountData=accountValues.accountListJson;
+	var g_accountArray = [];
+	$.each(accountData, function(index) {
+		var g_item = [];
+		g_item.push(accountData[index].accountName);
+		g_item.push(accountData[index].accountId);
+		g_accountArray.push(g_item);
+	});
+	$.each(g_accountArray, function(i) {
+		var g_proItem = g_accountArray[i];
+		$("#framework1").append('<option id="' + g_proItem[1] + '" value="' + g_proItem[1] + '">' + g_proItem[0] + '</option>');
+	});
+	
+	$('#framework1').multiselect({
+		includeSelectAllOption: true,
+		nonSelectedText: 'Select Account',
+		enableCaseInsensitiveFiltering: false,
+		buttonWidth:''
+	});
 	var barChartContent=[];
 	var pieChartContent=[];
 
@@ -9,32 +33,7 @@ $(document).ready(function(){
 	var chart_config ;
 	var chart;
 
-	$('#barChart').click(function (){
-		$.ajax({
-			type : "GET",
-			dataType : "json",
-			url : "/ResourceManagementApp/getBarChartDataJson.action",
-			complete : function(data) {
 
-				var obj1 = JSON.stringify(data);
-				var obj2 = JSON.parse(obj1);
-				var obj3 = obj2.responseJSON;
-				console.log("getBarChartDataJson : "+obj3);
-				$.each(obj3, function(i, object) {
-					barChartContent.push({
-						x : parseInt(object.x),
-						y : parseInt(object.y),
-						label : object.label
-					});
-				});
-
-				if (barChartContent != null && barChartContent != undefined) {
-					buildBarGraph();
-				}
-
-			}
-		});
-	});
 
 	function buildBarGraph() {
 		var options1 = {
@@ -50,42 +49,72 @@ $(document).ready(function(){
 
 				} ]
 		};
-
+		
 		$("#resizable").resizable({
 			create : function(event, ui) {
 				//Create chart.
-				$("#chartContainer1").CanvasJSChart(options1);
+				$("#chartContainer").CanvasJSChart(options1);
 			},
 			resize : function(event, ui) {
 				//Update chart size according to its container size.
-				$("#chartContainer1").CanvasJSChart().render();
+				$("#chartContainer").CanvasJSChart().render();
 			}
 		});
 	}
+	
+	
 
-	$('#pieChart').click(function (){
+	$('#pieChart').click(function (e){
+	
+		
+		
+		var form = $('#chartsForm')[0];
+        var formData = new FormData(form);
+        
+          var formAddNewRowObject = {};
+          formData.forEach(function(value, key){
+                 formAddNewRowObject[key] = value;
+          });
+         
+          e.preventDefault();
 		$.ajax({
-			type : "GET",
-			dataType : "json",
-			url : "/ResourceManagementApp/getPieChartDataJson.action",
+			 type: "GET",
+		     url: "/ResourceManagementApp/getChartData.action",
+		     data: formAddNewRowObject, 
 			complete : function(data) {
 
 				var obj1 = JSON.stringify(data);
 				var obj2 = JSON.parse(obj1);
 				var obj3 = obj2.responseJSON;
 				console.log("getPieChartDataJson : "+obj3);
+				
+				if (formAddNewRowObject.chartType == "pie" ) {
 				$.each(obj3, function(i, object) {
+					
 					pieChartContent.push({
 						x : parseInt(object.x),
 						y : parseInt(object.y),
 						label : object.label
 					});
+					
 				});
-
-				if (pieChartContent != null && pieChartContent != undefined) {
+				}else{
+					$.each(obj3, function(i, object) {
+						barChartContent.push({
+							x : parseInt(object.x),
+							y : parseInt(object.y),
+							label : object.label
+						});
+					});
+				}
+				
+				if(pieChartContent != null && pieChartContent != undefined){
+				if (formAddNewRowObject.chartType == "bar" ) {
+					buildBarGraph();
+				}else  {
 					buildPieGraph();
 				}
-
+				}
 			}
 		});
 
@@ -190,4 +219,11 @@ $(document).ready(function(){
 		result= map['-'].children;
 
 	}
+	
+	$(function() {
+	    var $radios = $('input:radio[name=chartType]');
+	    if($radios.is(':checked') === false) {
+	        $radios.filter('[value=pie]').prop('checked', true);
+	    }
+	});
 });
