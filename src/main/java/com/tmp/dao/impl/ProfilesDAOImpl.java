@@ -279,6 +279,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 
 			int profileId = isProfilesExist(profile, strUserId);
 			int initialEvalRes, customerInterviewStatus;
+			String profileSharedCustomer = "No";
 			if (StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd())
 					&& !profile.getInitialEvaluationResultAdd().equals("0")) {
 				initialEvalRes = new Integer(profile.getInitialEvaluationResultAdd());
@@ -290,6 +291,10 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 					customerInterviewStatus = new Integer(profile.getCustomerInterviewStatusAdd());
 				}else{
 					customerInterviewStatus=0;
+			}
+			
+			if((profile.getProfileSharedCustomer()!=null)){
+				profileSharedCustomer = profile.getProfileSharedCustomer();
 			}
 			if(profileId == 0){
 			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
@@ -314,7 +319,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				}
 
 				int status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
-						profile.getProfileSharedCustomer(), customerInterviewStatus, 0);
+						profileSharedCustomer, customerInterviewStatus, 0);
 
 				int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
 				String sql2 = null;
