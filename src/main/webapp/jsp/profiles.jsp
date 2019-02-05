@@ -624,7 +624,7 @@ $('#logout').click(function () {
 									<form enctype="multipart/form-data" >
 										<div class="form-group">
 											<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
-											<p>File to upload:<span style="color:red">*</span><input type="file" name="file" id="file"><br /></p>
+											<p>File to upload:<span style="color:red">*</span><input type="file" name="profileFile" id="profileFile"><br /></p>
 											<tr>
 												<td><Button type="button" id="uploadFile" name="Upload"
 														class="btn btn-md button1"

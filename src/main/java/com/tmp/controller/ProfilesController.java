@@ -205,13 +205,14 @@ public class ProfilesController {
 	}
 	
 	@RequestMapping(value="uploadFile",  method = RequestMethod.POST, produces="text/plain")
-	public @ResponseBody String uploadFileHandlerProfile(@RequestParam("file") String file, HttpServletRequest request) {
+	public @ResponseBody String uploadFileHandlerProfile(@RequestParam("profileFile") String profileFile, HttpServletRequest request) {
 		String file1 = null;
 		String userId = null;
 		HttpSession session = request.getSession();
 		userId = session.getAttribute("user").toString();
+		System.out.println("Upload file "+profileFile);
 		try {
-			  file1 = new File("D:\\", file).getAbsolutePath();
+			  file1 = new File("D:\\", profileFile).getAbsolutePath();
 			  if (!file1.isEmpty()) {
 			  ArrayList<Profile> profileList = readDataFromExcel(file1);
 			  int result = profileService.writeDataIntoDB(profileList,userId);
@@ -229,6 +230,7 @@ public class ProfilesController {
 			
 		}catch (Exception e) {
 			System.out.println(	"Exception occured"+e.getMessage());
+			e.printStackTrace();
 			return "Profile upload is failed";
 		} 
 		
@@ -241,7 +243,7 @@ public class ProfilesController {
 		if (!file1.isEmpty()) {
 				FileInputStream fis = null;
 				try {
-
+					System.out.println("File "+file1);
 					fis = new FileInputStream(file1);
 					// Create an excel workbook from the file system.
 					XSSFWorkbook workbook = new XSSFWorkbook(fis);
