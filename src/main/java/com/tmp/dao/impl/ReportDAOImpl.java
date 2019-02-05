@@ -199,7 +199,7 @@ public class ReportDAOImpl extends BaseDAO implements ReportDAO {
 		try {
 
 			StringBuffer sql = new StringBuffer("SELECT a.ACCOUNT_NAME,p.PROJECT_NAME,u.NAME,r.* FROM tmp.requirement r"
-					+ " INNER JOIN tmp.projects p ON p.PROJECT_ID = r.PROJECT"
+					+ " INNER JOIN tmp.projects p ON p.ID = r.PROJECT"
 					+ " INNER JOIN tmp.account_master a ON a.ACCOUNT_ID = r.ACCOUNT"
 					+ " INNER JOIN tmp.user u ON u.ID = r.CREATED_BY"
 					+ " where r.CREATED_ON >= ? AND r.CREATED_ON <= ? ORDER BY r.CREATED_ON DESC");
