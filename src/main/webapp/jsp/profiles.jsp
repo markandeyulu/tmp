@@ -264,16 +264,17 @@ table.dataTable thead th:first-child {
 		    
 	    	$('#uploadFile').on('click', function(e){
 	    		
-	    	var filename = $('input[type=file]').val().split('\\').pop();
+	    	var filename = $('#profileFile').val().split('\\').pop();
+	    	
 	    	    $.ajax({
 	                type: 'POST',           
 	       		 url: "/ResourceManagementApp/uploadFile.action",
-	       		 data: { "file": filename },
+	       		 data: { "profileFile": filename },
 	       		    success: function(e){ 
 	       		    	$('#fileId').html(e); 
 	     			},
 	     			complete:function(){
-	     				document.getElementById("file").value = null;
+	     				document.getElementById("profileFile").value = null;
 	     				//$("#uploadFile").attr("disabled",false);
 	     				$("#fileId").fadeOut(5000);
 	     				$("#uploadFile").prop("disabled", false);
@@ -283,7 +284,8 @@ table.dataTable thead th:first-child {
 
 $('#candidateUpload').on('click', function(e){
 	    		
-		    	var filename = $('input[type=file]').val().split('\\').pop();
+		    	var filename = $('#file').val().split('\\').pop();
+		    	
 		    	    $.ajax({
 		                type: 'POST',           
 		       		 url: "/ResourceManagementApp/candidateUpload.action",
