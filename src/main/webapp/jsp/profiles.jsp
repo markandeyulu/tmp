@@ -106,6 +106,7 @@ function adminRoleCheck() {
     }
  }
 
+
 </script>
 	
 <style>
@@ -301,6 +302,52 @@ $('#candidateUpload').on('click', function(e){
 		     			} 
 		            });
 		    });
+		    
+		    
+function fileValidation(){
+   
+    }
+    
+$('#resumeUpload').on('click', function(e){
+	var textfield = $('#profileId').val();
+	var filename = $('#resumeFile').val().split('\\').pop();
+	 $('#profileErrorMsg').text("");
+	 $('#uploadErrorMsg').text("");
+	 $('#invalidFormatError').text("");
+	if ($('#profileId').val() == "") {
+	    $('#profileErrorMsg').text("EmployeeId must be filled out")
+	    return false;
+	  }
+	else if($('#resumeFile').val() == ""){
+		$('#uploadErrorMsg').text("Choose file to be uploaded")
+		return false;
+	 }
+	    var fileInput = document.getElementById('resumeFile');
+	    var filePath = fileInput.value;
+	    var allowedExtensions = /(\.pdf)$/i;
+	    if(!allowedExtensions.exec(filePath)){
+	    	$('#invalidFormatError').text("Please upload file having pdf extension")
+	        fileInput.value = '';
+	        return false;
+	    }
+	
+	
+	    $.ajax({
+            type: 'POST',           
+   		 url: "/ResourceManagementApp/resumeUpload.action",
+   		 data: { "resumeFile": filename ,
+   		 		 "profileId": textfield },
+   		    success: function(e){ 
+   		    	$('#fileId').html(e); 
+ 			},
+ 			complete:function(){
+ 				document.getElementById("resumeFile").value = null;
+ 				$("#fileId").fadeOut(5000);
+ 				$("#resumeUpload").prop("disabled", false);
+ 			} 
+        });
+
+});
 	     
  var addMessage = ${addMessage};
 	if (undefined != addMessage) {
@@ -558,6 +605,9 @@ $('#logout').click(function () {
 					<%-- <spring:form name='candidateUpload' action="candidateUpload"  method="POST"> --%>
 	<button	style="margin-left: 0%; background-color: #b30000; color: white;" type="button"
 		data-target="#uploadCandidate" class="btn btn-md button1" data-toggle="modal">Candidate Upload</button>
+		 <button	style="margin-left: 0%; background-color: #b30000; color: white;" type="button"
+		data-target="#uploadResume" class="btn btn-md button1" data-toggle="modal">Resume Upload</button> 
+		
 					
 <%-- </spring:form> --%>
 	<!-- <div id="addProfileMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
@@ -571,6 +621,46 @@ $('#logout').click(function () {
 			
 			
 		</div>
+	 <div class="modal fade" id="uploadResume" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 80%; font-size: 12px;">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color: #b30000;">
+				<button type="button" id="reload" class="close" data-dismiss="modal" style="background-color: white;">
+					<a class="button" onclick="window.location.reload()" href="#">x</a>
+				</button>
+				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Resume Upload</h3>
+			</div>
+			
+			<div class="modal-body">
+				<div class="container" id="modelreload">
+					<div style="width: 40%; margin-left: 8%;">
+						<div class="card-body" id="uploadDiv">
+							<form enctype="multipart/form-data" >
+							 <div class="row"> 
+								 <p class="col-md-6">Employee Id:<span style="color:red">*</span><input type="number" name="profileId" id="profileId" required ><br /></p>
+       							 <p class="col-md-6" id="profileErrorMsg"></p>
+       						</div>
+       						<div class="row"> 
+       							 
+       							<p class="col-md-6">Resume to upload:<span style="color:red">*</span><input type="file" name="resumeFile" id="resumeFile"  required ></p>
+       							<p class="col-md-3" id="uploadErrorMsg"></p>
+								<p class="col-md-3" id="invalidFormatError"></p>
+										
+							</div>		
+									<div class="row"> 
+										<Button type="button" id="resumeUpload" name="resumeUpload" class="btn btn-md button1"
+												style="background-color: #cc0000; color: white; float: right; margin-right: 7%;" type="submit">
+													Upload Resume
+											</Button>
+									</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 		
 		<div class="modal fade" id="uploadCandidate" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="width: 80%; font-size: 12px;">
@@ -621,7 +711,7 @@ $('#logout').click(function () {
 					</div>
 					<div class="modal-body">
 						<div class="container" id="modelreload">
-							<div style="width: 60%; margin-left: 8%;">
+						<div style="width: 60%; margin-left: 8%;">
 								<div class="card-body" id="uploadDiv">
 									<form enctype="multipart/form-data" >
 										<div class="form-group">
@@ -632,9 +722,7 @@ $('#logout').click(function () {
 														class="btn btn-md button1"
 														style="background-color: #cc0000; color: white; float: right; margin-right: 7%;"
 														type="submit">Upload File</Button></td>
-														
 											</tr>
-
 										</div>
 									</form>
 								</div>
@@ -1310,8 +1398,10 @@ $('#logout').click(function () {
 											type="text"  oninvalid="this.setCustomValidity('Remarks must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')"/></td>
 									</tr>
+									
 									</table>
 								</div>
+								
 								
 								 <div style="background-color: #f1f1f1; margin-top: 2%; margin-left:90%;">
 				<button

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
@@ -11,55 +12,71 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-	<!-- <bean id="executeTimeInterceptor" 
-                 class="com.tmp.util.interceptor.AuthenticationInterceptor" /> -->
+	<!-- <bean id="executeTimeInterceptor" class="com.tmp.util.interceptor.AuthenticationInterceptor" 
+		/> -->
 
 	<!-- declaring base package -->
 	<context:component-scan base-package="com.tmp" />
-	<context:annotation-config /> 
+	<context:annotation-config />
 	<!-- adding view resolver to show jsp's on browser -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-	
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/tmp?zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" />
+
+	<bean id="sqlDataSource"
+	class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+	<property name="url" value="jdbc:sqlserver://INCHCMPC0644\SQLEXPRESS:1433;DatabaseName=tmp;" />
+	<property name="username" value="sa" />
+	<property name="password" value="Welcome@123" />
+    </bean>
+
+
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/tmp?zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" />
 		<property name="username" value="root" />
-		<property name="password" value="12345" />
+		<property name="password" value="Anushya@123" />
 	</bean>
-	
+
 	<bean id="loginDAO" class="com.tmp.dao.impl.LoginDAOImpl">
-    	<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
-	<bean id="requirementDAO" class="com.tmp.dao.impl.RequirementDAOImpl">
-    	<property name="dataSource" ref="dataSource" />
+	<bean id="requirementDAO"
+		class="com.tmp.dao.impl.RequirementDAOImpl">
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean id="configDAO" class="com.tmp.dao.impl.ConfigDAOImpl">
-    	<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean id="adminDAO" class="com.tmp.dao.impl.AdminDAOImpl">
-    	<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean id="profilesDAO" class="com.tmp.dao.impl.ProfilesDAOImpl">
-    	 <property name="dataSource" ref="dataSource" /> 
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean id="reportDAO" class="com.tmp.dao.impl.ReportDAOImpl">
-    	 <property name="dataSource" ref="dataSource" /> 
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean id="dashboardDAO" class="com.tmp.dao.impl.DashboardDAOImpl">
-    	 <property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
-	<!-- <bean id="requirementDAO" class="com.tmp.dao.impl.RequirementDAOImpl">
-    	<property name="dataSource" ref="dataSource" />
-	</bean> -->	
+	<!-- <bean id="requirementDAO" class="com.tmp.dao.impl.RequirementDAOImpl"> 
+		<property name="dataSource" ref="dataSource" /> </bean> -->
 	<bean id="candidateDAO" class="com.tmp.dao.impl.CandidateDAOImpl">
-    	<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<bean id="resumeUploadDAO" class="com.tmp.dao.impl.ResumeUploadDAOImpl">
+	<property name="dataSource" ref="sqlDataSource"/>
+	</bean>
+
 	<bean id="tmpUtil" class="com.tmp.util.TMPUtil">
 		<property name="loginDAO" ref="loginDAO" />
 		<property name="requirementDAO" ref="requirementDAO" />
@@ -71,56 +88,63 @@
 		<!-- <property name="candidateDAO" ref="candidateDAO" /> -->
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
-	 <bean id="loginController" class="com.tmp.controller.LoginController">
-    	<property name="tmpUtil" ref="tmpUtil" />
+
+	<bean id="loginController"
+		class="com.tmp.controller.LoginController">
+		<property name="tmpUtil" ref="tmpUtil" />
 	</bean>
-	<bean id="candidateExcelRead" class="com.tmp.util.CandidateExcelRead">
-    	<property name="candidateDAO" ref="candidateDAO" />
+	<bean id="candidateExcelRead"
+		class="com.tmp.util.CandidateExcelRead">
+		<property name="candidateDAO" ref="candidateDAO" />
 	</bean>
-	
-	<bean id="profilesController" class="com.tmp.controller.ProfilesController">
-    	<property name="tmpUtil" ref="tmpUtil" />
-    	<property name="candidateExcelRead" ref="candidateExcelRead" />
+
+	<bean id="profilesController"
+		class="com.tmp.controller.ProfilesController">
+		<property name="tmpUtil" ref="tmpUtil" />
+		<property name="candidateExcelRead" ref="candidateExcelRead"/> 
+		<property name="resumeUploadDAO" ref="resumeUploadDAO"/>
 	</bean>
-	<bean id="requirementController" class="com.tmp.controller.RequirementController">
-    	<property name="tmpUtil" ref="tmpUtil" />
-    	<property name="bulkUploadUtil" ref="bulkUploadUtil" />
-    	<property name="scheduler" ref="scheduler" />
-    	<property name="candidateDAO" ref="candidateDAO" />
-    	
+	<bean id="requirementController"
+		class="com.tmp.controller.RequirementController">
+		<property name="tmpUtil" ref="tmpUtil" />
+		<property name="bulkUploadUtil" ref="bulkUploadUtil" />
+		<property name="scheduler" ref="scheduler" />
+		<property name="candidateDAO" ref="candidateDAO" />
+
 	</bean>
-	<bean id="reportController" class="com.tmp.controller.ReportController">
-    	<property name="reportService" ref="reportService" />
+	<bean id="reportController"
+		class="com.tmp.controller.ReportController">
+		<property name="reportService" ref="reportService" />
 	</bean>
-	<bean id="chartController" class="com.tmp.controller.ChartController">
-    	<property name="tmpUtil" ref="tmpUtil" />
-    	<property name="candidateDAO" ref="candidateDAO" />
+	<bean id="chartController"
+		class="com.tmp.controller.ChartController">
+		<property name="tmpUtil" ref="tmpUtil" />
+		<property name="candidateDAO" ref="candidateDAO" />
 	</bean>
 	<bean id="tmpDAOUtil" class="com.tmp.util.TMPDAOUtil">
-	 	<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean id="bulkUploadUtil" class="com.tmp.util.ReqBulkUploadUtil">
-	 	<property name="configDAO" ref="configDAO" />
+		<property name="configDAO" ref="configDAO" />
 		<property name="adminDAO" ref="adminDAO" />
 		<property name="tmpDAOUtil" ref="tmpDAOUtil" />
 		<property name="requirementDAO" ref="requirementDAO" />
 		<property name="tmpUtil" ref="tmpUtil" />
 	</bean>
-	 <bean id="scheduler" class="com.tmp.scheduler.SchedulerDAO">
-	 	<property name="configDAO" ref="configDAO" />
-	 	<property name="tmpDAOUtil" ref="tmpDAOUtil" />
-	 	<property name="dataSource" ref="dataSource" />
-	</bean> 
-	
-	<mvc:annotation-driven />          
-	<mvc:resources mapping="/css/**" location="/css/"/>
-	<mvc:resources mapping="/js/**" location="/js/"/>
-	<mvc:resources mapping="/img/**" location="/img/"/>
-	<mvc:resources mapping="css/images/**" location="/img/"/>
-	<mvc:resources mapping="/images/**" location="/img/"/>
-	
+	<bean id="scheduler" class="com.tmp.scheduler.SchedulerDAO">
+		<property name="configDAO" ref="configDAO" />
+		<property name="tmpDAOUtil" ref="tmpDAOUtil" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/img/**" location="/img/" />
+	<mvc:resources mapping="css/images/**" location="/img/" />
+	<mvc:resources mapping="/images/**" location="/img/" />
+
 	<mvc:interceptors>
-			<bean class="com.tmp.util.interceptor.AuthenticationInterceptor" />
+		<bean class="com.tmp.util.interceptor.AuthenticationInterceptor" />
 	</mvc:interceptors>
 </beans>

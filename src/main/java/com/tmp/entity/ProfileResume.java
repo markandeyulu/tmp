@@ -2,6 +2,8 @@ package com.tmp.entity;
 
 import java.io.Serializable;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class ProfileResume implements Serializable {
 
 	/**
@@ -9,13 +11,14 @@ public class ProfileResume implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Profile profileId;
+	private int profileId;
 	private String fileName;
 	private String fileFormat;
 	private java.sql.Blob resume;
-	private User createdBy;
-	private java.util.Date updatedOn;
-	private User updatedBy;
+	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date createdOn;
+	private int createdBy;
+	@DateTimeFormat(pattern="yyyy-MM-dd") private java.util.Date updatedOn;
+	private int updatedBy;
 
 	public int getId() {
 		return id;
@@ -25,11 +28,11 @@ public class ProfileResume implements Serializable {
 		this.id = id;
 	}
 
-	public Profile getProfileId() {
+	public int getProfileId() {
 		return profileId;
 	}
 
-	public void setProfileId(Profile profileId) {
+	public void setProfileId(int profileId) {
 		this.profileId = profileId;
 	}
 
@@ -57,12 +60,29 @@ public class ProfileResume implements Serializable {
 		this.resume = resume;
 	}
 
-	public User getCreatedBy() {
+	public int getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(User createdBy) {
+	public void setCreatedBy(int createdBy) {
 		this.createdBy = createdBy;
+	}
+
+
+	public int getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(int updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public java.util.Date getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(java.util.Date createdOn) {
+		this.createdOn = createdOn;
 	}
 
 	public java.util.Date getUpdatedOn() {
@@ -73,12 +93,5 @@ public class ProfileResume implements Serializable {
 		this.updatedOn = updatedOn;
 	}
 
-	public User getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(User updatedBy) {
-		this.updatedBy = updatedBy;
-	}
 
 }
