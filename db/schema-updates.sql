@@ -878,3 +878,16 @@ INSERT INTO project_account_master (PROJECT_ID, PROJECT_NAME, CUSTOMER_ID, CUSTO
 INSERT INTO project_account_master (PROJECT_ID, PROJECT_NAME, CUSTOMER_ID, CUSTOMER_NAME) VALUES('35465','ZF License Management Mgd Srv','3249','ZF Friedrichshafen AG');
 INSERT INTO project_account_master (PROJECT_ID, PROJECT_NAME, CUSTOMER_ID, CUSTOMER_NAME) VALUES('33203','ZF MICS Development Project','3249','ZF Friedrichshafen AG');
 
+
+
+--15-02-19 SQL server management query for table creation of Resume_Upload--
+
+CREATE TABLE dbo.Resume_Upload(
+	ID int IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	EMP_ID int NOT NULL,
+	BLOB varbinary(max) NOT NULL,
+	CREATED_ON [date] NOT NULL,
+	CREATED_BY INT NOT NULL,
+	UPDATED_ON [date] ,
+	UPDATED_BY INT
+	);

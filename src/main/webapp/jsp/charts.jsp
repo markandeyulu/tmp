@@ -30,6 +30,12 @@
 %>
 <script>
 var accountValues = ${accountValuesJson};
+
+
+
+
+
+
 </script>
 <style>
 .custab {
@@ -67,6 +73,18 @@ body {
 
 				});
 
+			});
+			$('#pieChart').on('click', function(e){
+				 $('#errorMsg').text("");
+				 $('#locationErrorMsg').text("");
+				if( $('#searchBy').val() == ""){
+						$('#errorMsg').text("SearchbBy cannot be Empty")
+						return false;
+				 }
+				if( $('#location').val() == ""){
+					$('#locationErrorMsg').text("Location cannot be Empty")
+					return false;
+			 }
 			});
 		});
 	</script>
@@ -162,30 +180,33 @@ body {
 						<spring:label cssClass="control-label col-lg-2" path="searchBy">SearchBy<span
 								style="color: red">*</span>
 						</spring:label>
-						<div class="col-lg-10">
+						<div class="col-lg-5">
 						<spring:select required="required" multiple="false"
 							path="searchBy" id="searchBy" name="searchBy" class="form-control chart-dropdown"
 							oninvalid="this.setCustomValidity('Please select searchBy')"
 							oninput="this.setCustomValidity('')">
-							<option value="na">SearchBy skill/Account</option>
+							<option value="">SearchBy skill/Account</option>
 							<option value="skill">Skill</option>
 							<option value="account">Account</option>
 						</spring:select>
 						</div>
+						<p class="col-md-5" id="errorMsg"></p>
 				</div>
 				<div class="row">
 						<spring:label cssClass="control-label col-lg-2" path="location">Location
 						</spring:label>
-						<div class="col-lg-10">
+						<div class="col-lg-5">
 						<spring:select multiple="false"
 							path="location" id="location" name="location" class="form-control chart-dropdown"
 							oninvalid="this.setCustomValidity('Please select location')"
 							oninput="this.setCustomValidity('')">
-							<option value="na">Select Location</option>
+							<option value="">Select Location</option>
 							<option value="Onsite">Onsite</option>
 							<option value="OffShore">OffShore</option>
 						</spring:select>
 						</div>
+						<p class="col-md-5" id="locationErrorMsg"></p>
+						 
 				</div>
 				<%-- <div class="row">
 				

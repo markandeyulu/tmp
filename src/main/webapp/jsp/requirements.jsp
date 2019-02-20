@@ -113,9 +113,7 @@ $(document).ready(function () {
 	    	  g_item.push(projectListData[index].projectId);	 
 		      g_item.push(projectListData[index].projectName);	
 		      g_projectListArray.push(g_item);	
-	      }
-	       
-	                   		
+	      }          		
 	     });
 	      $("#projectAdd").append('<option value="">Select Project</option>');  
 	      
@@ -268,7 +266,15 @@ $(document).ready(function () {
 		 
 		  form.requirementProfile.action.value="/requirementProfile";
 		});
-	 
+	 $('#uploadReqFile').on('click', function(e){
+			var filename = $('#file').val().split('\\').pop();
+			 $('#noFileChosenMsg').text("");
+			if( $('#file').val() == ""){
+					$('#noFileChosenMsg').text("Choose file to be uploaded")
+					return false;
+			 }
+	 });
+			
 	 $('#uploadReqFile').on('click', function(e){
  		
 	    	var filename = $('input[type=file]').val().split('\\').pop();
@@ -684,18 +690,16 @@ $('#logout').click(function () {
 							<div style="width: 60%; margin-left: 8%;">
 								<div class="card-body" id="uploadDiv">
 									<form enctype="multipart/form-data" >
-										<div class="form-group">
+										<div class="form-group" style="height: 50px;">
 											<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
-											<p>File to upload:<span style="color:red">*</span><input type="file" name="file" id="file"><br /></p>
-											<tr>
-												<td><Button type="button" id="uploadReqFile" name="Upload"
+											<p class="col-md-6">File to upload:<span style="color:red">*</span><input type="file" name="file" id="file"></p>
+											<p class="col-md-6" id="noFileChosenMsg"></p>
+											
+										</div>
+										<Button type="button" id="uploadReqFile" name="Upload"
 														class="btn btn-md button1"
 														style="background-color: #cc0000; color: white; float: right; margin-right: 7%;"
-														type="submit">Upload File</Button></td>
-														
-											</tr>
-
-										</div>
+														type="submit">Upload File</Button>
 									</form>
 								</div>
 							</div>
