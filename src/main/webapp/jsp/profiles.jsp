@@ -637,7 +637,7 @@ $('#logout').click(function () {
 		<div class="modal-content">
 			<div class="modal-header" style="background-color: #b30000;">
 				<button type="button" id="reload" class="close" data-dismiss="modal" style="background-color: white;">
-					<a class="button" onclick="window.location.reload()" href="#">x</a>
+					<a class="button" href="#">x</a>
 				</button>
 				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Resume Upload</h3>
 			</div>
@@ -678,7 +678,7 @@ $('#logout').click(function () {
 		<div class="modal-content">
 			<div class="modal-header" style="background-color: #b30000;">
 				<button type="button" id="reload" class="close" data-dismiss="modal" style="background-color: white;">
-					<a class="button" onclick="window.location.reload()" href="#">x</a>
+					<a class="button" href="#">x</a>
 				</button>
 				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Upload Candidate File</h3>
 			</div>
