@@ -19,12 +19,12 @@ import com.tmp.entity.UserRoleMapping;
 
 @Repository
 @Qualifier("loginDAO")
-public class LoginDAOImpl implements LoginDAO{
+public class LoginDAOImpl extends BaseDAO implements LoginDAO {
 
 	@Autowired(required = true)
 	@Qualifier("configDAO")
 	ConfigDAO configDAO;
-	
+
 	private DataSource dataSource;
 
 	public void setDataSource(DataSource dataSource) {
@@ -35,14 +35,19 @@ public class LoginDAOImpl implements LoginDAO{
 		return dataSource;
 	}
 
+	/**
+	 * This method checks if the login details are of a valid user based on the
+	 * given username and password
+	 */
 	public User getAuthenticateUser(String username, String password) {
 
-		StringBuffer sql = new StringBuffer("SELECT NAME, ID, DISPLAY_NAME, PASSWORD, ROLE FROM USER WHERE NAME=? AND PASSWORD=? ");
+		StringBuffer sql = new StringBuffer(
+				"SELECT NAME, ID, DISPLAY_NAME, PASSWORD, ROLE FROM USER WHERE NAME=? AND PASSWORD=? ");
 
 		Connection conn = null;
-		PreparedStatement ps =null;
-		ResultSet rs=null;
-		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
 		User userInfo = new User();
 
 		try {
@@ -58,29 +63,25 @@ public class LoginDAOImpl implements LoginDAO{
 				userInfo.setRole(Role.fromInt(rs.getInt("ROLE")));
 			}
 
-		}catch (SQLException sqlException) {
+		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-					ps.close();
-					rs.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
 
 		return userInfo;
 	}
-	
-	public UserRoleMapping getUserRole(int userId){
+
+	/**
+	 * This method gets the role of the user based on the given user id
+	 */
+	public UserRoleMapping getUserRole(int userId) {
 		StringBuffer sql = new StringBuffer("SELECT ROLE FROM USER_ROLE_MAPPING WHERE USER_ID=?");
 
 		Connection conn = null;
-		PreparedStatement ps =null;
-		ResultSet rs=null;
-		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
 		UserRoleMapping userRole = null;
 
 		try {
@@ -94,19 +95,11 @@ public class LoginDAOImpl implements LoginDAO{
 					userRole.setRole(configDAO.getAdminInfoKeyValueMapping(rs.getInt("ROLE")));
 				}
 			}
-			rs.close();
-			ps.close();
-		}catch (SQLException sqlException) {
+
+		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-					ps.close();
-					rs.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
 
 		return userRole;

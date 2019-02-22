@@ -31,7 +31,7 @@ import com.tmp.util.TMPUtil;
 
 @Repository
 @Qualifier("requirementDAO")
-public class RequirementDAOImpl implements RequirementDAO {
+public class RequirementDAOImpl extends BaseDAO implements RequirementDAO {
 
 	@Autowired(required = true)
 	@Qualifier("configDAO")
@@ -68,6 +68,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * This method provides all the requirements based on the status, location and account
+	 */
 	public Requirements getRequirements(String location, String account, String status) {
 		StringBuffer sql = new StringBuffer("SELECT * FROM REQUIREMENT WHERE STATUS IN (?) ");
 
@@ -82,16 +85,19 @@ public class RequirementDAOImpl implements RequirementDAO {
 		sql.append("ORDERBY CREATED_ON DESC");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Requirement> requirementsList = null;
+		Requirements requirements = null;
+		
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, status);
 			ps.setString(2, location);
 			ps.setString(3, account);
-			List<Requirement> requirementsList = null;
-			Requirements requirements = null;
-			ResultSet rs = ps.executeQuery();
+			
+			rs = ps.executeQuery();
 			if (rs != null) {
 				requirements = new Requirements();
 				requirementsList = new ArrayList<Requirement>();
@@ -100,19 +106,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 				}
 				requirements.setRequirements(requirementsList);
 			}
-			rs.close();
-			ps.close();
-			return requirements;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return requirements;
 	}
 
 	public ConfigDAO getConfigDAO() {
@@ -183,43 +182,44 @@ public class RequirementDAOImpl implements RequirementDAO {
 		return requirement;
 	}
 
+	/**
+	 * This method displays the details of the particular requirement by id.
+	 */
 	public Requirement getRequirement(String requirementId) {
 		StringBuffer sql = new StringBuffer("SELECT * FROM REQUIREMENT WHERE ID = ?");
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Requirement requirement = null;
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, requirementId);
-			Requirement requirement = null;
-			ResultSet rs = ps.executeQuery();
+			
+			rs = ps.executeQuery();
 			if (rs != null) {
 				requirement = new Requirement();
 				while (rs.next()) {
 					requirement = populateRequirement(rs);
 				}
 			}
-			rs.close();
-			ps.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return requirement;
 	}
 
 	public Requirements createRequirements(List<Requirement> requirements) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * This method creates new requirement
+	 */
 	@Override
 	public int createRequirement(Requirement requirement, String userId, String userName) {
 		StringBuffer sql = new StringBuffer(
@@ -231,26 +231,21 @@ public class RequirementDAOImpl implements RequirementDAO {
 				.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		Connection conn = null;
-		int value;
+		PreparedStatement ps = null;
+		
+		int value = 0;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			requirement.setId(getRequirementId(requirement, userName, userId));
 			populateRequirementForInsert(ps, requirement, userId);
 			value = ps.executeUpdate();
-			ps.close();
 			System.out.println("Successfully the requirement has been created!! "+requirement.getId());
 		} catch (SQLException sqlException) {
 			sqlException.printStackTrace();
 			System.out.println("Failure!! the requirement has not been created!! "+requirement.getId());
-			return 0;
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, null, ps);
 		}
 		return value;
 	}
@@ -287,17 +282,6 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setInt(18, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId());
 		adminDAO.getRequirementAdminMappingValue(requirement.getIbu_cdu(), 5, userId);
 		ps.setInt(19, configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
-		/*int accNewMappingId = adminDAO.getRequirementAdminAccountMapping(requirement.getAccount1(), 6, userId, configDAO.getAdminInfoKeyValueMapping(requirement.getIbg_cdg()).getId(),
-				configDAO.getAdminInfoKeyValueMapping(requirement.getIbu_cdu()).getId());
-		int accId = configDAO.getAdminInfoKeyValueMapping(requirement.getAccount1()).getId();
-		int accountId = configDAO.getAccountMappingId(accId).getAccountId();
-		ps.setInt(21, accountId);
-		adminDAO.getRequirementAdminProjectMapping(requirement.getProjectAdd(), 7, userId, requirement.getAccount1(), accNewMappingId, accountId);
-		int projectId = configDAO.getAdminInfoKeyValueMapping(requirement.getProjectAdd()).getId();
-		ps.setInt(22, configDAO.getProjectMappingId(accountId,projectId).getId());*/
-		
-		//ps.setInt(20, Integer.parseInt(requirement.getAccount1()));
-		//ps.setInt(21, Integer.parseInt(requirement.getProjectAdd()));
 		ps.setInt(20, tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
 		ps.setInt(21, tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId)));
 		ps.setTimestamp(22, tmpDAOUtil.getCurrentTimestamp());
@@ -316,10 +300,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 	}
 
 	public Requirements updateRequirements(List<Requirement> requirements) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * This method updates the fields of the requirement on click of id
+	 */
 	public int updateRequirement(Requirement requirement, String userId) {
 		StringBuffer sql = new StringBuffer(
 				"UPDATE REQUIREMENT SET CRITICALITY=?, SKILL_CATEGORY =?, PRIMARY_SKILL=?, JOB_DESCRIPTION=?, \r\n")
@@ -328,25 +314,20 @@ public class RequirementDAOImpl implements RequirementDAO {
 		.append("ACTUAL_OWNER=?, ACTUAL_OWNER_EMAIL=?, REMARKS=?, UPDATED_ON=?, BAND=?, YEAR_EXPERIENCE=?, QUANTITY=?, PROJECT_DURATION=?, IBG_CDG=?, IBU_CDU=?, PID_CRMID_SO=?, UPDATED_BY=?,OPPORTUNITY_STATUS=?, PLANNED_CLOSURE_DATE=?  WHERE ID=?");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		int result=0;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			populateRequirementForUpdate(ps, requirement, userId);
-			int result=ps.executeUpdate();
-			ps.close();
-			return result;
+			result=ps.executeUpdate();
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 			
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, null, ps);
+		}return result;
 	}
 
 	private void populateRequirementForUpdate(PreparedStatement ps, Requirement requirement, String userId ) throws SQLException {
@@ -355,8 +336,6 @@ public class RequirementDAOImpl implements RequirementDAO {
 			return;
 		}
 		ps.setInt(1, requirement.getCriticality().getId());
-		//ps.setInt(2, requirement.getSkillCategory().getId());
-		//ps.setInt(3, requirement.getPrimarySkill().getId());
 		ps.setInt(2, tmpUtil.getKeyByValue("skillcategory", requirement.getSkillCategory()));
 		ps.setInt(3, tmpUtil.getKeyByValue("primaryskill", requirement.getPrimarySkill()));
 		ps.setString(4, requirement.getJobDescription());
@@ -394,6 +373,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 		ps.setString(34, requirement.getId());
 	}
 
+	/**
+	 * This method deletes the selected requirement
+	 */
 	public int deleteRequirement(ArrayList<String> requirementId) {
 
 		StringBuffer sql = new StringBuffer("DELETE FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID=?");
@@ -405,14 +387,17 @@ public class RequirementDAOImpl implements RequirementDAO {
 	      }
 		int index = 0;
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+		int result = 0;
 		try {
 			for (String reqId : reqIdList) { 
 		
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
-			PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
+			ps = conn.prepareStatement(sql.toString());
+			ps1 = conn.prepareStatement(sql1.toString());
+			ps2 = conn.prepareStatement(sql2.toString());
 			
 			if(null!=reqId){
 				ps.setString(1, reqId);
@@ -420,23 +405,28 @@ public class RequirementDAOImpl implements RequirementDAO {
 				ps2.setString(1, reqId);
 				ps.executeUpdate();
 				ps1.executeUpdate();
-				int result = ps2.executeUpdate();
+				result = ps2.executeUpdate();
 				++index;
-			ps.close();
-			ps1.close();
-			ps2.close();
-			//return result;
 			}
 		} 
 		}catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
+			if(ps != null) {
 				try {
-					conn.close();
-				} catch (SQLException sqlException) {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 			}
+			if(ps1 != null) {
+				try {
+					ps1.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			closeDBObjects(conn, null, ps2);
 		}
 		return index;
 	}
@@ -452,16 +442,18 @@ public class RequirementDAOImpl implements RequirementDAO {
 	 */
 	private String getRequirementId(Requirement requirement, String userName, String userId) { 
 		String requirementId = null;
+		String accountName = null, projectName = null;
+		int accountId = 0;
+		int projectId = 0;
+		String incrementor=null;
+		String dbDate="";
 		try {
 			
-			String accountName = null, projectName = null;
-			int accountId = tmpUtil.getAccountIdByName(requirement.getAccount1(), userId);
-			//accountName = configDAO.getAccountMapping(accountId).getAccount().getAdminInfoValue().getValue();
+			
+			accountId = tmpUtil.getAccountIdByName(requirement.getAccount1(), userId);
 			accountName = tmpDAOUtil.getAccount(accountId).getAccountName();
-			int projectId = tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
-			String incrementor=null;
-			String dbDate="";
-			//projectName = configDAO.getProjectMapping(projectId).getProject().getAdminInfoValue().getValue();
+			projectId = tmpUtil.getProjectNameByAccountId(requirement.getProjectAdd(), tmpUtil.getAccountIdByName(requirement.getAccount1(), userId));
+			
 			projectName = tmpDAOUtil.getProject(projectId).getProjectName();
 			
 			requirementId = getLatestRequirementId();
@@ -469,16 +461,6 @@ public class RequirementDAOImpl implements RequirementDAO {
 			incrementor = getLatestIdForAccountAndProject(accountId, projectId);
 			
 			System.out.println("accountName "+accountName+" projectName "+projectName +" requirementId "+requirementId);
-			/*if(StringUtils.isNotBlank(requirementId)) {
-				String[] requirementIdParts = requirementId.split("_");
-				
-				System.out.println("requirementIdParts "+requirementIdParts.length);
-				
-				if(requirementIdParts.length==6){
-					incrementor = requirementIdParts[5];
-					dbDate = requirementIdParts[0]+"_"+requirementIdParts[1];
-				}				
-			}*/
 			System.out.println("INcrementor "+incrementor);
 			requirementId = getRandomString(dbDate, incrementor, accountName, projectId+"", userName);
 			System.out.println(" New Req ID : "+requirementId);
@@ -535,28 +517,23 @@ public class RequirementDAOImpl implements RequirementDAO {
 		StringBuffer sql = new StringBuffer("SELECT ID FROM REQUIREMENT ORDER BY CREATED_ON DESC LIMIT 1");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String id=null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			String id=null;
-			ResultSet rs = ps.executeQuery();
+			ps = conn.prepareStatement(sql.toString());
+			
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				id= rs.getString("ID");
 			}
-			rs.close();
-			ps.close();
-			return id;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return id;
 	}
 	private String getLatestIdForAccountAndProject(int accountId, int projectId) {
 		
@@ -579,17 +556,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 					id = rs.getString("ID");
 				}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			if (conn != null) {
-				try {
-					rs.close();
-					ps.close();
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
 		return id;
 	}
@@ -598,31 +567,26 @@ public class RequirementDAOImpl implements RequirementDAO {
 		StringBuffer sql = new StringBuffer("SELECT * FROM REQUIREMENT WHERE ID = ?");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isExist = false;
 		try {
-			boolean isExist = false;
+			
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, requirementId);
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			if (rs != null) {
 				if (rs.next()) {
 					isExist = true;
 				}
 			}
-			rs.close();
-			ps.close();
-			return isExist;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return isExist;
 	}
 
 	public Requirement populateBlock(ResultSet rs1) throws SQLException{
@@ -668,43 +632,36 @@ public class RequirementDAOImpl implements RequirementDAO {
 		return temp1;
 
 	}
-	
+	/**
+	 * Get the requirement values
+	 */
 	public Requirement getRequirementValues(String userId) {
 		StringBuffer sql = new StringBuffer("SELECT COUNT(distinct R.ID) AS COUNT, CV.VALUE FROM REQUIREMENT R "
 				+ "INNER JOIN CONFIG_KEY_VALUE_MAPPING C ON R.STATUS = C.ID "
 				+ "INNER JOIN CONFIG_VALUE CV ON C.CONFIG_VALUE_ID = CV.ID "
-				//+ "LEFT JOIN USER_ROLE_ACCOUNT_MAPPING E ON E.ACCOUNT_ID = R.ACCOUNT "
-				//+ "LEFT JOIN ACCOUNT_MAPPING D ON D.ID = E.ACCOUNT_ID "
-				//+ "LEFT JOIN USER_ROLE_MAPPING B ON B.ID = E.USER_ROLE_ID "
-				//+ "LEFT JOIN USER A ON A.ID = B.USER_ID
 				+ "INNER JOIN USER_ACCOUNT_MAPPING Y ON Y.ACCOUNT_ID = R.ACCOUNT "
 				+ "INNER JOIN USER Z ON Z.ID = Y.USER_ID "
 				+ "WHERE Z.ID = ? GROUP BY R.STATUS");
 
 		Connection conn = null;
-
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Requirement requirement = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps1 = conn.prepareStatement(sql.toString());
+			ps1 = conn.prepareStatement(sql.toString());
 			ps1.setString(1, userId);
-			Requirement requirement = null;
-			ResultSet rs1 = ps1.executeQuery();
+			
+			rs1 = ps1.executeQuery();
 
 			requirement=populateBlock(rs1);
 
-			rs1.close();
-			ps1.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs1, ps1);
+		}return requirement;
 	}
 	public Requirement populateBlock1(ResultSet rs1) throws SQLException{
 
@@ -751,26 +708,26 @@ public class RequirementDAOImpl implements RequirementDAO {
 
 	}
 	
-	
+	/**
+	 * Get the requirement based on location and account
+	 */
 	@Override
 	public Requirement getRequirementValuesSubmit(Requirement requirement, String userId) {
 
 		Connection conn = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Requirement requirement1=null;
 
 		try {
 		
 				StringBuffer queryString1 = new StringBuffer("SELECT COUNT(STATUS) AS COUNT, CV.VALUE FROM REQUIREMENT R "
 						+ "INNER JOIN CONFIG_KEY_VALUE_MAPPING C ON R.STATUS = C.ID "
 						+ "INNER JOIN CONFIG_VALUE CV ON C.CONFIG_VALUE_ID = CV.ID "
-						//+ "LEFT JOIN USER_ROLE_ACCOUNT_MAPPING E ON E.ACCOUNT_ID = R.ACCOUNT "
-						//+ "LEFT JOIN ACCOUNT_MAPPING D ON D.ID = E.ACCOUNT_ID "
-						//+ "LEFT JOIN USER_ROLE_MAPPING B ON B.ID = E.USER_ROLE_ID "
-						//+ "LEFT JOIN USER A ON A.ID = B.USER_ID WHERE A.ID = ? ");
 						+ "INNER JOIN USER_ACCOUNT_MAPPING Y ON Y.ACCOUNT_ID = R.ACCOUNT "
 						+ "INNER JOIN USER Z ON Z.ID = Y.USER_ID "
 						+ "WHERE Z.ID = ?");
 			
-			//StringBuilder parameterBuilder1 = new StringBuilder();
 			if(null != requirement.getLocation1() && !requirement.getLocation1().isEmpty()){
 				String[] location = requirement.getLocation1().split(",");
 				queryString1.append("AND ");
@@ -784,7 +741,6 @@ public class RequirementDAOImpl implements RequirementDAO {
 				}
 				queryString1.append(") ");
 				
-				//queryString1=queryString1.replace("and ", parameterBuilder1.toString());
 			}
 			if(null != requirement.getAccount1() && !requirement.getAccount1().isEmpty()){
 				String[] account = requirement.getAccount1().split(",");
@@ -800,31 +756,23 @@ public class RequirementDAOImpl implements RequirementDAO {
 				}
 				queryString1.append(") ");
 				
-				//queryString1 = queryString1.replace("and", parameterBuilder1.toString());
 			}
 			
 			queryString1.append("GROUP BY R.STATUS ");
 			
 			conn = dataSource.getConnection();
-			PreparedStatement ps1 = conn.prepareStatement(queryString1.toString());
+			ps1 = conn.prepareStatement(queryString1.toString());
 			ps1.setString(1, userId);
-			ResultSet rs1 = ps1.executeQuery();
+			rs1 = ps1.executeQuery();
 
-			Requirement requirement1=populateBlock1(rs1);
+			requirement1=populateBlock1(rs1);
 
-			rs1.close();
-			ps1.close();
-			return requirement1;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs1, ps1);
+		}return requirement1;
 	}
 	
 	private ArrayList<Requirement> populateTable(ResultSet rs) throws SQLException {
@@ -861,7 +809,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 		}
 		return tmp ;
 	}
-	
+	/**
+	 * Provides the requirement details for table 
+	 */
 	public ArrayList<Requirement> getRequirementTable(String userId){
 		StringBuffer sql = new StringBuffer("SELECT R.ID, C1.VALUE, C2.VALUE, C3.VALUE, INTIMATION_DATE,EXPECTED_DOJ, C4.VALUE, C6.VALUE, COUNT(DISTINCT R1.PROFILE_ID), \r\n")
         .append("R.SHORTLISTED_PROFILE_ID, COUNT(R1.INTERNAL_EVALUATION_RESULT) FROM REQUIREMENT R \r\n ") 
@@ -871,56 +821,55 @@ public class RequirementDAOImpl implements RequirementDAO {
         .append("LEFT JOIN CONFIG_VALUE C4 ON C4.ID = (SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID= R.STATUS ) \r\n")
         .append("LEFT JOIN CONFIG_VALUE C6 ON C6.ID =(SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID= R.OPPORTUNITY_STATUS ) \r\n")
         .append("LEFT JOIN REQUIREMENT_PROFILE_MAPPING R1 ON R1.REQUIREMENT_ID = R.ID LEFT JOIN PROFILE P ON P.ID = R1.PROFILE_ID \r\n")
-        //.append("LEFT JOIN USER_ROLE_ACCOUNT_MAPPING C ON C.ACCOUNT_ID = R.ACCOUNT LEFT JOIN ACCOUNT_MAPPING D ON D.ID = C.ACCOUNT_ID  \r\n")
-        //.append("LEFT JOIN USER_ROLE_MAPPING B ON B.ID = C.USER_ROLE_ID LEFT JOIN USER A ON A.ID = B.USER_ID \r\n")
         .append("INNER JOIN USER_ACCOUNT_MAPPING Y ON Y.ACCOUNT_ID = R.ACCOUNT ")
         .append("INNER JOIN USER Z ON Z.ID = Y.USER_ID ")
         .append("WHERE Z.ID = ? GROUP BY R.ID ORDER BY R.CREATED_ON DESC");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Requirement> requirement = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1,  userId);
 			
-			ArrayList<Requirement> requirement = null;
-			ResultSet rs = ps.executeQuery();
+			
+			rs = ps.executeQuery();
 
 			requirement=populateTable(rs);
 
-			rs.close();
-			ps.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return requirement;
 		
 		
 	}
+	/**
+	 * Provides account list
+	 */
 	public ArrayList<Account> getAccountList(){
 		StringBuffer sql = new StringBuffer("SELECT * FROM account_master;");
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Account>  tmp=null;
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 
 			if (rs == null) {
 				return null;
 			}
 
-			 ArrayList<Account>  tmp=new ArrayList<Account>();
+			 tmp=new ArrayList<Account>();
 
 			while(rs.next()){
 				Account rq = new Account();
@@ -928,38 +877,36 @@ public class RequirementDAOImpl implements RequirementDAO {
 				rq.setAccountName((rs.getString(2)));
 				
 				tmp.add(rq);
-			}rs.close();
-			ps.close();
-			return tmp ;
+			}
+			
 			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return tmp ;
 	}
-	
+	/**
+	 * Provides project list
+	 */
 	public ArrayList<Project> getProjectList(){
 		StringBuffer sql = new StringBuffer("SELECT * FROM Projects;");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Project>  tmp=null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 
 			if (rs == null) {
 				return null;
 			}
 
-			 ArrayList<Project>  tmp=new ArrayList<Project>();
+			 tmp = new ArrayList<Project>();
 
 			while(rs.next()){
 				Project rq = new Project();
@@ -968,20 +915,14 @@ public class RequirementDAOImpl implements RequirementDAO {
 				rq.setAccountId(rs.getInt(7));
 				
 				tmp.add(rq);
-			}rs.close();
-			ps.close();
-			return tmp ;
+			}
+			
 			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return tmp ;
 	}
 	
 	private ArrayList<Requirement> populateTableSubmit(ResultSet rs) throws SQLException {
@@ -1020,11 +961,17 @@ public class RequirementDAOImpl implements RequirementDAO {
 		
 		return tmp ;
 	}
-	
+	/**
+	 * Provides requirement details for table
+	 */
 	public ArrayList<Requirement> getRequirementTable(Requirement requirement, String userId){
 		
 		Connection conn = null;
-
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		String location = null;
+		String account = null;
+		ArrayList<Requirement> requirement1=null;
 		try {
 			
 			StringBuilder queryString = new StringBuilder("SELECT R.ID, C1.VALUE, C2.VALUE, C3.VALUE, INTIMATION_DATE,EXPECTED_DOJ, "
@@ -1035,14 +982,12 @@ public class RequirementDAOImpl implements RequirementDAO {
 					+ "LEFT JOIN CONFIG_VALUE C4 ON C4.ID = (SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID= R.STATUS ) "
 					+ "LEFT JOIN CONFIG_VALUE C6 ON C6.ID =(SELECT CONFIG_VALUE_ID FROM CONFIG_KEY_VALUE_MAPPING CKVM WHERE CKVM.ID= R.OPPORTUNITY_STATUS ) "
 					+ "LEFT JOIN REQUIREMENT_PROFILE_MAPPING R1 ON R1.REQUIREMENT_ID = R.ID LEFT JOIN PROFILE P ON P.ID = R1.PROFILE_ID "
-					//+ "LEFT JOIN USER_ROLE_ACCOUNT_MAPPING C ON C.ACCOUNT_ID = R.ACCOUNT LEFT JOIN ACCOUNT_MAPPING D ON D.ID = C.ACCOUNT_ID "
-					//+ "LEFT JOIN USER_ROLE_MAPPING B ON B.ID = C.USER_ROLE_ID LEFT JOIN USER A ON A.ID = B.USER_ID WHERE A.ID = ? ");
 					+ "INNER JOIN USER_ACCOUNT_MAPPING Y ON Y.ACCOUNT_ID = R.ACCOUNT "
 					+ "INNER JOIN USER Z ON Z.ID = Y.USER_ID "
 					+ "WHERE Z.ID = ?");
 			
-			String location = requirement.getLocation1();
-			String account = requirement.getAccount1();
+			location = requirement.getLocation1();
+			account = requirement.getAccount1();
 			
 			if(StringUtils.isNotBlank(location) && StringUtils.isNotBlank(account)){
 				queryString = queryString.append(" AND R.LOCATION IN (");
@@ -1059,26 +1004,19 @@ public class RequirementDAOImpl implements RequirementDAO {
 			queryString = queryString.append(" GROUP BY R.ID"); 
 			
 			conn = dataSource.getConnection();
-			PreparedStatement ps1 = conn.prepareStatement(queryString.toString());
+			ps1 = conn.prepareStatement(queryString.toString());
 			
 			ps1.setString(1,  userId);
-			ResultSet rs1 = ps1.executeQuery();
+			rs1 = ps1.executeQuery();
 
-		ArrayList<Requirement> requirement1=populateTableSubmit(rs1);
+		requirement1=populateTableSubmit(rs1);
 
-			rs1.close();
-			ps1.close();
-			return requirement1;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs1, ps1);
+		}return requirement1;
 		
 		
 	}
@@ -1118,7 +1056,9 @@ public class RequirementDAOImpl implements RequirementDAO {
 		
 		return tmp ;
 	}
-	
+	/**
+	 * Provides requirement details for table based on account name
+	 */
 	public ArrayList<Requirement> getRequirementCustomerTable(String accountName){
 
 		StringBuffer sql = new StringBuffer("SELECT R.ID, C1.VALUE, C2.VALUE, C3.VALUE, INTIMATION_DATE, EXPECTED_DOJ, "
@@ -1132,128 +1072,90 @@ public class RequirementDAOImpl implements RequirementDAO {
 				+ "WHERE R.ACCOUNT= ? GROUP BY R.ID ");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Requirement> requirement = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setInt(1, tmpDAOUtil.getAccountFromName(accountName).getAccountId());
-			ArrayList<Requirement> requirement = null;
 			
-			ResultSet rs = ps.executeQuery();
+			
+			rs = ps.executeQuery();
 
 			requirement=populateTableCustomername(rs);
 
-			rs.close();
-			ps.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return requirement;
 		
 		
 	}
+	
+	/**
+	 * Provides requirement details based on account id and name
+	 */
 	public Requirement getRequirementValuesCustomerName(String name) {
 		StringBuffer sql = new StringBuffer("SELECT COUNT(STATUS) AS COUNT, CV.VALUE FROM REQUIREMENT R "
 				+ "INNER JOIN CONFIG_KEY_VALUE_MAPPING C ON R.STATUS = C.ID INNER JOIN CONFIG_VALUE CV ON C.CONFIG_VALUE_ID = CV.ID "
 				+ "WHERE R.ACCOUNT=? GROUP BY R.STATUS");
 
 		Connection conn = null;
-
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		int accId = 0;
+		int acctnameId = 0;
+		Requirement requirement = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps1 = conn.prepareStatement(sql.toString());
-			int accId = configDAO.getAdminInfoKeyValueMapping(name).getId();
-			int acctnameId = tmpDAOUtil.getAccountFromName(name).getAccountId();
-			//int acctnameId = configDAO.getAccountMappingId(accId).getAccountId();
+			ps1 = conn.prepareStatement(sql.toString());
+			accId = configDAO.getAdminInfoKeyValueMapping(name).getId();
+			acctnameId = tmpDAOUtil.getAccountFromName(name).getAccountId();
 			ps1.setInt(1, acctnameId);
-			Requirement requirement = null;
-			ResultSet rs1 = ps1.executeQuery();
+			
+			rs1 = ps1.executeQuery();
 
 			requirement=populateBlock(rs1);
 
-			rs1.close();
-			ps1.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-	}
+			closeDBObjects(conn, rs1, ps1);
+	}return requirement;
 	}
 	
-	/*private ArrayList<Requirement> populateTableRef(ResultSet rs) throws SQLException {
-		if (rs == null) {
-			return null;
-		}
-
-		 ArrayList<Requirement>  tmp=new ArrayList<Requirement>();
-
-		while(rs.next()){
-			Requirement rq = new Requirement();
-			rq.setId(rs.getString(1));
-			rq.setCriticality1(rs.getString(2));
-			rq.setPrimarySkill1(rs.getString(3));
-			rq.setLocation2(rs.getString(4));
-			rq.setIntimationDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate(5)));
-			rq.setExpectedDOJ(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate(6)));
-			rq.setStatus1(rs.getString(7));
-			rq.setOppurtunitystatus(rs.getString(8));
-			rq.setProfileshared(rs.getInt(9));
-			String shortlist=rs.getString(10);			 			
-			String[] shortlistId = shortlist.split(",");
-			int count=shortlistId.length;
-			rq.setCustomershortlisted(String.valueOf(count));
-			//rq.setCustomershortlisted(rs.getString(10));
-			rq.setInternalevaluation(rs.getInt(11));
-			rq.setRemarks(rs.getString(12));
-			tmp.add(rq);
-		}
-		
-		return tmp ;
-	}*/
-	
+	/**
+	 * Get details from mapping table for requirement and profile
+	 */
 	public ArrayList<RequirementProfileMapping> getRequirementProfile(String requirementId){
 		
 		StringBuffer sql = new StringBuffer("SELECT PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER,OFFER_PROCESSING_STATUS,"
 				+ "REMARKS FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID = ?");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<RequirementProfileMapping> requirement = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, requirementId);
-			ArrayList<RequirementProfileMapping> requirement = null;
-			ResultSet rs = ps.executeQuery();
+			
+			rs = ps.executeQuery();
 			
 		requirement = populateRequirementProfile(rs);
 			
 			
-			rs.close();
-			ps.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return requirement;
 		
 	}
 	private ArrayList<RequirementProfileMapping> populateRequirementProfile(ResultSet rs) throws SQLException {
@@ -1277,33 +1179,30 @@ public class RequirementDAOImpl implements RequirementDAO {
 		return mapping;
 		}
 	
-	
+	/**
+	 * Provides requirement id and profile id from mapping table
+	 */
 public ArrayList<RequirementProfileMapping> getRequirementProfileName(String requirementId){
 		
 		StringBuffer sql = new StringBuffer("SELECT REQUIREMENT_ID, PROFILE_ID FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID = ?");
 		
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<RequirementProfileMapping> requirement = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());			
+			ps = conn.prepareStatement(sql.toString());			
 			ps.setString(1, requirementId);			
-			ArrayList<RequirementProfileMapping> requirement = null;			
-			ResultSet rs = ps.executeQuery();			
+						
+			rs = ps.executeQuery();			
 		requirement = populateRequirementProfileName(rs);			
-			rs.close();
-			ps.close();
-			return requirement;
+			
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
-		}
+			closeDBObjects(conn, rs, ps);
+		}return requirement;
 		
 	}
 private ArrayList<RequirementProfileMapping> populateRequirementProfileName(ResultSet rs) throws SQLException {
@@ -1324,30 +1223,27 @@ private ArrayList<RequirementProfileMapping> populateRequirementProfileName(Resu
 	return mapping;
 	}
 	
-
+/**
+ * While updating provides data for shortlistedProfileId, updatedOn, updatedBy based on id
+ */
 public int updateShortlistedProfile(Requirement requirement, String userId) {
 	StringBuffer sql = new StringBuffer(
 			"UPDATE REQUIREMENT SET SHORTLISTED_PROFILE_ID=?, UPDATED_ON=?, UPDATED_BY=?  WHERE ID=?");
 	Connection conn = null;
-
+	PreparedStatement ps = null;
+	int result=0;
 	try {
 		conn = dataSource.getConnection();
-		PreparedStatement ps = conn.prepareStatement(sql.toString());		
+		ps = conn.prepareStatement(sql.toString());		
 		populateshortlistedProfileForUpdate(ps, requirement, userId);		
-		int result=ps.executeUpdate();
-		ps.close();
-		return result;
+		result=ps.executeUpdate();
+		
 	} catch (SQLException sqlException) {
 		throw new RuntimeException(sqlException);
 		
 	} finally {
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException sqlException) {
-			}
-		}
-	}
+		closeDBObjects(conn, null, ps);
+	}return result;
 }
 private void populateshortlistedProfileForUpdate(PreparedStatement ps, Requirement requirement, String userId ) throws SQLException {
 
@@ -1361,19 +1257,26 @@ private void populateshortlistedProfileForUpdate(PreparedStatement ps, Requireme
 }
 
 
-
+/**
+ * Displays ShortlistedProfileId from requirement
+ */
 
 public  ArrayList<Requirement> getShortlistedProfiles(String requirementId) {
 	StringBuffer queryString = new StringBuffer("SELECT SHORTLISTED_PROFILE_ID FROM REQUIREMENT WHERE ID =?");
 
 	Connection conn = null;
+	PreparedStatement ps = null;
+	PreparedStatement ps1 = null;
+	ResultSet rs = null;
+	ResultSet rs1 = null;
+	ArrayList<Requirement> requirement=null;
 	String id=null;
 	try {
 		conn = dataSource.getConnection();
-		ArrayList<Requirement> requirement=null;
-		PreparedStatement ps = conn.prepareStatement(queryString.toString());
+		
+		ps = conn.prepareStatement(queryString.toString());
 		ps.setString(1, requirementId);
-		ResultSet rs = ps.executeQuery();
+		rs = ps.executeQuery();
 		if (rs != null) {
 			while (rs.next()) {
 				id=rs.getString("SHORTLISTED_PROFILE_ID");
@@ -1384,24 +1287,29 @@ public  ArrayList<Requirement> getShortlistedProfiles(String requirementId) {
 			queryString1 = queryString1.append(" SELECT NAME, ID FROM PROFILE WHERE ID IN(");
 			queryString1 = queryString1.append(id+") ");
 		}
-		PreparedStatement ps1 = conn.prepareStatement(queryString1.toString());
+		ps1 = conn.prepareStatement(queryString1.toString());
 	
-		ResultSet rs1 = ps1.executeQuery();
+		rs1 = ps1.executeQuery();
 		requirement=populateShortlistedProfiles(rs1);
 
-		rs.close();
-		ps.close();
-		return requirement;
+		
 	} catch (SQLException sqlException) {
 		throw new RuntimeException(sqlException);
 	} finally {
-		if (conn != null) {
+		if (rs1 != null) {
 			try {
-				conn.close();
+				rs1.close();
 			} catch (SQLException sqlException) {
 			}
 		}
-	}
+		if (ps1 != null) {
+			try {
+				ps1.close();
+			} catch (SQLException sqlException) {
+			}
+		}
+		closeDBObjects(conn, rs, ps);
+	}return requirement;
 }
 
 public ArrayList<Requirement>  populateShortlistedProfiles(ResultSet rs) throws SQLException{

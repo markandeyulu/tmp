@@ -103,6 +103,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		return dataSource;
 	}
 
+	/**
+	 * This method provides all the available profiles
+	 */
 	public Profiles getProfiles() {
 
 		StringBuffer sql = new StringBuffer(
@@ -111,14 +114,16 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 						+ "inner join REQUIREMENT_PROFILE_MAPPING m ON p.ID= m.PROFILE_ID\r\n" + "ORDER BY ID DESC");
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Profile> profilesList = null;
+		Profiles profiles = null;
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 
-			List<Profile> profilesList = null;
-			Profiles profiles = null;
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			if (rs != null) {
 				profiles = new Profiles();
 				profilesList = new ArrayList<Profile>();
@@ -127,21 +132,19 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				}
 				profiles.setProfiles(profilesList);
 			}
-			rs.close();
-			ps.close();
-			return profiles;
+
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
+		return profiles;
 	}
 
+	/**
+	 * This method provides the requirement reference number based on user and
+	 * account details.
+	 */
 	public Profiles getRequirementRefNum(String userId) {
 
 		StringBuffer sql = new StringBuffer("SELECT R.ACCOUNT, R.ID FROM USER A\r\n"
@@ -149,15 +152,16 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				+ "INNER JOIN REQUIREMENT R ON R.ACCOUNT =C.ACCOUNT_ID WHERE A.ID = ? \r\n" + "GROUP BY R.ACCOUNT");
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Profile> profilesList = null;
+		Profiles profiles = null;
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
-
-			List<Profile> profilesList = null;
-			Profiles profiles = null;
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, userId);
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			if (rs != null) {
 				profiles = new Profiles();
 				profilesList = new ArrayList<Profile>();
@@ -166,55 +170,50 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				}
 				profiles.setProfiles(profilesList);
 			}
-			rs.close();
-			ps.close();
-			return profiles;
+
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
+		return profiles;
 	}
 
+	/**
+	 * This method provides the id of the particular requirement
+	 */
 	public int getRefId(String RefId) {
 		StringBuffer sql = new StringBuffer("SELECT ID FROM requirement WHERE ID = ?");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int retid = 0;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, RefId);
-			int retid = 0;
-			ResultSet rs = ps.executeQuery();
+
+			rs = ps.executeQuery();
 			if (rs != null) {
 
 				while (rs.next()) {
 					retid = 1;
 				}
 			}
-			rs.close();
-			ps.close();
-			return retid;
+
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
+		return retid;
 	}
 
+	/**
+	 * This method provides all the field values of the profile for updating
+	 */
 	public Profile getProfile(String profileId) {
-		// StringBuffer sql = new StringBuffer("SELECT * FROM PROFILE WHERE ID = ?");
 		StringBuffer sql = new StringBuffer(
 				"SELECT p.ID,r.ID AS REQUIREMENT_ID, p.NAME, p.EMAIL_ID, p.CONTACT_NO, p.CURRENT_COMPANY, p.LOCATION, \r\n"
 						+ "p.PRIMARY_SKILL,p.PROFILE_SOURCE, p.PROFILE_SHARED_BY,  p.YEARS_OF_EXPERIENCE, \r\n"
@@ -229,36 +228,31 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 						+ "inner join REQUIREMENT_PROFILE_MAPPING m ON p.ID= m.PROFILE_ID\r\n" + "WHERE p.ID = ?");
 
 		Connection conn = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Profile profile = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setString(1, profileId);
-			Profile profile = null;
-			ResultSet rs = ps.executeQuery();
+
+			rs = ps.executeQuery();
 			if (rs != null) {
 				profile = new Profile();
 				while (rs.next()) {
 					profile = populateProfileUpdate(rs);
 				}
 			}
-			rs.close();
-			ps.close();
-			return profile;
+
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
+		return profile;
 	}
 
 	public Profiles createProfiles(List<Profile> profiles) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -270,64 +264,68 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 						.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps2 = null;
+		ResultSet generatedKeys = null;
+		int newProfileId = 0;
+		int result = 0;
+		int initialEvalRes, customerInterviewStatus;
+		String profileSharedCustomer = "No";
+		int profileId = 0;
+		int status = 0;
+		int reqStatus = 0;
 
 		try {
 			conn = dataSource.getConnection();
 
-			int newProfileId = 0;
-			int result = 0;
+			profileId = isProfilesExist(profile, strUserId);
 
-			int profileId = isProfilesExist(profile, strUserId);
-			int initialEvalRes, customerInterviewStatus;
-			String profileSharedCustomer = "No";
 			if (StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd())
 					&& !profile.getInitialEvaluationResultAdd().equals("0")) {
 				initialEvalRes = new Integer(profile.getInitialEvaluationResultAdd());
 			} else {
 				initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
 			}
-			
-			if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
-					customerInterviewStatus = new Integer(profile.getCustomerInterviewStatusAdd());
-				}else{
-					customerInterviewStatus=0;
+
+			if ((profile.getCustomerInterviewStatusAdd() != null)
+					&& !(profile.getCustomerInterviewStatusAdd().isEmpty())) {
+				customerInterviewStatus = new Integer(profile.getCustomerInterviewStatusAdd());
+			} else {
+				customerInterviewStatus = 0;
 			}
-			
-			if((profile.getProfileSharedCustomer()!=null)){
+
+			if ((profile.getProfileSharedCustomer() != null)) {
 				profileSharedCustomer = profile.getProfileSharedCustomer();
 			}
-			if(profileId == 0){
-			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-			populateProfileForInsert(ps, profile, strUserId);
-			
-			result = ps.executeUpdate();
-			
-			ResultSet generatedKeys = ps.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				 newProfileId=generatedKeys.getInt(1);
-				 //system.out.println("newProfileId==> "+newProfileId);
-			} else {
-				throw new SQLException(
-						"Creating profile failed, no ID obtained for profile.");
-			}
-			ps.close();
+			if (profileId == 0) {
+				ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+				populateProfileForInsert(ps, profile, strUserId);
 
-			profile.setId(newProfileId);
-			
+				result = ps.executeUpdate();
+
+				generatedKeys = ps.getGeneratedKeys();
+				if (generatedKeys.next()) {
+					newProfileId = generatedKeys.getInt(1);
+				} else {
+					throw new SQLException("Creating profile failed, no ID obtained for profile.");
+				}
+
+				profile.setId(newProfileId);
+
 				if (profile.getId() > 0) {
 					result = insertProfileMapping(profile, "", strUserId);
 				}
 
-				int status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
-						profileSharedCustomer, customerInterviewStatus, 0);
+				status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes, profileSharedCustomer,
+						customerInterviewStatus, 0);
 
-				int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
+				reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
 				String sql2 = null;
 				if (status > reqStatus) {
 					sql2 = "UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
 					if (StringUtils.isNotBlank(sql2)) {
 						System.out.println("sql2-->" + sql2);
-						PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
+						ps2 = conn.prepareStatement(sql2.toString());
 						ps2.setInt(1, status);
 						ps2.setString(2, profile.getReqRefNo());
 						ps2.executeUpdate();
@@ -336,102 +334,100 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			} else {
 				profile.setId(profileId);
 
-				/*
-				 * if (profile.getId() > 0) { result = insertProfileMapping(profile, "",
-				 * strUserId); }
-				 */
-				int status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
-						profile.getProfileSharedCustomer(), customerInterviewStatus,0);
+				status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
+						profile.getProfileSharedCustomer(), customerInterviewStatus, 0);
 
-				int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
+				reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
 				String sql2 = null;
 				if (status > reqStatus) {
 					sql2 = "UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
 					if (StringUtils.isNotBlank(sql2)) {
 						System.out.println("sql2-->" + sql2);
-						PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
+						ps2 = conn.prepareStatement(sql2.toString());
 						ps2.setString(1, profile.getReqRefNo());
 						ps2.executeUpdate();
 					}
 				}
 			}
 
-			return result;
 		} catch (SQLException sqlException) {
 			sqlException.printStackTrace();
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
+			if (ps2 != null) {
 				try {
-					conn.close();
-				} catch (SQLException sqlException) {
+					ps2.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 			}
+			closeDBObjects(conn, generatedKeys, ps);
 		}
+		return result;
 	}
-	
-	@Override
-	public void updateRequirementStatus(int profileId, String reqId, int initialEvaluationResult, String profileSharedCustomer, int customerInterviewStatus, String userId) {
 
-		//TODO
-		int proposedReqStatus= ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvaluationResult, profileSharedCustomer, customerInterviewStatus, 0);
+	/**
+	 * This method updates the requirement status based on the
+	 * initialEvaluationResult, profileSharedCustomer and customerStatus
+	 */
+	@Override
+	public void updateRequirementStatus(int profileId, String reqId, int initialEvaluationResult,
+			String profileSharedCustomer, int customerInterviewStatus, String userId) {
+
+		int proposedReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvaluationResult,
+				profileSharedCustomer, customerInterviewStatus, 0);
 
 		int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();
-		String sql2=null;
+		String sql2 = null;
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps3 = null;
 
 		try {
 			conn = dataSource.getConnection();
 
-			if(proposedReqStatus == 18) { //Offer Processing
-				// append this profile id to SHORTLISTED_PROFILE_ID column value in tmp.requirement table 
-					String sql3 = "UPDATE REQUIREMENT SET STATUS=18, SHORTLISTED_PROFILE_ID = IF(SHORTLISTED_PROFILE_ID IS NULL, '"+profileId+"', CONCAT(SHORTLISTED_PROFILE_ID, ',"+profileId+"')) WHERE ID=?";
-					PreparedStatement ps3 = conn.prepareStatement(sql3);
-					ps3.setString(1, reqId);
-					ps3.executeUpdate();
-					ps3.close();
-			} else if(proposedReqStatus > reqStatus){
-				sql2="UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
-				if(StringUtils.isNotBlank(sql2)) {
-					PreparedStatement ps = conn.prepareStatement(sql2.toString());
+			if (proposedReqStatus == 18) { // Offer Processing
+				// append this profile id to SHORTLISTED_PROFILE_ID column value in
+				// tmp.requirement table
+				String sql3 = "UPDATE REQUIREMENT SET STATUS=18, SHORTLISTED_PROFILE_ID = IF(SHORTLISTED_PROFILE_ID IS NULL, '"
+						+ profileId + "', CONCAT(SHORTLISTED_PROFILE_ID, '," + profileId + "')) WHERE ID=?";
+				ps3 = conn.prepareStatement(sql3);
+				ps3.setString(1, reqId);
+				ps3.executeUpdate();
+			} else if (proposedReqStatus > reqStatus) {
+				sql2 = "UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
+				if (StringUtils.isNotBlank(sql2)) {
+					ps = conn.prepareStatement(sql2.toString());
 					ps.setInt(1, proposedReqStatus);
 					ps.setString(2, reqId);
 					ps.executeUpdate();
-					
-					ps.close();
+
 				}
 			}
-		}catch (SQLException sqlException) {
+		} catch (SQLException sqlException) {
 			sqlException.printStackTrace();
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, null, ps);
 		}
-
 
 	}
 
 	public Profiles updateProfiles(List<Profile> profiles) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	private int getActualRequirementStatus(ArrayList<RequirementProfileMapping> profiles, int reqStatus,
 			int proposedReqStatus, int profileId) {
 		int propReqStatus = 0;
-		
-		System.out.println("profile size "+profiles.size());
+
+		System.out.println("profile size " + profiles.size());
 		if (reqStatus <= proposedReqStatus) {
 			return proposedReqStatus;
-		}else if(profiles.size()==1 && reqStatus<16){
+		} else if (profiles.size() == 1 && reqStatus < 16) {
 			return proposedReqStatus;
-		}else if(profiles.size()==1){
+		} else if (profiles.size() == 1) {
 			return proposedReqStatus;
 		}
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
@@ -440,7 +436,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		Integer sortStatus = 0;
 		for (RequirementProfileMapping requirementProfileMapping : profiles) {
 			if (requirementProfileMapping.getProfileId().getId() != profileId) {
-				int initialEvalRes = 0,customerInterviewStatus = 0, offerStatus = 0;
+				int initialEvalRes = 0, customerInterviewStatus = 0, offerStatus = 0;
 				String profileSharedCusomer = "no";
 				if ((requirementProfileMapping.getInternalEvaluationResult()) != null
 						&& (requirementProfileMapping.getInternalEvaluationResult().getId() != 0)) {
@@ -449,24 +445,28 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 					initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
 				}
 
-				System.out.println(" requirementProfileMapping.getProfileSharedCustomer() "+ requirementProfileMapping.getProfileSharedCustomer());
-				
-				if( StringUtils.isNotBlank(requirementProfileMapping.getProfileSharedCustomer()) &&
-						(requirementProfileMapping.getProfileSharedCustomer().equalsIgnoreCase("yes"))){
-					customerInterviewStatus = new Integer(requirementProfileMapping.getCustomerInterviewStatus().getId());
+				System.out.println(" requirementProfileMapping.getProfileSharedCustomer() "
+						+ requirementProfileMapping.getProfileSharedCustomer());
+
+				if (StringUtils.isNotBlank(requirementProfileMapping.getProfileSharedCustomer())
+						&& ("yes".equalsIgnoreCase(requirementProfileMapping.getProfileSharedCustomer()))) {
+					customerInterviewStatus = new Integer(
+							requirementProfileMapping.getCustomerInterviewStatus().getId());
 					profileSharedCusomer = "yes";
 				}
-				
-				if (!requirementProfileMapping.getOfferStatus().equals("0")) {
+
+				if (null != requirementProfileMapping.getOfferStatus()
+						&& !"0".equals(requirementProfileMapping.getOfferStatus())) {
 					offerStatus = requirementProfileMapping.getOfferStatus().getId();
 				} else {
-					offerStatus = configDAO.getConfigKeyValueMapping("A").getId();
+					offerStatus = 0;// configDAO.getConfigKeyValueMapping("A").getId();
 				}
 
-				System.out.println("initialEvalRes"+ initialEvalRes +" profileSharedCusomer "+ profileSharedCusomer + ",customerInterviewStatus" + customerInterviewStatus);
+				System.out.println("initialEvalRes" + initialEvalRes + " profileSharedCusomer " + profileSharedCusomer
+						+ ",customerInterviewStatus" + customerInterviewStatus);
 				propReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
 						profileSharedCusomer, customerInterviewStatus, offerStatus);
-				System.out.println("propReqStatus "+propReqStatus);
+				System.out.println("propReqStatus " + propReqStatus);
 				reqStatusList.add(propReqStatus);
 
 			}
@@ -478,10 +478,13 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			}
 
 		}
-		System.out.println( " sortStatus "+sortStatus);
+		System.out.println(" sortStatus " + sortStatus);
 		return sortStatus;
 	}
 
+	/**
+	 * This method updates the profile for any given field
+	 */
 	public int updateProfile(Profile profile, String userId, int reqStatus,
 			ArrayList<RequirementProfileMapping> profiles) {
 
@@ -497,6 +500,10 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		boolean foundProfile = false;
 
 		Connection conn = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs = null;
+		int result = 0;
 
 		try {
 			conn = dataSource.getConnection();
@@ -509,41 +516,47 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 
 			sql.append(" WHERE ID=? ");
 
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
+			ps = conn.prepareStatement(sql.toString());
+			ps1 = conn.prepareStatement(sql1.toString());
 			populateProfileForUpdate(ps, profile, userId);
 			populateProfileForUpdateForMapping(ps1, profile, userId);
 
 			// Updating the Requirement Status
-			updateRequirementStatus(profile,reqStatus, profiles);
-			
+			updateRequirementStatus(profile, reqStatus, profiles);
+
 			ps.executeUpdate();
-			int result=ps1.executeUpdate();
-			ps.close();
-			
-			return result;
+			result = ps1.executeUpdate();
+
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
+			if (ps1 != null) {
 				try {
-					conn.close();
-				} catch (SQLException sqlException) {
+					ps1.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 			}
+			closeDBObjects(conn, null, ps);
 		}
+		return result;
 	}
-	
-	private void updateRequirementStatus(Profile profile,int reqStatus, ArrayList<RequirementProfileMapping> profiles) {
-	
+
+	private void updateRequirementStatus(Profile profile, int reqStatus,
+			ArrayList<RequirementProfileMapping> profiles) {
+
 		Connection conn = null;
+		PreparedStatement ps2 = null;
+		PreparedStatement ps3 = null;
+		PreparedStatement ps5 = null;
+		ResultSet rs = null;
 
 		try {
 			conn = dataSource.getConnection();
 			String sql2 = "UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
 			System.out.println("sql2-->" + sql2);
-			PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
-			int initialEvalRes, customerInterviewStatus,offerStatus;
+			ps2 = conn.prepareStatement(sql2.toString());
+			int initialEvalRes, customerInterviewStatus, offerStatus;
 			if (!profile.getInitialEvaluationResult().equals("0")) {
 				initialEvalRes = profile.getInitialEvaluationResult().getId();
 			} else {
@@ -555,20 +568,20 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			} else {
 				customerInterviewStatus = 0;
 			}
-			
-			if(profile.getOfferProcessingStatus() != null) {
-			
+
+			if (profile.getOfferProcessingStatus() != null) {
+
 				offerStatus = profile.getOfferProcessingStatus().getId();
 			} else {
-				offerStatus = 0;/*configDAO.getConfigKeyValueMapping("A").getId();*/
+				offerStatus = 0;/* configDAO.getConfigKeyValueMapping("A").getId(); */
 			}
-			
-			/*if(profile.getOfferProcessingStatus() != null) {
-				offerStatus = new Integer(profile.getOfferProcessingStatus().getId());
-			}else {
-				offerStatus = 0;
-			}*/
-			
+
+			/*
+			 * if(profile.getOfferProcessingStatus() != null) { offerStatus = new
+			 * Integer(profile.getOfferProcessingStatus().getId()); }else { offerStatus = 0;
+			 * }
+			 */
+
 			int proposedReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
 					profile.getProfileSharedCustomer(), customerInterviewStatus, offerStatus);
 
@@ -582,54 +595,64 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 										// tmp.requirement table
 				String sql3 = "UPDATE REQUIREMENT SET SHORTLISTED_PROFILE_ID = IF(SHORTLISTED_PROFILE_ID IS NULL, '"
 						+ profile.getId() + "', CONCAT(SHORTLISTED_PROFILE_ID, '," + profile.getId() + "')) WHERE ID=?";
-				PreparedStatement ps3 = conn.prepareStatement(sql3);
+				ps3 = conn.prepareStatement(sql3);
 				ps3.setString(1, profile.getReqRefNo());
 				ps3.executeUpdate();
-				ps3.close();
-			}else if(reqStatus == 18){
-				String sql5= "SELECT SHORTLISTED_PROFILE_ID from REQUIREMENT WHERE ID=?" ;
-				PreparedStatement ps5 = conn.prepareStatement(sql5);
+
+			} else if (reqStatus == 18) {
+				String sql5 = "SELECT SHORTLISTED_PROFILE_ID from REQUIREMENT WHERE ID=?";
+				ps5 = conn.prepareStatement(sql5);
 				ps5.setString(1, profile.getReqRefNo());
-				ResultSet rs = ps5.executeQuery();
+				rs = ps5.executeQuery();
 				String shortlistedProfileId = null;
 				if (rs != null) {
 					while (rs.next()) {
 						shortlistedProfileId = rs.getString("SHORTLISTED_PROFILE_ID");
 					}
 				}
-			String [] shortlistProfIds = shortlistedProfileId.split(",");
-			StringBuffer shortlistedProfileIds = new StringBuffer();
+				String[] shortlistProfIds = shortlistedProfileId.split(",");
+				StringBuffer shortlistedProfileIds = new StringBuffer();
 
-			for (String str : shortlistProfIds) {
-				if(Integer.parseInt(str)!=profile.getId()) {
-					shortlistedProfileIds.append(str);
-					shortlistedProfileIds.append(",");
+				for (String str : shortlistProfIds) {
+					if (Integer.parseInt(str) != profile.getId()) {
+						shortlistedProfileIds.append(str);
+						shortlistedProfileIds.append(",");
+					}
 				}
-			}
-			String withoutLastComma1 = null;
-			if(StringUtils.isNotBlank(shortlistedProfileIds)) {
-				withoutLastComma1 = shortlistedProfileIds.substring( 0, shortlistedProfileIds.length()-1);
-			}
-			String sql3 = "UPDATE REQUIREMENT SET SHORTLISTED_PROFILE_ID = ? WHERE ID=?";
-			PreparedStatement ps3 = conn.prepareStatement(sql3);
-			ps3.setString(1, withoutLastComma1);
-			ps3.setString(2, profile.getReqRefNo());
-			ps3.executeUpdate();
-			ps3.close();
-		}
+				String withoutLastComma1 = null;
+				if (StringUtils.isNotBlank(shortlistedProfileIds)) {
+					withoutLastComma1 = shortlistedProfileIds.substring(0, shortlistedProfileIds.length() - 1);
+				}
+				String sql3 = "UPDATE REQUIREMENT SET SHORTLISTED_PROFILE_ID = ? WHERE ID=?";
+				ps3 = conn.prepareStatement(sql3);
+				ps3.setString(1, withoutLastComma1);
+				ps3.setString(2, profile.getReqRefNo());
+				ps3.executeUpdate();
 
+			}
 
-		ps2.close();
-		
-		}catch(Exception e) {
-		e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			if (conn != null) {
+			if (ps3 != null) {
 				try {
-					conn.close();
+					ps3.close();
 				} catch (SQLException sqlException) {
 				}
 			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			if (ps5 != null) {
+				try {
+					ps5.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			closeDBObjects(conn, null, ps2);
 		}
 	}
 
@@ -656,7 +679,8 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setContactNo(rs.getString("CONTACT_NO"));
 		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
 		profile.setLocation(rs.getString("LOCATION"));
-		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
+		profile.setPrimarySkill(
+				configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
 		/* profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE")); */
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
@@ -665,9 +689,11 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setNoticePeriod(rs.getInt("NOTICE_PERIOD"));
 		profile.setCurrentCTC(rs.getInt("CURRENT_CTC"));
 		profile.setExpectedCTC(rs.getInt("EXPECTED_CTC"));
-		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(rs.getInt("IS_ALLOCATED")));/*
-		profile.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
-		profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));*/
+		profile.setIsAllocated(configDAO.getConfigKeyValueMapping(
+				rs.getInt("IS_ALLOCATED")));/*
+											 * profile.setAccount(configDAO.getAccountMapping(rs.getInt("ACCOUNT")));
+											 * profile.setProject(configDAO.getProjectMapping(rs.getInt("PROJECT")));
+											 */
 		profile.setAllocationStartDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_START_DATE")));
 		profile.setAllocationEndDate(tmpDAOUtil.convertUtilDatetoSQLDate(rs.getDate("ALLOCATION_END_DATE")));
 		profile.setCreatedBy(configDAO.getUserId(rs.getInt("CREATED_BY")));
@@ -713,7 +739,8 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		profile.setContactNo(rs.getString("CONTACT_NO"));
 		profile.setCurrentCompany(rs.getString("CURRENT_COMPANY"));
 		profile.setLocation(rs.getString("LOCATION"));
-		profile.setPrimarySkill(configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
+		profile.setPrimarySkill(
+				configDAO.getConfigKeyValueMapping(rs.getInt("PRIMARY_SKILL")).getConfigValue().getValue());
 		profile.setProfileSource(configDAO.getConfigKeyValueMapping(rs.getInt("PROFILE_SOURCE")));
 		/* profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE")); */
 		profile.setProfileSharedBy(rs.getString("PROFILE_SHARED_BY"));
@@ -745,25 +772,27 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		}
 
 		int customerInterStatus = rs.getInt("CUSTOMER_INTERVIEW_STATUS");
-		
+
 		if (customerInterStatus > 0) {
 			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
 		} else {
 			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
 		}
-		
+
 		int offerProcessStatus = rs.getInt("OFFER_PROCESSING_STATUS");
-		
-		System.out.println("OfferProcessingStatus "+offerProcessStatus);
-		
-		if(offerProcessStatus > 0) {
+
+		System.out.println("OfferProcessingStatus " + offerProcessStatus);
+
+		if (offerProcessStatus > 0) {
 			profile.setOfferProcessingStatus(configDAO.getConfigKeyValueMapping(offerProcessStatus));
-			
-			System.out.println(" Inside If-> offer processing status from configkeyvalue mapping "+profile.getOfferProcessingStatus());
-			
-		}else {
+
+			System.out.println(" Inside If-> offer processing status from configkeyvalue mapping "
+					+ profile.getOfferProcessingStatus());
+
+		} else {
 			profile.setOfferProcessingStatus(configDAO.getConfigKeyValueMapping("A"));
-			System.out.println(" Inside Else -> offer processing status from configkeyvalue mapping "+profile.getOfferProcessingStatus());
+			System.out.println(" Inside Else -> offer processing status from configkeyvalue mapping "
+					+ profile.getOfferProcessingStatus());
 		}
 		profile.setProfileSharedDate(rs.getDate("PROFILE_SHARED_DATE"));
 		/*
@@ -785,9 +814,11 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		ps.setString(i++, profile.getContactNo());
 		ps.setString(i++, profile.getCurrentCompany());
 		ps.setString(i++, profile.getLocation());
-		//adminDAO.getRequirementMappingValue(profile.getPrimarySkillAdd(), 11, strUserId);
-		//ps.setInt(i++, configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
-		//ps.setInt(i++,Integer.parseInt(profile.getPrimarySkillAdd()));
+		// adminDAO.getRequirementMappingValue(profile.getPrimarySkillAdd(), 11,
+		// strUserId);
+		// ps.setInt(i++,
+		// configDAO.getConfigKeyValueMapping(profile.getPrimarySkillAdd()).getId());
+		// ps.setInt(i++,Integer.parseInt(profile.getPrimarySkillAdd()));
 		ps.setInt(i++, tmpUtil.getKeyByValue("primaryskill", profile.getPrimarySkillAdd()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSourceAdd());
@@ -815,7 +846,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		ps.setString(i++, profile.getContactNo());
 		ps.setString(i++, profile.getCurrentCompany());
 		ps.setString(i++, profile.getLocation());
-		//ps.setInt(i++, profile.getPrimarySkill().getId());
+		// ps.setInt(i++, profile.getPrimarySkill().getId());
 		ps.setInt(i++, tmpUtil.getKeyByValue("primaryskill", profile.getPrimarySkill()));
 		ps.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedDate()));
 		ps.setString(i++, profile.getProfileSharedBy());
@@ -863,19 +894,17 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		ps1.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getInternalEvaluationResultDate()));
 		ps1.setString(i++, profile.getProfileSharedCustomer());
 		ps1.setDate(i++, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
-		if(null != profile.getOfferProcessingStatus()) {
+		if (null != profile.getOfferProcessingStatus()) {
 			ps1.setInt(i++, profile.getOfferProcessingStatus().getId());
-		}else {
+		} else {
 			ps1.setInt(i++, 0);
 		}
 		ps1.setInt(i++, profile.getId());
 
 	}
 
-	/*
-	 * private void populateProfileForUpdateReq(PreparedStatement ps2, Profile
-	 * profile) throws SQLException { if(ps2 == null) { return; } ps2.setString(1,
-	 * profile.getReqRefNo()); }
+	/**
+	 * This method deletes the selected profiles
 	 */
 	public int deleteProfile(ArrayList<String> profIdList) {
 		StringBuffer sql2 = new StringBuffer(
@@ -898,16 +927,26 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			System.out.println(num);
 		}
 		int index = 0;
-		
+
 		int profileId = 0;
-		
+
 		Connection conn = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+		PreparedStatement ps3 = null;
+		PreparedStatement ps4 = null;
+		PreparedStatement ps5 = null;
+		PreparedStatement ps7 = null;
+		ResultSet rs = null;
+		ResultSet rs1 = null;
+
 		try {
 			sql2.append(withoutLastComma);
 			sql2.append(")");
 			conn = dataSource.getConnection();
-			PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
-			ResultSet rs = ps2.executeQuery();
+			ps2 = conn.prepareStatement(sql2.toString());
+			rs = ps2.executeQuery();
 			ArrayList<String> reqList = new ArrayList<String>();
 			if (rs != null) {
 
@@ -920,9 +959,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			for (String profId : profIdList) {
 				System.out.println(profId);
 				conn = dataSource.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql.toString());
-				PreparedStatement ps1 = conn.prepareStatement(sql1.toString());
-				if(null!=profId && !profId.isEmpty()){
+				ps = conn.prepareStatement(sql.toString());
+				ps1 = conn.prepareStatement(sql1.toString());
+				if (null != profId && !profId.isEmpty()) {
 					ps.setString(1, profId);
 					ps1.setString(1, profId);
 					int result = ps.executeUpdate();
@@ -930,133 +969,165 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 					System.out.println("result==> " + result + "result1==> " + result1);
 					++index;
 
-					ps.close();
-					ps1.close();
-					ps2.close();
-
 				}
-				if(null!=profId && !profId.isEmpty()) {
-				profileId = new Integer(profId);
-			}
-			for (String reqId : reqList) {
-				StringBuffer sql4 = new StringBuffer(
-						"select count(PROFILE_ID) as PROFILE_COUNT from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
-				PreparedStatement ps3 = conn.prepareStatement(sql4.toString());
-				ps3.setString(1, reqId);
-				ResultSet rs1 = ps3.executeQuery();
-				int profileCount = 0;
-				if (rs1 != null) {
+				if (null != profId && !profId.isEmpty()) {
+					profileId = new Integer(profId);
+				}
+				for (String reqId : reqList) {
+					StringBuffer sql4 = new StringBuffer(
+							"select count(PROFILE_ID) as PROFILE_COUNT from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
+					ps3 = conn.prepareStatement(sql4.toString());
+					ps3.setString(1, reqId);
+					rs1 = ps3.executeQuery();
+					int profileCount = 0;
+					if (rs1 != null) {
 
-					while (rs1.next()) {
-						profileCount = rs1.getInt("PROFILE_COUNT");
-					}
-					if (profileCount == 0) {
-						String sql5 = "UPDATE REQUIREMENT SET STATUS=15,SHORTLISTED_PROFILE_ID=NULL WHERE ID=?";
-						if (StringUtils.isNotBlank(sql5)) {
-							System.out.println("sql2-->" + sql5);
-							PreparedStatement ps4 = conn.prepareStatement(sql5.toString());
-							ps4.setString(1, reqRefNum);
-							ps4.executeUpdate();
-							ps4.close();
+						while (rs1.next()) {
+							profileCount = rs1.getInt("PROFILE_COUNT");
 						}
-					} else {
-						ArrayList<RequirementProfileMapping> requirement = new ArrayList<RequirementProfileMapping>();
-						sql4 = new StringBuffer(
-								"select PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
-						ps3 = conn.prepareStatement(sql4.toString());
-						ps3.setString(1, reqId);
-						rs1 = ps3.executeQuery();
-							int profileIds = 0,proposedReqStatus=15; 
-						if (rs1 != null) {
-							while (rs1.next()) {
-								RequirementProfileMapping requirement1 = new RequirementProfileMapping();
-								requirement1.setProfileId(configDAO.getProfileName(rs1.getInt("PROFILE_ID")));
-								requirement1.setInternalEvaluationResult(
-										configDAO.getConfigKeyValueMapping(rs1.getInt("INTERNAL_EVALUATION_RESULT")));
-								requirement1.setCustomerInterviewStatus(
-										configDAO.getConfigKeyValueMapping(rs1.getInt("CUSTOMER_INTERVIEW_STATUS")));
-								requirement1.setProfileSharedCustomer(rs1.getString("PROFILE_SHARED_CUSTOMER"));
-								requirement.add(requirement1);
+						if (profileCount == 0) {
+							String sql5 = "UPDATE REQUIREMENT SET STATUS=15,SHORTLISTED_PROFILE_ID=NULL WHERE ID=?";
+							if (StringUtils.isNotBlank(sql5)) {
+								System.out.println("sql2-->" + sql5);
+								ps4 = conn.prepareStatement(sql5.toString());
+								ps4.setString(1, reqRefNum);
+								ps4.executeUpdate();
+							}
+						} else {
+							ArrayList<RequirementProfileMapping> requirement = new ArrayList<RequirementProfileMapping>();
+							sql4 = new StringBuffer(
+									"select PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
+							ps3 = conn.prepareStatement(sql4.toString());
+							ps3.setString(1, reqId);
+							rs1 = ps3.executeQuery();
+							int profileIds = 0, proposedReqStatus = 15;
+							if (rs1 != null) {
+								while (rs1.next()) {
+									RequirementProfileMapping requirement1 = new RequirementProfileMapping();
+									requirement1.setProfileId(configDAO.getProfileName(rs1.getInt("PROFILE_ID")));
+									requirement1.setInternalEvaluationResult(configDAO
+											.getConfigKeyValueMapping(rs1.getInt("INTERNAL_EVALUATION_RESULT")));
+									requirement1.setCustomerInterviewStatus(configDAO
+											.getConfigKeyValueMapping(rs1.getInt("CUSTOMER_INTERVIEW_STATUS")));
+									requirement1.setProfileSharedCustomer(rs1.getString("PROFILE_SHARED_CUSTOMER"));
+									requirement.add(requirement1);
+								}
+
 							}
 
-						}
-							
-							String sql6= "SELECT SHORTLISTED_PROFILE_ID FROM REQUIREMENT WHERE ID=?";
+							String sql6 = "SELECT SHORTLISTED_PROFILE_ID FROM REQUIREMENT WHERE ID=?";
 							String shortListedProfId = null;
-							StringBuffer profId1=new StringBuffer();
-							PreparedStatement ps5 = conn.prepareStatement(sql6.toString());
+							StringBuffer profId1 = new StringBuffer();
+							ps5 = conn.prepareStatement(sql6.toString());
 							ps5.setString(1, reqId);
 							rs1 = ps5.executeQuery();
-							if (rs1 != null ) {
+							if (rs1 != null) {
 								while (rs1.next()) {
-									shortListedProfId=rs1.getString("SHORTLISTED_PROFILE_ID");
+									shortListedProfId = rs1.getString("SHORTLISTED_PROFILE_ID");
 								}
 							}
-							ps5.close();
-							if(StringUtils.isNotBlank(shortListedProfId)) {
-							String sql7= "SELECT ID FROM PROFILE WHERE ID IN( "+shortListedProfId+")";
-							PreparedStatement ps7 = conn.prepareStatement(sql7.toString());
-							rs1 = ps7.executeQuery();	
-							if (rs1 != null ) {
-								while (rs1.next()) {
-									profId1.append(rs1.getString("ID"));
-									profId1.append(',');
+							if (StringUtils.isNotBlank(shortListedProfId)) {
+								String sql7 = "SELECT ID FROM PROFILE WHERE ID IN( " + shortListedProfId + ")";
+								ps7 = conn.prepareStatement(sql7.toString());
+								rs1 = ps7.executeQuery();
+								if (rs1 != null) {
+									while (rs1.next()) {
+										profId1.append(rs1.getString("ID"));
+										profId1.append(',');
+									}
 								}
+
+								if (StringUtils.isNotBlank(profId1.toString())) {
+									String withoutLastComma1 = profId1.substring(0, profId1.length() - 1);
+
+									String sql5 = "UPDATE REQUIREMENT SET STATUS=?,SHORTLISTED_PROFILE_ID=? WHERE ID=?";
+									ps4 = conn.prepareStatement(sql5.toString());
+									int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();
+									ps4.setInt(1, getActualRequirementStatus(requirement, reqStatus, proposedReqStatus,
+											profileId));
+									ps4.setString(2, withoutLastComma1);
+									ps4.setString(3, reqId);
+									ps4.executeUpdate();
+								} else {
+									String sql5 = "UPDATE REQUIREMENT SET STATUS=?,SHORTLISTED_PROFILE_ID=? WHERE ID=?";
+									ps4 = conn.prepareStatement(sql5.toString());
+									int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();
+									int test = getActualRequirementStatus(requirement, reqStatus, proposedReqStatus,
+											profileId);
+									ps4.setInt(1, test);
+									ps4.setString(2, null);
+									ps4.setString(3, reqId);
+									ps4.executeUpdate();
+								}
+
+							} else {
+								String sql5 = "UPDATE REQUIREMENT SET STATUS=?,SHORTLISTED_PROFILE_ID=NULL WHERE ID=?";
+								ps4 = conn.prepareStatement(sql5.toString());
+								int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();
+								ps4.setInt(1, getActualRequirementStatus(requirement, reqStatus, proposedReqStatus,
+										profileId));
+								ps4.setString(2, reqId);
+								ps4.executeUpdate();
+
 							}
-							
-							if(StringUtils.isNotBlank(profId1.toString())) {
-								String withoutLastComma1 = profId1.substring( 0, profId1.length()-1);
-								
-								String sql5 ="UPDATE REQUIREMENT SET STATUS=?,SHORTLISTED_PROFILE_ID=? WHERE ID=?";
-							PreparedStatement ps4 = conn.prepareStatement(sql5.toString());
-							int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();
-							ps4.setInt(1, getActualRequirementStatus(requirement, reqStatus, proposedReqStatus, profileId));
-							ps4.setString(2, withoutLastComma1);
-							ps4.setString(3, reqId);
-							ps4.executeUpdate();	
-							ps4.close();
-						}else {
-							String sql5 ="UPDATE REQUIREMENT SET STATUS=?,SHORTLISTED_PROFILE_ID=? WHERE ID=?";
-							PreparedStatement ps4 = conn.prepareStatement(sql5.toString());
-							int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();		
-							int test = getActualRequirementStatus(requirement, reqStatus, proposedReqStatus, profileId);
-							ps4.setInt(1, test);
-							ps4.setString(2, null);
-							ps4.setString(3, reqId);
-							ps4.executeUpdate();	
-							ps4.close();
+
 						}
-						
-						
-					}else {
-						String sql5 ="UPDATE REQUIREMENT SET STATUS=?,SHORTLISTED_PROFILE_ID=NULL WHERE ID=?";
-						PreparedStatement ps4 = conn.prepareStatement(sql5.toString());
-						int reqStatus = requirementDAO.getRequirement(reqId).getStatus().getId();						
-						ps4.setInt(1, getActualRequirementStatus(requirement, reqStatus, proposedReqStatus, profileId));
-						ps4.setString(2, reqId);
-						ps4.executeUpdate();
-
 					}
-					ps3.close();
-
 				}
 			}
-			}
-		}
 		} catch (SQLException sqlException) {
-			// system.out.println("sqlException.getMessage()"+sqlException.getMessage());
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
+			if (rs1 != null) {
 				try {
-					conn.close();
+					rs1.close();
 				} catch (SQLException sqlException) {
 				}
 			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			if (ps1 != null) {
+				try {
+					ps1.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			if (ps3 != null) {
+				try {
+					ps3.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			if (ps4 != null) {
+				try {
+					ps4.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			if (ps5 != null) {
+				try {
+					ps5.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			if (ps7 != null) {
+				try {
+					ps7.close();
+				} catch (SQLException sqlException) {
+				}
+			}
+			closeDBObjects(conn, rs, ps2);
 		}
 		return index;
 	}
 
+	/**
+	 * This method checks if the profile already exists for the requirement id
+	 */
 	public int isProfilesExist(Profile profile, String userId) {
 		StringBuffer sql = new StringBuffer(
 				"SELECT ID, EMAIL_ID, CONTACT_NO, REQUIREMENT_ID FROM PROFILE WHERE EMAIL_ID=? AND REQUIREMENT_ID = ?");
@@ -1082,8 +1153,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 					if ((contactNum.equals(profile.getContactNo()) && reqRefNum.equals(profile.getReqRefNo()))
 							|| (emailId.equals(profile.getEmail()) && reqRefNum.equals(profile.getReqRefNo()))) {
 						id = rs.getInt("ID");
-						//system.out.println("Profile ID==> "+id);
-					}else{
+					} else {
 						insertProfile(profile, userId);
 					}
 
@@ -1098,8 +1168,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		return id;
 	}
 
-	
-	
+	/**
+	 * This method checks if mapping exists for the particular profile
+	 */
 	public int isProfileMapingExist(int profileId, String refNo) {
 		StringBuffer sql = new StringBuffer(
 				"SELECT * FROM REQUIREMENT_PROFILE_MAPPING WHERE REQUIREMENT_ID=? AND PROFILE_ID=?");
@@ -1118,7 +1189,6 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 
 				while (rs.next()) {
 					id = rs.getInt("ID");
-					// system.out.println("Profile ID==> "+id);
 				}
 			}
 
@@ -1130,94 +1200,71 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		return id;
 	}
 
-	/*public int insertProfile(Profile profile, String userId) {
+	/**
+	 * This method inserts profile details from excel sheet
+	 */
+	public int insertProfile(Profile profile, String userId) {
 		StringBuffer sql = new StringBuffer(
 				"INSERT INTO PROFILE ( NAME, CONTACT_NO, CURRENT_COMPANY, LOCATION, PRIMARY_SKILL, PROFILE_SHARED_DATE, \r\n")
 						.append("PROFILE_SOURCE, PROFILE_SHARED_BY, YEARS_OF_EXPERIENCE, RELEVANT_EXPERIENCE, CURRENT_CTC, EXPECTED_CTC, NOTICE_PERIOD, \r\n")
 						.append(" REMARKS, CREATED_ON,\r\n")
 						.append("CREATED_BY, EMAIL_ID, ALLOCATION_START_DATE, ALLOCATION_END_DATE, IS_ALLOCATED, REQUIREMENT_ID ) \r\n")
 						.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
 		Connection conn = null;
 		PreparedStatement ps = null;
+		PreparedStatement ps2 = null;
+		ResultSet generatedKeys = null;
+
+		int value = 0;
 		int profileId = 0;
+		int newProfileId = 0;
+		int result = 0;
+		int status = 0;
+		int reqStatus = 0;
 		try {
 			conn = dataSource.getConnection();
-			ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-			populateProfileForInsertExcel(ps, profile, userId);
-			ps.executeUpdate();
 
-			ResultSet generatedKeys = ps.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				profileId = generatedKeys.getInt(1);
-			}
-
-		} catch (SQLException sqlException) {
-			System.out.println("SQLException occurred " + sqlException.getMessage());
-
-		} finally {
-			closeDBObjects(conn, null, ps);
-		}
-		return profileId;
-	}*/
-
-	public int insertProfile(Profile profile, String userId) {
-		StringBuffer sql = new StringBuffer(
-				"INSERT INTO PROFILE ( NAME, CONTACT_NO, CURRENT_COMPANY, LOCATION, PRIMARY_SKILL, PROFILE_SHARED_DATE, \r\n")
-		.append("PROFILE_SOURCE, PROFILE_SHARED_BY, YEARS_OF_EXPERIENCE, RELEVANT_EXPERIENCE, CURRENT_CTC, EXPECTED_CTC, NOTICE_PERIOD, \r\n")
-		.append(" REMARKS, CREATED_ON,\r\n")
-		.append("CREATED_BY, EMAIL_ID, ALLOCATION_START_DATE, ALLOCATION_END_DATE, IS_ALLOCATED, REQUIREMENT_ID ) \r\n")
-		.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		Connection conn = null;
-		int value;
-		int profileId;
-		try {
-			conn = dataSource.getConnection();
-			
-			int newProfileId = 0;
-			int result = 0;
-			
-			profileId = isProfilesExist(profile,userId);
-			int initialEvalRes,customerInterviewStatus;
-			if(StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd()) && !profile.getInitialEvaluationResultAdd().equals("0")){
+			profileId = isProfilesExist(profile, userId);
+			int initialEvalRes, customerInterviewStatus;
+			if (StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd())
+					&& !profile.getInitialEvaluationResultAdd().equals("0")) {
 				initialEvalRes = new Integer(profile.getInitialEvaluationResultAdd());
-				}else{
+			} else {
 				initialEvalRes = configDAO.getConfigKeyValueMapping("In Progress").getId();
 			}
-			
-			if((profile.getCustomerInterviewStatusAdd()!=null) && !(profile.getCustomerInterviewStatusAdd().isEmpty())){
-					customerInterviewStatus = new Integer(profile.getCustomerInterviewStatusAdd());
-				}else{
-					customerInterviewStatus=0;
+
+			if ((profile.getCustomerInterviewStatusAdd() != null)
+					&& !(profile.getCustomerInterviewStatusAdd().isEmpty())) {
+				customerInterviewStatus = new Integer(profile.getCustomerInterviewStatusAdd());
+			} else {
+				customerInterviewStatus = 0;
 			}
-			if(profileId == 0){
-			
-			
-			PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-			populateProfileForInsertExcel(ps, profile, userId);
-			 value = ps.executeUpdate();
-			
-				ResultSet generatedKeys = ps.getGeneratedKeys();
+			if (profileId == 0) {
+
+				ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+				populateProfileForInsertExcel(ps, profile, userId);
+				value = ps.executeUpdate();
+
+				generatedKeys = ps.getGeneratedKeys();
 				if (generatedKeys.next()) {
-					 profileId=generatedKeys.getInt(1);
-					 //system.out.println("profileId==> "+profileId);
+					profileId = generatedKeys.getInt(1);
 				} else {
-					throw new SQLException(
-							"Creating user failed, no ID obtained.");
+					throw new SQLException("Creating user failed, no ID obtained.");
 				}
-			
-			 //system.out.println("valueee...."+value);
-			ps.close();
-			profile.setId(profileId);
-			
-				int status= ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,"No",customerInterviewStatus, 0);
-				
-				int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
-				String sql2=null;
-				if(status> reqStatus){
-					sql2="UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
-					if(StringUtils.isNotBlank(sql2)) {
-						System.out.println("sql2-->"+sql2);
-						PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
+
+				profile.setId(profileId);
+
+				status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes, "No",
+						customerInterviewStatus, 0);
+
+				reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
+				String sql2 = null;
+				if (status > reqStatus) {
+					sql2 = "UPDATE REQUIREMENT SET STATUS=? WHERE ID=?";
+					if (StringUtils.isNotBlank(sql2)) {
+						System.out.println("sql2-->" + sql2);
+						ps2 = conn.prepareStatement(sql2.toString());
 						ps2.setInt(1, status);
 						ps2.setString(2, profile.getReqRefNo());
 						ps2.executeUpdate();
@@ -1225,40 +1272,37 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				}
 			} else {
 				profile.setId(profileId);
-				
-/*				if (profile.getId() > 0) {
-					result = insertProfileMapping(profile, "", strUserId);
-				}
-*/								
-				int status= ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,profile.getProfileSharedCustomer(),customerInterviewStatus, 0);
-				
-				int reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
-				String sql2=null;
-				if(status> reqStatus){
-					sql2="UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
-					if(StringUtils.isNotBlank(sql2)) {
-						System.out.println("sql2-->"+sql2);
-						PreparedStatement ps2 = conn.prepareStatement(sql2.toString());
+
+				status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
+						profile.getProfileSharedCustomer(), customerInterviewStatus, 0);
+
+				reqStatus = requirementDAO.getRequirement(profile.getReqRefNo()).getStatus().getId();
+				String sql2 = null;
+				if (status > reqStatus) {
+					sql2 = "UPDATE REQUIREMENT SET STATUS=15 WHERE ID=?";
+					if (StringUtils.isNotBlank(sql2)) {
+						System.out.println("sql2-->" + sql2);
+						ps2 = conn.prepareStatement(sql2.toString());
 						ps2.setString(1, profile.getReqRefNo());
 						ps2.executeUpdate();
 					}
 				}
 			}
-			
-			return profileId;
+
 		} catch (SQLException sqlException) {
 			sqlException.getMessage();
-			return 0;
 		} finally {
-			if (conn != null) {
+			if (ps2 != null) {
 				try {
-					conn.close();
+					ps2.close();
 				} catch (SQLException sqlException) {
 				}
 			}
+			closeDBObjects(conn, generatedKeys, ps);
 		}
+		return profileId;
 	}
-	
+
 	private void populateProfileForInsertExcel(PreparedStatement ps, Profile profile, String userId)
 			throws SQLException {
 
@@ -1360,40 +1404,27 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		} else {
 			ps.setInt(20, 0);
 		}
-		/*
-		 * int accNewMappingId =
-		 * adminDAO.getRequirementAdminAccountMapping(profile.getAccount1(), 6, userId,
-		 * 8, 9); //int accId =
-		 * configDAO.getAdminInfoKeyValueMapping(profile.getAccount1()).getId(); / int
-		 * accountId = configDAO.getAccountMappingId(accId).getAccountId(); int
-		 * accountId = tmpDAOUtil.getAccount(accID); if(profile.getAccount1()!=null){
-		 * ps.setInt(26, accountId); }else{ ps.setInt(26,
-		 * configDAO.getConfigKeyValueMapping("0").getId()); }
-		 * 
-		 * adminDAO.getRequirementAdminProjectMapping(profile.getProject1(), 7, userId,
-		 * profile.getAccount1(), accNewMappingId, accountId); int projectId =
-		 * configDAO.getAdminInfoKeyValueMapping(profile.getProject1()).getId();
-		 * if(profile.getProject1()!=null){ ps.setInt(27,
-		 * configDAO.getProjectMappingId(accountId,projectId).getId()); }else{
-		 * ps.setInt(27, configDAO.getConfigKeyValueMapping("0").getId()); }
-		 */
+
 		ps.setString(21, profile.getReqRefNo());
 	}
 
+	/**
+	 * This method inserts into the requirement_pofile_mapping the common details of
+	 * both profile and requirement
+	 */
 	public int insertProfileMapping(Profile profile, String refNo, String userId) {
 		StringBuffer sql = new StringBuffer(
 				"INSERT INTO REQUIREMENT_PROFILE_MAPPING(REQUIREMENT_ID,PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,"
 						+ "REMARKS,CREATED_ON,CREATED_BY, INTERNAL_EVALUATION_RESULT_DATE,PROFILE_SHARED_CUSTOMER,PROFILE_SHARED_CUSTOMER_DATE)VALUES(?,?,?,?,?,?,?,?,?,?)");
 		Connection conn = null;
 		PreparedStatement ps = null;
+
 		int value = 0;
 		try {
 			conn = dataSource.getConnection();
 			ps = conn.prepareStatement(sql.toString());
 			populateProfileMappingForInsertExcel(ps, profile, refNo, userId);
 			value = ps.executeUpdate();
-			// system.out.println("INSERT INTO REQUIREMENT_PROFILE_MAPPING
-			// valueee...."+value);
 
 		} catch (SQLException sqlException) {
 			System.out.println("SQLException Occurred " + sqlException.getMessage());
@@ -1648,7 +1679,6 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				try {
 					fis.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -1658,39 +1688,42 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 
 		return result;
 	}
-	
-	public String isReqExist(int profile){
-		StringBuffer sql = new StringBuffer("Select rp.REQUIREMENT_ID FROM tmp.requirement_profile_mapping rp\r\n" + 
-				"INNER JOIN profile p ON rp.PROFILE_ID = p.ID where p.ID=?");
+
+	/**
+	 * This method checks if the requirement id already exists for the profile id
+	 * 
+	 * @param profile
+	 * @return
+	 */
+	public String isReqExist(int profile) {
+		StringBuffer sql = new StringBuffer("Select rp.REQUIREMENT_ID FROM tmp.requirement_profile_mapping rp\r\n"
+				+ "INNER JOIN profile p ON rp.PROFILE_ID = p.ID where p.ID=?");
 		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String reqId = null;
 		int id = 0;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
 			ps.setInt(1, profile);
-			ResultSet rs = ps.executeQuery();
-			String reqId=null;
-			if (rs != null ) {
-				
+			rs = ps.executeQuery();
+
+			if (rs != null) {
+
 				while (rs.next()) {
-					
+
 					reqId = rs.getString("REQUIREMENT_ID");
-					
+
 				}
-			} 
-			rs.close();
-			ps.close();
-	     return reqId;
+			}
+
 		} catch (SQLException sqlException) {
 			throw new RuntimeException(sqlException);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException sqlException) {
-				}
-			}
+			closeDBObjects(conn, rs, ps);
 		}
+		return reqId;
 	}
 
 }
