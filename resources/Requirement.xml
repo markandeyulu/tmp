@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+<record>Student Details</record>
+<student>
+<name>Anushya</name>
+<id>001</id>
+<DOB>31.08.1995</DOB>
+</student>
+
+
+<student>
+<name>Sherine</name>
+<id>002</id>
+<DOB>01.03.1996</DOB>
+</student>
+
+<student>
+<name>Deepthi</name>
+<id>003</id>
+<DOB>05.08.1996</DOB> 
+</student>
+</students>
