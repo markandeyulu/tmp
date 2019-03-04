@@ -9,6 +9,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta charset="utf-8" />
 		<script src="<c:url value="/js/jquery112.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/js/cryptoJS.js" />" type="text/javascript"></script>
 		<link href="<c:url value="/css/sb-admin.css" />" rel="stylesheet"/>
 		<link href="<c:url value="/css/font-awesome.min.css" />" rel="stylesheet"/>
 		<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet"/>
@@ -27,6 +28,14 @@
 						$("#errorMsg").text("You have successfully logged off from application !");
 					}
 				}
+				
+				$('#submit').click(function (){
+					var text = $("#password").val();
+					var secret = "TMP SECRET";
+					var encrypted = CryptoJS.AES.encrypt(text, secret);
+					encrypted = encrypted.toString();
+					$("#password").val(encrypted);
+				});
 			});
 		</script>
 	
@@ -52,7 +61,7 @@
 							<spring:label path="password">Password</spring:label> 
 							<spring:input class="form-control" errorMessage="Password is required"  required="required" path="password" id="password" type="password" placeholder="Password"/>
 						</div>
-						<td><Button name="submit" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="submit">Submit</Button></td>
+						<td><Button id="submit" name="submit" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="submit">Submit</Button></td>
 					</spring:form>
 				</div>
 			</div>
