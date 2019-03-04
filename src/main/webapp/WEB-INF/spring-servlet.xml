@@ -42,7 +42,7 @@
 		<property name="url"
 			value="jdbc:mysql://localhost:3306/tmp?zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" />
 		<property name="username" value="root" />
-		<property name="password" value="Anushya@123" />
+		<property name="password" value="12345" />
 	</bean>
 
 	<bean id="loginDAO" class="com.tmp.dao.impl.LoginDAOImpl">
