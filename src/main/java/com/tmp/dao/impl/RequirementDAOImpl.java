@@ -481,6 +481,8 @@ public class RequirementDAOImpl extends BaseDAO implements RequirementDAO {
 		String reqRandomNo =null;
 		String shortNames = "_"+getShortName(accountName)+"_"+projectName+"_"+getShortName(userName)+"_";
 		try {
+			System.out.println("projectName :" +projectName);
+			
 			
 			if(dbDate == null){
 				reqRandomNo = currDate+shortNames+defaultIncrementor;

@@ -796,7 +796,7 @@ public class TMPUtil {
 			
 			if (rs != null) {
 				if (rs.next()) {
-					projectId = rs.getInt("PROJECT_ID");			
+					projectId = rs.getInt("ID");			
 					}
 			}
 			

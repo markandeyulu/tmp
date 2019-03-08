@@ -315,6 +315,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				if (profile.getId() > 0) {
 					result = insertProfileMapping(profile, "", strUserId);
 				}
+				
+				System.out.println("initialEvalRes "+ initialEvalRes + " profileSharedCustomer "+ profileSharedCustomer
+						+" customerInterviewStatus "+ customerInterviewStatus);
 
 				status = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes, profileSharedCustomer,
 						customerInterviewStatus, 0);
@@ -326,6 +329,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 					if (StringUtils.isNotBlank(sql2)) {
 						System.out.println("sql2-->" + sql2);
 						ps2 = conn.prepareStatement(sql2.toString());
+						
+						System.out.println("Status Id "+status +" id "+profile.getReqRefNo());
+						
 						ps2.setInt(1, status);
 						ps2.setString(2, profile.getReqRefNo());
 						ps2.executeUpdate();
@@ -401,6 +407,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 					ps = conn.prepareStatement(sql2.toString());
 					ps.setInt(1, proposedReqStatus);
 					ps.setString(2, reqId);
+					
+					System.out.println("Status Id "+proposedReqStatus +" id "+reqId);
+					
 					ps.executeUpdate();
 
 				}
@@ -421,19 +430,36 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 	private int getActualRequirementStatus(ArrayList<RequirementProfileMapping> profiles, int reqStatus,
 			int proposedReqStatus, int profileId) {
 		int propReqStatus = 0;
+		Integer sortStatus = 0;
+		Set<Integer> reqStatusList = new TreeSet<Integer>();
 
 		System.out.println("profile size " + profiles.size());
-		if (reqStatus <= proposedReqStatus) {
+		/*
+		 * If existing status value is lesser then the proposed status
+		 * if profile size is 1 and actual status is in LeadGeneration/ProfileSourcing
+		 * if profile size is 1 and updated that profile
+		 *
+		 */
+		
+		/*if (reqStatus <= proposedReqStatus) {
 			return proposedReqStatus;
 		} else if (profiles.size() == 1 && reqStatus < 16) {
 			return proposedReqStatus;
-		} else if (profiles.size() == 1) {
+		} else if (profiles.size() == 1 && 
+				(((RequirementProfileMapping)profiles.get(0)).getProfileId().getId() == profileId)) {
 			return proposedReqStatus;
+			
+		}*/
+		
+		if (profiles.size() == 1) {
+			return proposedReqStatus;
+			
 		}
+		
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
-		Set<Integer> reqStatusList = new TreeSet<Integer>();
+		
 
-		Integer sortStatus = 0;
+		
 		for (RequirementProfileMapping requirementProfileMapping : profiles) {
 			if (requirementProfileMapping.getProfileId().getId() != profileId) {
 				int initialEvalRes = 0, customerInterviewStatus = 0, offerStatus = 0;
@@ -589,6 +615,8 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 
 			ps2.setInt(1, actualReqStatus);
 			ps2.setString(2, profile.getReqRefNo());
+			
+			System.out.println("Status Id "+actualReqStatus +" id "+profile.getReqRefNo());
 			ps2.executeUpdate();
 
 			if (actualReqStatus == 18) {// append this profile id to SHORTLISTED_PROFILE_ID column value in
@@ -913,7 +941,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		String reqRefNum = null;
 		// ArrayList<String> profIdList = profileId;
 		for (String profId : profIdList) {
-			System.out.println(profId);
+			System.out.println("profI"+profId);
 			if (profId != "") {
 				sb.append(profId + ",");
 			}
@@ -924,7 +952,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		StringBuffer sql1 = new StringBuffer("DELETE FROM PROFILE WHERE ID=?");
 		// ArrayList<String> profIdList = profileId;
 		for (String num : profIdList) {
-			System.out.println(num);
+			System.out.println("num1"+num);
 		}
 		int index = 0;
 
@@ -1076,6 +1104,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				}
 			}
 		} catch (SQLException sqlException) {
+			sqlException.printStackTrace();
 			throw new RuntimeException(sqlException);
 		} finally {
 			if (rs1 != null) {
@@ -1088,36 +1117,42 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				try {
 					ps.close();
 				} catch (SQLException sqlException) {
+					sqlException.printStackTrace();
 				}
 			}
 			if (ps1 != null) {
 				try {
 					ps1.close();
 				} catch (SQLException sqlException) {
+					sqlException.printStackTrace();
 				}
 			}
 			if (ps3 != null) {
 				try {
 					ps3.close();
 				} catch (SQLException sqlException) {
+					sqlException.printStackTrace();
 				}
 			}
 			if (ps4 != null) {
 				try {
 					ps4.close();
 				} catch (SQLException sqlException) {
+					sqlException.printStackTrace();
 				}
 			}
 			if (ps5 != null) {
 				try {
 					ps5.close();
 				} catch (SQLException sqlException) {
+					sqlException.printStackTrace();
 				}
 			}
 			if (ps7 != null) {
 				try {
 					ps7.close();
 				} catch (SQLException sqlException) {
+					sqlException.printStackTrace();
 				}
 			}
 			closeDBObjects(conn, rs, ps2);

@@ -163,6 +163,7 @@ table.dataTable thead th:first-child {
 		<td>{{customerInterviewStatus.configValue.value}}</td>
 		<td>{{remarks}}</td>
 		<td>{{profileSharedDatestr}}</td>
+		<td>{{offerProcessingStatus.configValue.value}}</td>
 </tr>
 {{/each}}
 
@@ -1044,6 +1045,7 @@ $('#logout').click(function () {
 					<th>Customer interview status</th>
 					<th>Remarks</th>
 					<th>Profile shared date</th>
+					<th>Offer Processing Status</th>
       </tr>
     </thead>
 <tbody align="center" id="profileView_content">
@@ -1394,13 +1396,13 @@ $('#logout').click(function () {
 											 oninvalid="this.setCustomValidity('Offer Processing Status must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')">
 											<option value="">Select Offer Processing Status</option>
-											<option value="89">A</option>
-											<option value="90">B</option>
-											<option value="91">C</option>
-											<option value="92">D</option>
-											<option value="93">E</option>
-											<option value="94">F</option>
-											<option value="95">G</option>
+											<option value="279">A</option>
+											<option value="280">B</option>
+											<option value="281">C</option>
+											<option value="282">D</option>
+											<option value="283">E</option>
+											<option value="284">F</option>
+											<option value="285">G</option>
 						            </spring:select></td>
 										
 									</tr> 

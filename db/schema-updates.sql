@@ -891,3 +891,7 @@ CREATE TABLE dbo.Resume_Upload(
 	UPDATED_ON [date] ,
 	UPDATED_BY INT
 	);
+	
+	
+	ALTER TABLE `tmp`.`requirement_profile_mapping` 
+ADD COLUMN `INTERNAL_EVALUATION_RESULT_DATE` VARCHAR(45) NOT NULL AFTER `UPDATED_BY`;
