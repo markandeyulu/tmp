@@ -441,7 +441,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		 *
 		 */
 		
-		/*if (reqStatus <= proposedReqStatus) {
+		if (reqStatus <= proposedReqStatus) {
 			return proposedReqStatus;
 		} else if (profiles.size() == 1 && reqStatus < 16) {
 			return proposedReqStatus;
@@ -449,12 +449,12 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				(((RequirementProfileMapping)profiles.get(0)).getProfileId().getId() == profileId)) {
 			return proposedReqStatus;
 			
-		}*/
+		}
 		
-		if (profiles.size() == 1) {
+	/*	else if (profiles.size() == 1) {
 			return proposedReqStatus;
 			
-		}
+		}*/
 		
 		ArrayList<Integer> sortReqStatus = new ArrayList<Integer>();
 		
@@ -489,7 +489,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 				}
 
 				System.out.println("initialEvalRes" + initialEvalRes + " profileSharedCusomer " + profileSharedCusomer
-						+ ",customerInterviewStatus" + customerInterviewStatus);
+						+ ",customerInterviewStatus" + customerInterviewStatus + " ,Offer Processing Status "+offerStatus);
 				propReqStatus = ProfileRequirementStatusMappingUtil.findDashboardStatus(initialEvalRes,
 						profileSharedCusomer, customerInterviewStatus, offerStatus);
 				System.out.println("propReqStatus " + propReqStatus);
@@ -1024,7 +1024,7 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 						} else {
 							ArrayList<RequirementProfileMapping> requirement = new ArrayList<RequirementProfileMapping>();
 							sql4 = new StringBuffer(
-									"select PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
+									"select PROFILE_ID,INTERNAL_EVALUATION_RESULT,CUSTOMER_INTERVIEW_STATUS,PROFILE_SHARED_CUSTOMER,OFFER_PROCESSING_STATUS from tmp.requirement_profile_mapping where REQUIREMENT_ID=?");
 							ps3 = conn.prepareStatement(sql4.toString());
 							ps3.setString(1, reqId);
 							rs1 = ps3.executeQuery();
@@ -1038,6 +1038,9 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 									requirement1.setCustomerInterviewStatus(configDAO
 											.getConfigKeyValueMapping(rs1.getInt("CUSTOMER_INTERVIEW_STATUS")));
 									requirement1.setProfileSharedCustomer(rs1.getString("PROFILE_SHARED_CUSTOMER"));
+									// added offer processing status as it is required in getActualRequirementStatus method
+									requirement1.setOfferStatus(configDAO
+											.getConfigKeyValueMapping(rs1.getInt("OFFER_PROCESSING_STATUS")));
 									requirement.add(requirement1);
 								}
 
