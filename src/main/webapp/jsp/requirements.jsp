@@ -431,6 +431,8 @@ $('#logout').click(function () {
 						style="margin-right: 0px; background-color: white; color: black; height: 45px;">Requirements</a></li>
 					<li><a id="black" href="profiles.html"
 						style="margin-right: 0px; color: white; height: 43px;">Profiles</a></li>
+					<li><a id="black" href="offerStatus.html"
+						style="margin-right: 0px; color: white; height: 43px;">OfferStatus</a></li>
 					<li><a id="black" href="reports.html"
 						style="margin-right: 0px; color: white; height: 43px;">Reports</a></li>
 						<li><a id="black" href="charts.html"
@@ -461,6 +463,8 @@ $('#logout').click(function () {
 								class="ddata" href="#">Requirements</a></li>
 							<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
 								class="ddata" href="profiles.html">Profiles</a></li>
+								<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
+								class="ddata" href="offerStatus.html">OfferStatus</a></li>
 							<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
 								class="ddata" href="reports.html">Reports</a></li>
 							<li data-toggle="collapse" data-target="#navbar-collapse.in"><a

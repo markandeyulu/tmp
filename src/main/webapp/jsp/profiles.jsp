@@ -86,7 +86,7 @@ var profiledata=${profilesJson};
 var profileSourceJson=${profileSourceJson};
 var initialEvaluationResultJson=${initialEvaluationResultJson};
 var customerInterviewStatusJson=${customerInterviewStatusJson};
-/* var offerProcessingStatus = ${offerProcessingstatusJson};  */
+var offerProcessingStatus = ${offerProcessingstatusJson};  
 var primarySkillJson=${primarySkillJson};
 var projectValues = ${projectValuesJson};
 var criticalJson=${criticalJson};
@@ -566,6 +566,7 @@ $('#logout').click(function () {
 						<li><a id="black" href="dashboard.html" style="margin-right:0px;color:white;height:43px;">Dashboard</a></li>
 						<li><a id="black" href="requirements.html" style="margin-right:0px;color:white;height:43px;">Requirements</a></li>
 						<li class="active"><a href="#" style="margin-right:0px;background-color:white;color:black;height:45px;">Profiles</a></li>
+						<li><a id="black" href="offerStatus.html" style="margin-right:0px;color:white;height:43px;">OfferStatus</a></li>
 						<li><a id="black" href="reports.html" style="margin-right:0px;color:white;height:43px;">Reports</a></li>
 						<li><a id="black" href="charts.html" style="margin-right: 0px; color: white; height: 43px;">Charts</a></li>
 					</ul>
@@ -589,6 +590,7 @@ $('#logout').click(function () {
 <li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="dashboard.html">Dashboard</a></li>
 <li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="requirements.html">Requirements</a></li>
 <li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="#">Profiles</a></li>
+<li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="offerStatus.html">OfferStatus</a></li>
 <li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="reports.html">Reports</a></li>
 <li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="help.html">Help</a></li>
 <li data-toggle="collapse" data-target="#navbar-collapse.in"><a class="ddata" href="contactus.html">Contact Us</a></li>
@@ -1395,14 +1397,6 @@ $('#logout').click(function () {
 											 <spring:select id="offerProcessingStatusProfile" multiple="false" path="offerProcessingStatus.id"   class="form-control dropdown-toggle text-left " 
 											 oninvalid="this.setCustomValidity('Offer Processing Status must not be empty')" 
 											required="required" oninput="this.setCustomValidity('')">
-											<option value="">Select Offer Processing Status</option>
-											<option value="279">A</option>
-											<option value="280">B</option>
-											<option value="281">C</option>
-											<option value="282">D</option>
-											<option value="283">E</option>
-											<option value="284">F</option>
-											<option value="285">G</option>
 						            </spring:select></td>
 										
 									</tr> 

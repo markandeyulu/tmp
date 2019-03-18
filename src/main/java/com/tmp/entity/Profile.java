@@ -21,6 +21,7 @@ public class Profile implements Serializable {
 	private String primarySkill;
 	@DateTimeFormat(pattern="yyyy-MM-dd") private Date profileSharedDate;
 	private String profileSharedDatestr;
+	private String offerProcessingStatusStr;
 	
 	public String getProfileSharedDatestr() {
 		return profileSharedDatestr;
@@ -397,6 +398,14 @@ public class Profile implements Serializable {
 
 	public void setOfferProcessingStatus(ConfigKeyValueMapping offerProcessingStatus) {
 		this.offerProcessingStatus = offerProcessingStatus;
+	}
+
+	public String getOfferProcessingStatusStr() {
+		return offerProcessingStatusStr;
+	}
+
+	public void setOfferProcessingStatusStr(String offerProcessingStatusStr) {
+		this.offerProcessingStatusStr = offerProcessingStatusStr;
 	}
 	
 	

@@ -189,7 +189,22 @@ $.each(oppurtunityStatusData, function(index) {
 	 var g_oppurtunityStatusItem = g_oppurtunityStatusArray[i];
 	 $("#oppurtunityNew").append('<option id="' + g_oppurtunityStatusItem[1] + '" value="' + g_oppurtunityStatusItem[1] + '">' + g_oppurtunityStatusItem[0] + '</option>');
  });                	  
-	 	    	    		    	    	                       	  
+	 	
+	 
+	 var offerProcessingStatusData=offerProcessingStatus.locationJson;
+	 var g_offerProcessingStatusArray = [];
+	 $.each(offerProcessingStatusData, function(index) {
+	 	 var g_item = [];
+	 	 	 g_item.push(offerProcessingStatusData[index].configValue.value);
+	 	 	 g_item.push(offerProcessingStatusData[index].id);
+	 	 	g_offerProcessingStatusArray.push(g_item);
+	 	 	    	    		    	    	                       	                   	             		
+	 	 });	 	    	    		    	    	                       	                   	             	
+	  $("#offerProcessingStatusProfile").append('<option value="">Select Offer Processing Status</option>');                	             	
+	 	 $.each(g_offerProcessingStatusArray, function(i) {
+	 	 var g_offerProcessingStatusItem = g_offerProcessingStatusArray[i];
+	 	 $("#offerProcessingStatusProfile").append('<option id="' + g_offerProcessingStatusItem[1] + '" value="' + g_offerProcessingStatusItem[1] + '">' + g_offerProcessingStatusItem[0] + '</option>');
+	  });  
 	 	    	    		    	  
 });
 

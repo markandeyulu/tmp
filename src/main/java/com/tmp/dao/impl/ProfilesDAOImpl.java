@@ -38,6 +38,8 @@ import com.tmp.dao.AdminDAO;
 import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.ProfilesDAO;
 import com.tmp.dao.RequirementDAO;
+import com.tmp.entity.ConfigKeyValueMapping;
+import com.tmp.entity.Configkey;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
 import com.tmp.entity.RequirementProfileMapping;
@@ -103,10 +105,10 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		return dataSource;
 	}
 
-	/**
-	 * This method provides all the available profiles
-	 */
+	
 	public Profiles getProfiles() {
+		
+		populateOfferStatusList();
 
 		StringBuffer sql = new StringBuffer(
 				"SELECT p.*, m.INTERNAL_EVALUATION_RESULT_DATE, m.INTERNAL_EVALUATION_RESULT,m.PROFILE_SHARED_CUSTOMER,\r\n"
@@ -139,6 +141,45 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 			closeDBObjects(conn, rs, ps);
 		}
 		return profiles;
+	}
+	
+public List<Profile> getOfferProcessingProfiles() {
+		
+		populateOfferStatusList();
+	
+		StringBuffer sql = new StringBuffer( "SELECT P.NAME,RPM.PROFILE_ID,RPM.REQUIREMENT_ID,RPM.INTERNAL_EVALUATION_RESULT,RPM.PROFILE_SHARED_CUSTOMER,\r\n" +
+		        "RPM.CUSTOMER_INTERVIEW_STATUS,RPM.OFFER_PROCESSING_STATUS FROM REQUIREMENT_PROFILE_MAPPING RPM \r\n" +
+		         "INNER JOIN PROFILE P ON RPM.PROFILE_ID = P.ID  where OFFER_PROCESSING_STATUS > 0");
+	
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Profile> profilesList = null;
+		Profiles profiles = null;
+
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sql.toString());
+
+			rs = ps.executeQuery();
+			if (rs != null) {
+				profiles = new Profiles();
+				profilesList = new ArrayList<Profile>();
+				while (rs.next()) {
+					profilesList.add(populateOfferProcessingProfile(rs));
+				}
+				//profiles.setProfiles(profilesList);
+			}
+
+		} catch (SQLException sqlException) {
+			throw new RuntimeException(sqlException);
+		} finally {
+			closeDBObjects(conn, rs, ps);
+		}
+		
+	//	System.out.println("Offer Status profile size "+profiles.getProfiles().size());
+		return profilesList;
 	}
 
 	/**
@@ -751,6 +792,29 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
 		String DateToStr = simpleDateFormat.format(sqldate);
 		profile.setProfileSharedDatestr(DateToStr);
+		return profile;
+	}
+	
+	private Profile populateOfferProcessingProfile(ResultSet rs) throws SQLException {
+
+		Profile profile = new Profile();
+		profile.setId(rs.getInt("PROFILE_ID"));
+		profile.setReqRefNo(rs.getString("REQUIREMENT_ID"));
+		profile.setName(rs.getString("NAME"));
+		int iniEvalResult = rs.getInt("INTERNAL_EVALUATION_RESULT");
+		if (iniEvalResult > 0) {
+			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping(iniEvalResult));
+		} else {
+			profile.setInitialEvaluationResult(configDAO.getConfigKeyValueMapping("In Progress"));
+		}
+		profile.setProfileSharedCustomer(rs.getString("PROFILE_SHARED_CUSTOMER"));
+		int customerInterStatus = rs.getInt("CUSTOMER_INTERVIEW_STATUS");
+		if (customerInterStatus > 0) {
+			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping(customerInterStatus));
+		} else {
+			profile.setCustomerInterviewStatus(configDAO.getConfigKeyValueMapping("Yet to Process"));
+		}
+		profile.setOfferProcessingStatusStr(getStatusById(rs.getInt("OFFER_PROCESSING_STATUS")));
 		return profile;
 	}
 
@@ -1763,5 +1827,89 @@ public class ProfilesDAOImpl extends BaseDAO implements ProfilesDAO {
 		}
 		return reqId;
 	}
+	
+	/**
+	 * This method provides all the available profiles
+	 */
+	
+	
+	private static List<ConfigKeyValueMapping> configValueList = new ArrayList<ConfigKeyValueMapping>();
+	
+	
+	/**
+	 * This method used to get key and values for offer processing status
+	 */
+	public void populateOfferStatusList() {
+		
+		if(configValueList.size() == 0) {
+			
+			int offerId = 0;
+			Connection conn = null;
+			PreparedStatement ps1 = null;
+			ResultSet rs1 = null;
+			
+			try {
+				conn = dataSource.getConnection();
+				
+					StringBuffer sql1 = new StringBuffer("SELECT `ID`,`KEY` from config_key where `KEY` = 'Offer Processing Status'");
+					ps1 = conn.prepareStatement(sql1.toString());
+					rs1 = ps1.executeQuery();
+					
+					while(rs1.next()) {
+						
+							offerId = rs1.getInt("ID");
+						
+					}
+					
+					//System.out.println("Offer Id "+offerId);
+					
+					configValueList = configDAO.getConfigKeyValues(offerId);
+					
+					//System.out.println("size of configValueList "+configValueList.size());
+					
+					/*for(ConfigKeyValueMapping obj: configValueList) {
+						System.out.println("ID **"+obj.getId() +" * Value "+obj.getConfigValue().getValue());
+					}*/
+			}catch (SQLException sqlException) {
+				throw new RuntimeException(sqlException);
+			} finally {
+				closeDBObjects(conn, rs1, ps1);
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * This method used to get offer processing id for given offer processing status like A,B,C,D,E,F and G
+	 * @param status Offer processing status
+	 * @return id of offer processing status
+	 */
+	
+public String getStatusById(int id) {
+		
+		String status = "";
+		
+		for(ConfigKeyValueMapping obj: configValueList) {
+			
+			if(obj.getId() == id)
+				return obj.getConfigValue().getValue();
+		}
+		return status;
+	}
+	
+	public int getIdByStatus(String status) {
+		
+		int statusId = 0;
+		
+		for(ConfigKeyValueMapping obj: configValueList) {
+			
+			if(obj.getConfigValue() != null && 
+					obj.getConfigValue().getValue().equalsIgnoreCase(status))
+				return obj.getId();
+		}
+		return statusId;
+	}
+	
 
 }

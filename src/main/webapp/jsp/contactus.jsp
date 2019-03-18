@@ -94,8 +94,12 @@ $('#logout').click(function () {
 					style="margin-right: 0px; color: white; height: 43px;">Requirements</a></li>
 				<li><a id="black" href="profiles.html"
 					style="margin-right: 0px; color: black; color: white; height: 43px;">Profiles</a></li>
+					<li><a id="black" href="offerStatus.html"
+					style="margin-right: 0px; color: black; color: white; height: 43px;">OfferStatus</a></li>
 				<li><a id="black" href="reports.html"
 					style="margin-right: 0px; color: black; color: white; height: 43px;">Reports</a></li>
+					<li><a id="black" href="charts.html" 
+					style="margin-right: 0px; color: white; height: 43px;">Charts</a></li>
 			</ul>
 		</div>
 	</div>

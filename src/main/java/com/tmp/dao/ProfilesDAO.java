@@ -36,4 +36,8 @@ public interface ProfilesDAO {
 	public int getRefId(String refId);
 
 	public void updateRequirementStatus(int id, String refNo, int i, String string, int j, String userId);
+	
+	public int getIdByStatus(String status);
+	
+	public List<Profile> getOfferProcessingProfiles();
 }

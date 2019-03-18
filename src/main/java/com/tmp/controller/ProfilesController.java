@@ -22,6 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -35,10 +36,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.mysql.jdbc.Blob;
 import com.tmp.dao.ConfigDAO;
+import com.tmp.dao.ProfilesDAO;
 import com.tmp.dao.ResumeUploadDAO;
 import com.tmp.entity.Associate;
+import com.tmp.entity.Charts;
 import com.tmp.entity.Profile;
 import com.tmp.entity.ProfileResume;
+import com.tmp.entity.Profiles;
 import com.tmp.service.ProfileService;
 import com.tmp.util.CandidateExcelRead;
 import com.tmp.util.TMPUtil;
@@ -65,6 +69,10 @@ public class ProfilesController {
 	@Autowired(required = true)
 	@Qualifier("resumeUploadDAO")
 	ResumeUploadDAO resumeUploadDAO;
+	
+	@Autowired(required = true)
+	@Qualifier("profilesDAO")
+	ProfilesDAO profilesDAO;
 	
 	public ResumeUploadDAO getResumeUploadDAO() {
 		return resumeUploadDAO;
@@ -103,12 +111,21 @@ public class ProfilesController {
 	public void setTmpUtil(TMPUtil tmpUtil) {
 		this.tmpUtil = tmpUtil;
 	}
-
-	@RequestMapping(value = "/profiles", method = RequestMethod.GET)
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+		@RequestMapping(value = "/profiles", method = RequestMethod.GET)
 	public ModelAndView getProfiles(HttpServletRequest request,
 			@RequestParam(value = "fromCreateProfile", required = false) String fromCreateProfile) throws IOException {
 		HttpSession httpSession = request.getSession();
 		String userId = httpSession.getAttribute("user").toString();
+		//ModelAndView model = new ModelAndView("profiles");
 		ModelAndView model = new ModelAndView("profiles");
 		if (httpSession != null && !httpSession.isNew()) {
 			// do something here
@@ -133,6 +150,7 @@ public class ProfilesController {
 		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
 		model.addObject("accountValuesJson", tmpUtil.getAccountList());
 		model.addObject("projectValuesJson", tmpUtil.getProjectList());
+		model.addObject("offerProcessingstatusJson", tmpUtil.getConfigKeyValues(14));
 		if (StringUtils.isNotBlank(fromCreateProfile)) {
 			model.addObject("addMessage", fromCreateProfile);
 		} else {
@@ -188,6 +206,32 @@ public class ProfilesController {
 		model.addObject("projectValuesJson", tmpUtil.getProjectList());
 		model.addObject("addMessage", 3);
 		model.addObject("deleteMessage", 4);
+		return model;
+	}
+	
+	
+	@RequestMapping(value = "/offerStatus", method = RequestMethod.GET)
+	public ModelAndView getOfferStatus(HttpServletRequest request ) throws IOException {
+		HttpSession httpSession = request.getSession();
+		String userId = httpSession.getAttribute("user").toString();
+		ModelAndView model = new ModelAndView("offerStatus");
+		if (httpSession != null && !httpSession.isNew()) {
+			// do something here
+		} else {
+			model.setViewName("login");
+		}
+		model.addObject("profiles", new Profile());
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("profilesJson", profilesDAO.getOfferProcessingProfiles());
+		String jsonStr = jsonObj.toString();
+		model.addObject("profilesJson", jsonStr);
+		model.addObject("initialEvaluationResultJson", tmpUtil.getConfigKeyValues(8));
+		model.addObject("customerInterviewStatusJson", tmpUtil.getConfigKeyValues(9));
+		model.addObject("positionStatusJson", tmpUtil.getConfigKeyValues(5));
+		model.addObject("opportunityStatusJson", tmpUtil.getConfigKeyValues(6));
+		model.addObject("requirementRefNum", tmpUtil.getRequirementRefNum(userId));
+		model.addObject("offerProcessingstatusJson", tmpUtil.getConfigKeyValues(14));
 		return model;
 	}
 

@@ -107,8 +107,11 @@ function loadDetail(id){
 			 }
 			
 			 $("#offerProcessingStatusProfile option:selected").removeAttr("selected");
-			 $("#offerProcessingStatusProfile option:contains(" + data.offerProcessingStatus.configValue.value+ ")").attr('selected', 'selected');
 			 
+			 if(data.offerProcessingStatus.configValue.value!=null && data.offerProcessingStatus.configValue.value!=""){
+			 $("#offerProcessingStatusProfile option:contains(" + data.offerProcessingStatus.configValue.value+ ")").attr('selected', 'selected');
+			 }	
+					
 			 showOrHideOfferProcessingStatus();
 			
 			 if(null!=data.account2.accountName){

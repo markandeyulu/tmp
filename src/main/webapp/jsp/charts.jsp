@@ -131,9 +131,11 @@ body {
 					style="margin-right: 0px; color: white; height: 43px;">Requirements</a></li>
 				<li><a id="black" href="profiles.html"
 					style="margin-right: 0px; color: white; height: 43px;">Profiles</a></li>
-				<li class="black"><a href="reports.html"
+					<li><a id="black" href="offerStatus.html"
+					style="margin-right: 0px; color: white; height: 43px;">OfferStatus</a></li>
+				<li id="black"><a href="reports.html"
 					style="margin-right: 0px;  color: white; height: 45px;">Reports</a></li>
-				<li><a id="active" href="#"
+				<li><a class="active" href="#"
 					style="margin-right: 0px; background-color: white; color: black;height: 43px;">Charts</a></li>
 			</ul>
 		</div>
@@ -160,6 +162,8 @@ body {
 						class="ddata" href="requirements.html">Requirements</a></li>
 					<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
 						class="ddata" href="profiles.html">Profiles</a></li>
+						<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
+						class="ddata" href="offerStatus.html">OfferStatus</a></li>
 					<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
 						class="ddata" href="#">Reports</a></li>
 					<li data-toggle="collapse" data-target="#navbar-collapse.in"><a
@@ -233,7 +237,7 @@ body {
 					<div class="col-md-6 form-group subbut">
 						<button id="pieChart"
 							style="background-color: #b30000; color: white; margin-top: 5%;"
-							 class="btn btn-md button1" data-target="#chartModal" data-toggle="modal"
+							 class="btn btn-md button1" data-target="kchartModal" data-toggle="modal"
 							>Submit</button>
 							
 							<!-- <Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" 
