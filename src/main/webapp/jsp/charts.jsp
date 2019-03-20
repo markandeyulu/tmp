@@ -237,7 +237,7 @@ body {
 					<div class="col-md-6 form-group subbut">
 						<button id="pieChart"
 							style="background-color: #b30000; color: white; margin-top: 5%;"
-							 class="btn btn-md button1" data-target="kchartModal" data-toggle="modal"
+							 class="btn btn-md button1" data-target="#chartModal" data-toggle="modal"
 							>Submit</button>
 							
 							<!-- <Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" 
