@@ -167,6 +167,10 @@ $(document).ready(function () {
 		    if(dataArr.length == 0){
 				  alert("Please select atleast one Record to delete");
 			  }else{
+				  var msg = confirm("Proceed to delete selected rows");
+				  if(msg == false){
+					  return false;
+				  }
 		    $.ajax({
 	            type: 'POST',
 	   		 url: "/ResourceManagementApp/requirementDelete.action",
@@ -353,7 +357,7 @@ function validateEmail(event){
 		<tr>
 		<td> <input type="checkbox" class="checkbox" name="" value=""></td>
        
-		<td href="#" data-toggle="modal" data-target="#squarespaceModal1" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
+		<td href="#" data-toggle="modal" data-target="#squarespaceModal1" data-backdrop="static" data-keyboard="false" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
         
         <td>{{criticality1}}</td>
 		<td>{{primarySkill1}}</td>
@@ -448,7 +452,7 @@ $('#logout').click(function () {
 					<div class="navbar-header" style="background-color: #b30000;">
 						<button type="button"
 							class="navbar-toggle x collapsed toggle but2"
-							data-toggle="collapse" data-target="#navbar-collapse-x">
+							data-toggle="collapse"   data-backdrop="static" data-keyboard="false"data-target="#navbar-collapse-x">
 							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 								class="icon-bar"></span>
 						</button>
@@ -592,11 +596,11 @@ $('#logout').click(function () {
 			<div id="hidReq" style="background-color: #f1f1f1; margin-top: 2%; display:none;">
 				<button
 					style="margin-left: 5%; background-color: #b30000; color: white;"
-					type="button" class="btn btn-md button1" data-toggle="modal"
+					type="button" class="btn btn-md button1" data-toggle="modal"  data-backdrop="static" data-keyboard="false"
 					data-target="#squarespaceModal">Add Requirement</button>
 					<Button name="submit" id="deleteReqRow" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="submit">Delete</Button>
 					<button	style="margin-left: 0%; background-color: #b30000; color: white;"
-					type="button" class="btn btn-md button1" data-toggle="modal"
+					type="button" class="btn btn-md button1" data-toggle="modal"  data-backdrop="static" data-keyboard="false"
 					data-target="#uploadModal">Bulk Upload</button>
 					
 					<!-- <Button name="barChart" id="barChart" data-target="#barChartModal" data-toggle="modal" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="button">Accounts-Head Count Bar Chart</Button> -->
@@ -606,7 +610,7 @@ $('#logout').click(function () {
 					<Button name="treeChart" id="treeChart" data-target="#treeChartModal" data-toggle="modal" class="btn btn-md button1"  style="background-color:#b30000;color:white;display:none" type="button">Associate-Hierarchy Tree Chart</Button>
 					
 					<button	style="margin-left: 0%; background-color: #b30000; color: white;"
-					type="button" class="btn btn-md button1" data-toggle="modal"
+					type="button" class="btn btn-md button1" data-toggle="modal" data-backdrop="static" data-keyboard="false"
 					data-target="#scheduleModal">Scheduler</button>
 					
 					<!-- <div id="addReqMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
@@ -681,8 +685,8 @@ $('#logout').click(function () {
 			<div class="modal-dialog" style="width: 80%; font-size: 12px;">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #b30000;">
-						<button type="button" id="reload" class="close" data-dismiss="modal"
-							style="background-color: white;">
+						<button type="button" id="reload" class="close" data-dismiss="modal"  data-backdrop="static" data-keyboard="false"
+							style="background-color: white;" >
 							<!-- <span aria-hidden="true">×</span><span class="sr-only" onclick="window.location.reload()">Close</span> -->
 							<a class="button" onclick="window.location.reload()" href="#">x</a>
 							
@@ -719,7 +723,7 @@ $('#logout').click(function () {
 			<div class="modal-dialog" style="width: 80%; font-size: 12px;">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #b30000;">
-						<button type="button" id="reload" class="close" data-dismiss="modal"
+						<button type="button" id="reload" class="close" data-dismiss="modal" data-backdrop="static" data-keyboard="false"
 							style="background-color: white;">
 							<!-- <span aria-hidden="true">×</span><span class="sr-only" onclick="window.location.reload()">Close</span> -->
 							<a class="button" onclick="window.location.reload()" href="#">x</a>
@@ -757,7 +761,7 @@ $('#logout').click(function () {
   <div class="modal-dialog" style="width:60%;">
 	<div class="modal-content">
 		<div class="modal-header" style="background-color: #b30000;">
-						<button type="button" id="reload" class="close" data-dismiss="modal"
+						<button type="button" id="reload" class="close" data-dismiss="modal" data-backdrop="static" data-keyboard="false"
 							style="background-color: white;">
 							<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 						</button>
@@ -819,7 +823,7 @@ $('#logout').click(function () {
 				<div class="modal-dialog" style="width: 80%; font-size: 12px;">
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
-							<button type="button" class="close" data-dismiss="modal"
+							<button type="button" class="close" data-dismiss="modal"  data-backdrop="static" data-keyboard="false"
 								style="background-color: white;" onClick="window.location.reload();">
 								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 							</button>
@@ -854,10 +858,6 @@ $('#logout').click(function () {
 										<spring:label path="account1">Customer Name<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<%-- <spring:select required="required" class="form-control" id="account1" path="account1"
-										oninvalid="this.setCustomValidity('Please select Customer name')" 
-										oninput="this.setCustomValidity('')" >
-										</spring:select> --%>
 										<spring:input type="text" class="form-control" id="account1" path="account1" placeholder="Enter Customer Name.." />	
 										</div>
 									</div>
@@ -866,11 +866,6 @@ $('#logout').click(function () {
 										<spring:label path="projectAdd">Project Name<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<%-- <spring:select required="required" class="form-control" id="projectAdd" path="projectAdd"
-										oninvalid="this.setCustomValidity('Project name must not be empty')" 
-										oninput="this.setCustomValidity('')" >
-										
-										</spring:select> --%>
 										<spring:input type="text" class="form-control" id="projectAdd" path="projectAdd" placeholder="Enter Project Name.." />	
 										</div>
 										
@@ -1026,13 +1021,14 @@ $('#logout').click(function () {
 										<spring:label path="jobDescription">Job Description<span style="color:red">*</span></spring:label>
 										</div>
 										<div class="col-75">
-										<spring:textarea id="jobDescription" class="form-control"
+										<spring:input id="jobDescription"  type="text" class="form-control"
 											path="jobDescription" required="required" oninvalid="this.setCustomValidity('Job description must not be empty')" 
 										oninput="this.setCustomValidity('')"
 												placeholder="Write Job Description here.."
-											style="height:200px"></spring:textarea>
+											style="height:200px"></spring:input>
 										</div>
 									</div>
+									
 									<div class="row">
 										<div class="col-25">
 										<spring:label path="ibg_cdg">From IBG/CDG<span style="color:red">*</span></spring:label>
@@ -1188,7 +1184,7 @@ $('#logout').click(function () {
 				<div class="modal-dialog" style="width: 90%;">
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
-						<button type="button" id="btnReset" class="close" data-dismiss="modal"
+						<button type="button" id="btnReset" class="close" data-dismiss="modal"  data-backdrop="static" data-keyboard="false"
 							style="background-color: white;">
 							<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 						</button>
@@ -1464,7 +1460,7 @@ $('#logout').click(function () {
   <div class="modal-dialog" style="width:60%;">
 	<div class="modal-content">
 		<div class="modal-header" style="background-color: #b30000;">
-			<button type="button" id="reload" class="close" data-dismiss="modal"
+			<button type="button" id="reload" class="close" data-dismiss="modal" data-backdrop="static" data-keyboard="false"
 							style="background-color: white;">
 							<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 						</button>

@@ -140,7 +140,7 @@ table.dataTable thead th:first-child {
 
   <tr>
 		<td> <input type="checkbox" class="checkbox" name="" value=""></td>
-		<td id="profileCustomerID" href="#" data-toggle="modal" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
+		<td id="profileCustomerID" href="#" data-toggle="modal"  data-backdrop="static" data-keyboard="false" data-target="#popup" onclick="loadDetail('{{id}}');"><a>{{id}}</a></td>
 		<td>{{reqRefNo}}</td>
 		<td>{{location}}</td>
 		<td>{{primarySkill}}</td>
@@ -213,7 +213,12 @@ table.dataTable thead th:first-child {
 				    });
 		  if(dataArr.length == 0){
 			  alert("Please select atleast one Record to delete");
-		  }else{
+		  }else
+		  {
+			  var msg = confirm("Proceed to delete selected rows");
+			  if(msg == false){
+				  return false;
+			  }
 		        $.ajax({
 		           
 		            type: 'POST',
@@ -610,17 +615,17 @@ $('#logout').click(function () {
 <div id="hidProfile" style="background-color: #f1f1f1; margin-top: 2%; display:none;">
 	<button
 					style="margin-left: 5%; background-color: #b30000; color: white;"
-					type="button" class="btn btn-md button1" data-toggle="modal"
+					type="button" class="btn btn-md button1" data-toggle="modal" data-backdrop="static" data-keyboard="false"
 					data-target="#squarespaceModal">Add Profile</button>
 	<Button name="submit" id="deleteProfile" class="btn btn-md button1" style="background-color:#b30000;color:white;" type="submit">Delete</Button>
 	<button	style="margin-left: 0%; background-color: #b30000; color: white;"
-					type="button" class="btn btn-md button1" data-toggle="modal"
+					type="button" class="btn btn-md button1" data-toggle="modal" data-backdrop="static" data-keyboard="false"
 					data-target="#uploadModal">Bulk Upload</button>
 					<%-- <spring:form name='candidateUpload' action="candidateUpload"  method="POST"> --%>
 	<button	style="margin-left: 0%; background-color: #b30000; color: white;" type="button"
-		data-target="#uploadCandidate" class="btn btn-md button1" data-toggle="modal">Candidate Upload</button>
+		data-target="#uploadCandidate" class="btn btn-md button1" data-toggle="modal" data-backdrop="static" data-keyboard="false">Candidate Upload</button>
 		 <button	style="margin-left: 0%; background-color: #b30000; color: white;" type="button"
-		data-target="#uploadResume" class="btn btn-md button1" data-toggle="modal">Resume Upload</button> 
+		data-target="#uploadResume" class="btn btn-md button1" data-toggle="modal" data-backdrop="static" data-keyboard="false">Resume Upload</button> 
 		
 					
 <%-- </spring:form> --%>

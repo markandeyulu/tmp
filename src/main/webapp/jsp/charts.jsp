@@ -147,7 +147,7 @@ body {
 			<nav class="navbar navbar-default" role="navigation">
 			<div class="navbar-header" style="background-color: #b30000;">
 				<button type="button" class="navbar-toggle x collapsed toggle but2"
-					data-toggle="collapse" data-target="#navbar-collapse-x">
+					data-toggle="collapse"   data-target="#navbar-collapse-x">
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
@@ -237,7 +237,7 @@ body {
 					<div class="col-md-6 form-group subbut">
 						<button id="pieChart"
 							style="background-color: #b30000; color: white; margin-top: 5%;"
-							 class="btn btn-md button1" data-target="#chartModal" data-toggle="modal"
+							 class="btn btn-md button1" data-target="#chartModal" data-toggle="modal" data-backdrop="static" data-keyboard="false"
 							>Submit</button>
 							
 							<!-- <Button name="pieChart" id="pieChart" data-target="#pieChartModal" data-toggle="modal" 
@@ -250,7 +250,7 @@ body {
 				<div class="modal-dialog" style="height: 600px; width: 800px ; font-size: 12px;">
 					<div class="modal-content">
 						<div class="modal-header" style="background-color: #b30000;">
-							<button type="button" class="close" data-dismiss="modal"
+							<button type="button" class="close" data-dismiss="modal" data-backdrop="static" data-keyboard="false"
 								style="background-color: white;" onClick="window.location.reload();">
 								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
 							</button>
