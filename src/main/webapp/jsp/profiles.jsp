@@ -273,18 +273,18 @@ table.dataTable thead th:first-child {
 	    		
 	    	var filename = $('#profileFile').val().split('\\').pop();
 	    	 $('#fileNotFoundError').text("");
+	    	 $('#bulkMessage').text("");
 	    	 if ($('#profileFile').val() == "") {
 	    		    $('#fileNotFoundError').text("Choose file to be uploaded")
 	    		    return false;
 	    		  }
-	    	 
-	    	
+	    
 	    	    $.ajax({
 	                type: 'POST',           
 	       		 url: "/ResourceManagementApp/uploadFile.action",
 	       		 data: { "profileFile": filename },
 	       		    success: function(e){ 
-	       		    	$('#fileId').html(e); 
+	       		    	$('#bulkMessage').html(e); 
 	     			},
 	     			complete:function(){
 	     				document.getElementById("profileFile").value = null;
@@ -293,12 +293,14 @@ table.dataTable thead th:first-child {
 	     				$("#uploadFile").prop("disabled", false);
 	     			} 
 	            });
+	    		 
 	    });
 
 $('#candidateUpload').on('click', function(e){
 	    		
 		    	var filename = $('#file').val().split('\\').pop();
 		    	 $('#noFileChosenMsg').text("");
+		    	 $('#candidateMsg').text("");
 		    	 if ($('#file').val() == "") {
 		    		    $('#noFileChosenMsg').text("Choose file to be uploaded")
 		    		    return false;
@@ -309,7 +311,8 @@ $('#candidateUpload').on('click', function(e){
 		       		 url: "/ResourceManagementApp/candidateUpload.action",
 		       		 data: { "file": filename },
 		       		    success: function(e){ 
-		       		    	$('#fileId').html(e); 
+		       		    	$('#candidateMsg').html(e); 
+		       		    	
 		     			},
 		     			complete:function(){
 		     				document.getElementById("file").value = null;
@@ -318,7 +321,9 @@ $('#candidateUpload').on('click', function(e){
 		     				$("#candidateUpload").prop("disabled", false);
 		     			} 
 		            });
+		    		
 		    });
+
 		    
 		    
 function fileValidation(){
@@ -331,6 +336,7 @@ $('#resumeUpload').on('click', function(e){
 	 $('#profileErrorMsg').text("");
 	 $('#uploadErrorMsg').text("");
 	 $('#invalidFormatError').text("");
+	 $('#resumeMessage').text("");
 	if ($('#profileId').val() == "") {
 	    $('#profileErrorMsg').text("EmployeeId must be filled out")
 	    return false;
@@ -355,7 +361,8 @@ $('#resumeUpload').on('click', function(e){
    		 data: { "resumeFile": filename ,
    		 		 "profileId": textfield },
    		    success: function(e){ 
-   		    	$('#fileId').html(e); 
+   		    	$('#resumeMessage').html(e); 
+   		    	
  			},
  			complete:function(){
  				document.getElementById("resumeFile").value = null;
@@ -383,6 +390,7 @@ $('#resumeUpload').on('click', function(e){
 	                  $("#profileMsg").text('Failure!! the profile has not been updated!!');
 	            }
 	      }
+	      
 	      
 	      $('#accountProfile').change(function() {
 	  		var account_id=$('#accountProfile').val();
@@ -640,6 +648,7 @@ $('#logout').click(function () {
 			
 			
 		</div>
+		
 	 <div class="modal fade" id="uploadResume" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="width: 80%; font-size: 12px;">
 		<div class="modal-content">
@@ -674,7 +683,10 @@ $('#logout').click(function () {
 									</div>
 							</form>
 						</div>
+					 </div>
 					</div>
+					<div id="resumeMessage" style="display: inline-block; margin-left:10%; font-weight: bold">
+                        </div>
 				</div>
 			</div>
 		</div>
@@ -698,12 +710,16 @@ $('#logout').click(function () {
 								<div class="form-group">
 									<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
 									<p class="col-md-6">File to upload:<span style="color:red">*</span><input type="file" name="file" id="file"></p>
-									<p class="col-md-6" id="noFileChosenMsg"></p>
+									<p class="col-md-3" id="noFileChosenMsg"></p>
+									<p class="col-md-7"><a href="/ResourceManagementApp/canSampleDwnld.action" >click for SampleFile download</a> 
+									</p>
 									<tr>
 										<td><Button type="button" id="candidateUpload" name="Upload" class="btn btn-md button1"
 												style="background-color: #cc0000; color: white; float: right; margin-right: 7%;" type="submit">
 													Upload File
 											</Button>
+											
+				
 										</td>			
 									</tr>
 								</div>
@@ -711,6 +727,9 @@ $('#logout').click(function () {
 						</div>
 					</div>
 				</div>
+				<div id="candidateMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
+                                             </div>
+					</div>
 			</div>
 		</div>
 	</div>
@@ -737,7 +756,9 @@ $('#logout').click(function () {
 										<div class="form-group">
 											<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
 											<p class="col-md-6">File to upload:<span style="color:red">*</span><input type="file" name="profileFile" id="profileFile"></p>
-											<p class="col-md-6" id="fileNotFoundError"></p>
+											<p class="col-md-3" id="fileNotFoundError"></p>
+											<p class="col-md-7"><a href="/ResourceManagementApp/proSampleDwnld.action" >click for SampleFile download</a> 
+									</p>
 											
 											<tr>
 												<td><Button type="button" id="uploadFile" name="Upload"
@@ -751,6 +772,8 @@ $('#logout').click(function () {
 							</div>
 						
 						</div>
+						<div id="bulkMessage" style="display: inline-block; margin-left:10%; font-weight: bold">
+                                             </div>
 					</div>
 				</div>
 			</div>

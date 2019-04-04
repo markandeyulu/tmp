@@ -32,10 +32,14 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 	}
 
 	
-	public void insertCandidateList(ArrayList<Associate> candidateList, String userId, String userName) {
+	public int insertCandidateList(ArrayList<Associate> candidateList, String userId, String userName) {
 		int successCount = 0;
 		int failedCount = 0;
 		int candidateListSize = candidateList.size();
+		int result = 0;
+		
+		System.out.println("Inside DAO insertCandidateList");
+		
 		for (Associate candidate : candidateList) {
 			int ibuId = getIbuByName(candidate.getEmpIBU());
 			int primarySkillId = getSkillByName(candidate.getPrimarySkill());
@@ -50,12 +54,13 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				insertAssociateProjectDetails(empId, projId, candidate);
 				successCount++;
 			}
-			
+			result = 1;
 		}
 		System.out.println("Total Records : "+candidateList);
 		System.out.println("Records inserted : "+successCount);
 		failedCount = candidateListSize - successCount;
 		System.out.println("Records failed to insert : "+failedCount);
+		return result;
 	}
 
 	/**
@@ -92,7 +97,10 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 		} catch (SQLException e) {
 			System.out.println("SQLException Occurred " + e.getMessage());
-		} finally {
+		}catch (Exception e) {
+			System.out.println("Exception Occurred " + e.getMessage());
+		}  
+		finally {
 			closeDBObjects(conn, rs, ps);
 		}
 		return id;
@@ -134,7 +142,6 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 		} catch (SQLException sqlException) {
 			sqlException.printStackTrace();
-			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -298,7 +305,10 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}catch (Exception e) {
+			e.printStackTrace();
+		}  
+		finally {
 
 			closeDBObjects(conn, rs, ps);
 
@@ -409,7 +419,10 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		finally {
 			closeDBObjects(conn, rs, ps);
 		}
 
@@ -452,6 +465,8 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 			}
 
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			closeDBObjects(conn, rs, ps);

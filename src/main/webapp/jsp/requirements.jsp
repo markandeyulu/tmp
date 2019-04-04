@@ -273,21 +273,25 @@ $(document).ready(function () {
 	 $('#uploadReqFile').on('click', function(e){
 			var filename = $('#file').val().split('\\').pop();
 			 $('#noFileChosenMsg').text("");
+			
 			if( $('#file').val() == ""){
 					$('#noFileChosenMsg').text("Choose file to be uploaded")
 					return false;
 			 }
+			
 	 });
 			
 	 $('#uploadReqFile').on('click', function(e){
  		
 	    	var filename = $('input[type=file]').val().split('\\').pop();
+	    	 $('#requirementMsg').text("");
 	    	    $.ajax({
 	                type: 'POST',           
 	       		 url: "/ResourceManagementApp/uploadReqFile.action",
 	       		 data: { "file": filename },
 	       		    success: function(e){ 
-	       		    	$('#fileId').html(e); 
+	       		    	$('#requirementMsg').html(e); 
+	       		    
 	     			},
 	     			complete:function(){
 	     				document.getElementById("file").value = null;
@@ -702,17 +706,23 @@ $('#logout').click(function () {
 											<div id="fileId" style="font-weight: bold; display: inline-block;"></div>
 											<p class="col-md-6">File to upload:<span style="color:red">*</span><input type="file" name="file" id="file"></p>
 											<p class="col-md-6" id="noFileChosenMsg"></p>
-											
 										</div>
+										<a href="/ResourceManagementApp/reqSampleDwnld.action" >click for Samplefile download</a> 
 										<Button type="button" id="uploadReqFile" name="Upload"
 														class="btn btn-md button1"
 														style="background-color: #cc0000; color: white; float: right; margin-right: 7%;"
 														type="submit">Upload File</Button>
+														<div id="fileMsg" style="display: inline-block; margin-left:10%;">
+                                                        </div>
 									</form>
+									<!-- 	<a href="a/requirementsample.xlsx"  target="_blank">click for download</a> -->
 								</div>
 							</div>
 						
 						</div>
+						<div id="requirementMsg" style="display: inline-block; margin-left:10%; font-weight: bold">
+                        </div>
+						
 					</div>
 				</div>
 			</div>

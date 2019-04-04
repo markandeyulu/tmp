@@ -10,7 +10,7 @@ import com.tmp.entity.Departments;
 
 public interface CandidateDAO {
 	public void setDataSource(DataSource dataSource);
-	public void insertCandidateList(ArrayList<Associate> candidateList,String userId, String userName );
+	public int insertCandidateList(ArrayList<Associate> candidateList,String userId, String userName );
 	public int insertCandidateDetails(Associate candidate, String userId, String userName);
 	public  void populateCandidateDetailsForInsert(PreparedStatement ps, Associate candidate, String userId);
 	public int getIbuByName(String ibuName);

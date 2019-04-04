@@ -243,14 +243,14 @@ public class ReqBulkUploadUtil {
 	 * @return List of User Object
 	 * @throws IOException
 	 */
-	public ArrayList<ReqBulk> getReqListFromExcel(HttpServletRequest request) throws IOException {
+	public ArrayList<ReqBulk> getReqListFromExcel(HttpServletRequest request, String fileName) throws IOException {
 		ReqBulk reqBulk = null;
 		ArrayList<ReqBulk> reqList = new ArrayList<ReqBulk>();
 		HttpSession session = request.getSession();
 		String userId=session.getAttribute("user").toString();
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream(new File(FILE_PATH + "requirement.xlsx"));
+			fis = new FileInputStream(new File(FILE_PATH + fileName));
 			Workbook workbook = new XSSFWorkbook(fis);
 			int numberOfSheets = workbook.getNumberOfSheets();
 			// to iterate through sheets
@@ -727,14 +727,12 @@ private static String getShortName(String name) {
 		}*/
 	//}
 
-	public void processReqList(ArrayList<ReqBulk> reqList, String userId, String displayName) {
+	public int processReqList(ArrayList<ReqBulk> reqList, String userId, String displayName) {
 		ReqBulk bulkList = null;
+		int processRecordCount = 0;
 		Requirement req= new Requirement();
 		for (i = 0; i < reqList.size(); i++) {
 			bulkList = (ReqBulk) reqList.get(i);
-			
-			
-			
 			req.setCriticality1(bulkList.getCriticality()+"");
 			req.setSkillCategoryAdd1(bulkList.getSkillCategory()+"");
 			req.setPrimarySkill1(bulkList.getpSkill()+"");
@@ -754,11 +752,7 @@ private static String getShortName(String name) {
 			req.setRemarks(bulkList.getRemarks());
 			req.setIbg_cdg(bulkList.getIbg()+"");
 			req.setIbu_cdu(bulkList.getIbu()+"");
-			
 			req.setAccount1(bulkList.getCustomerName()+"");
-			
-			System.out.println("Account Name :: "+req.getAccount1());
-			
 			req.setProjectAdd(bulkList.getProjectName()+"");
 			req.setBand(bulkList.getBand());
 			req.setQuantity(bulkList.getPosition()+"");
@@ -768,25 +762,12 @@ private static String getShortName(String name) {
 			req.setSkillCategoryAdd2("");
 			req.setSkillCategoryAdd3("");
 			req.setSkillCategoryAdd4("");
-			
-			//req.setActivityOwner(bulkList.getActivityOwner());
-			
-			//req.setActualOwner(bulkList.getActualOwner());
-			
-			//req.setOppurtunitystatus(bulkList.getOpportunityStatus()+"");
-		
-			//req.setplbulkList.getPlannedClosureDate());
-			
-			//req.setposbulkList.getPositionStatus());
-			
-		
-			
-			
-			
-			
-			System.out.println("processReqList");
-			requirementDAO.createRequirement(req, userId, displayName);
+			int result = requirementDAO.createRequirement(req, userId, displayName);
+			if(result != 0) {
+				processRecordCount++;
+			}
 		}
+		return processRecordCount - reqList.size();
 		
 	}
 

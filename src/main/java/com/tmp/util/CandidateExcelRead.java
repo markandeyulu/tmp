@@ -94,7 +94,7 @@ public class CandidateExcelRead {
 	}
 
 	public ArrayList<Associate> getCandidateListFromExcel(String files) {
-		System.out.println("Read excel!!");
+		System.out.println("Read excel!!"+files);
 		ArrayList<Associate> candidateList = new ArrayList<Associate>();
 		FileInputStream fis = null;
 
@@ -241,13 +241,17 @@ public class CandidateExcelRead {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("Size of candidate list "+candidateList.size());
 
 		return candidateList;
 
 	}
 
-	public void insertResourceList(ArrayList<Associate> candidateList, String userId, String userName) {
-		candidateDAO.insertCandidateList(candidateList, userId, userName);
+	public int insertResourceList(ArrayList<Associate> candidateList, String userId, String userName) {
+
+		int result = candidateDAO.insertCandidateList(candidateList, userId, userName);
+		return result;
 	}
 
 	/**

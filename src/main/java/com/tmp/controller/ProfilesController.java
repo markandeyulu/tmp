@@ -1,5 +1,7 @@
 package com.tmp.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +16,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -253,7 +256,8 @@ public class ProfilesController {
 	}
 
 	@RequestMapping(value = "/candidateUpload", method = RequestMethod.POST, produces = "text/plain")
-	public @ResponseBody void candidateBulkUpload(@RequestParam("file") String file, HttpServletRequest request) {
+	public @ResponseBody String candidateBulkUpload(@RequestParam("file") String file, HttpServletRequest request) {
+		String candidateMsg = "";
 		String userId = null;
 		String files = null;
 		HttpSession session = request.getSession();
@@ -262,15 +266,51 @@ public class ProfilesController {
 		ArrayList<Associate> candidateList = null;
 		if (!files.isEmpty()) {
 			candidateList = candidateExcelRead.getCandidateListFromExcel(files);
-			candidateExcelRead.insertResourceList(candidateList, userId, "Siva");
-		} else
-			System.out.println("Upload file is empty!!");
+			System.out.println("Before DAO insertCandidateList User "+ userId+ "**Size**"+candidateList.size());
+			int resMessage = candidateExcelRead.insertResourceList(candidateList, userId, "Siva");
+			System.out.println("resMessage "+ resMessage);
+			if(resMessage == 0)
+				candidateMsg = "Upload Failed: File has not been uploaded!!!";
+			else if(resMessage == 1)
+				candidateMsg = "Upload Sucess: File has uploaded sucessfully!!!";
+			
+		} else {
+		   
+			candidateMsg = "File is Empty!!!";
+		}
+		return candidateMsg;
+	}
+	
+	@RequestMapping(value = "canSampleDwnld", method = RequestMethod.GET)
+	public void doDownload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	
+	String FILE_PATH = "D:\\excel\\sampleresource.xlsx";
+	
+	File file = new File(FILE_PATH);
+
+	response.setContentType("application/vnd.ms-excel");
+	response.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+    BufferedInputStream inStrem = new BufferedInputStream(new FileInputStream(file));
+    BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
+    
+    byte[] buffer = new byte[1024];
+    int bytesRead = 0;
+    while ((bytesRead = inStrem.read(buffer)) != -1) {
+      outStream.write(buffer, 0, bytesRead);
+    }
+    outStream.flush();
+    inStrem.close();
+
+	
+	
+		
 	}
 
 	@RequestMapping(value = "/resumeUpload", method = RequestMethod.POST, produces = "text/plain")
-	public @ResponseBody void resumeBulkUpload(@RequestParam("resumeFile") String file, @RequestParam("profileId") String profileId, HttpServletRequest request) {
+	public @ResponseBody String resumeBulkUpload(@RequestParam("resumeFile") String file, @RequestParam("profileId") String profileId, HttpServletRequest request) {
 		String userId = null;
 		String files = null;
+		String resumeMessage = null;
 		System.out.println("Inside Controller");
 		HttpSession session = request.getSession();
 		userId = session.getAttribute("user").toString();
@@ -287,6 +327,12 @@ public class ProfilesController {
 			//System.out.println("calling insert method");
 			int result =  resumeUploadDAO.uploadResume(resume);
 			//System.out.println("executed insert method");
+			if(result == 0) {
+				resumeMessage = ("Upload Failed: File has not been uploaded!!!");
+			}else {
+				resumeMessage = ("Upload Success: File has been uploaded!!!");
+			}
+			return resumeMessage;
 	}
 
 	@RequestMapping(value = "uploadFile", method = RequestMethod.POST, produces = "text/plain")
@@ -294,6 +340,7 @@ public class ProfilesController {
 			HttpServletRequest request) {
 		String file1 = null;
 		String userId = null;
+		String bulkMessage = "Upload file is empty!!";
 		HttpSession session = request.getSession();
 		userId = session.getAttribute("user").toString();
 		System.out.println("Upload file " + profileFile);
@@ -301,25 +348,52 @@ public class ProfilesController {
 			file1 = new File("D:\\", profileFile).getAbsolutePath();
 			if (!file1.isEmpty()) {
 				ArrayList<Profile> profileList = readDataFromExcel(file1);
+				
+				if(null != profileList && profileList.size() > 0) {
 				int result = profileService.writeDataIntoDB(profileList, userId);
 
 				if (result == 0)
-					return "Successfully uploaded a profile(s)!!";
+					bulkMessage =  "Successfully uploaded a profile(s)!!";
 				else if (profileList.size() == result * (-1))
-					return "All profiles are already exists!!";
+					bulkMessage = "All profiles are already exists!!";
 				else
-					return (result * (-1))
+					bulkMessage = (result * (-1))
 							+ " of profiles already exists!! and rest of the profile(s) uploaded sucessfully ";
+				}
 
-			} else
-				return "Upload file is empty!!";
+			}
 
 		} catch (Exception e) {
 			System.out.println("Exception occured" + e.getMessage());
 			e.printStackTrace();
-			return "Profile upload is failed";
+			bulkMessage = "Profile upload is failed";
 		}
+		return bulkMessage ;
+	}
+	
+	@RequestMapping(value = "proSampleDwnld", method = RequestMethod.GET)
+	public void performDownload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	
+	String FILE_PATH = "D:\\excel\\samplebulkprofile.xlsx";
+	
+	File file = new File(FILE_PATH);
 
+	response.setContentType("application/vnd.ms-excel");
+	response.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+    BufferedInputStream inStrem = new BufferedInputStream(new FileInputStream(file));
+    BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
+    
+    byte[] buffer = new byte[1024];
+    int bytesRead = 0;
+    while ((bytesRead = inStrem.read(buffer)) != -1) {
+      outStream.write(buffer, 0, bytesRead);
+    }
+    outStream.flush();
+    inStrem.close();
+
+	
+	
+		
 	}
 
 	public ArrayList<Profile> readDataFromExcel(String file1) {
@@ -471,7 +545,12 @@ public class ProfilesController {
 
 				e.printStackTrace();
 
-			} finally {
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			} 
+			finally {
 
 				if (fis != null) {
 					try {

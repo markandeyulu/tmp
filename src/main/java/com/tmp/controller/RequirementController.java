@@ -1,5 +1,8 @@
 package com.tmp.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -12,11 +15,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -41,7 +46,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tmp.dao.CandidateDAO;
 import com.tmp.email.EmailService;
-import com.tmp.entity.Departments;
 import com.tmp.entity.Hierarchy;
 import com.tmp.entity.ReqBulk;
 import com.tmp.entity.Requirement;
@@ -363,22 +367,59 @@ public class RequirementController {
 	@RequestMapping(value = "uploadReqFile", method = RequestMethod.POST, produces = "text/plain")
 	public @ResponseBody String uploadFileHandlerProfile(@RequestParam("file") String file,
 			HttpServletRequest request) {
-
+           String requirementMsg = "";
 		try {
-			ArrayList<ReqBulk> reqList = bulkUploadUtil.getReqListFromExcel(request);
+			ArrayList<ReqBulk> reqList = bulkUploadUtil.getReqListFromExcel(request, file);
 			HttpSession session = request.getSession();
 			String userId = session.getAttribute("user").toString();
 			String displayName = session.getAttribute("displayName").toString();
-			bulkUploadUtil.processReqList(reqList, userId, displayName);
+			int result = bulkUploadUtil.processReqList(reqList, userId, displayName);
+			if (result == 0)
+				requirementMsg =  "Successfully uploaded requirement(s)!!";
+			else if (reqList.size() == result * (-1)){
+				requirementMsg = "All requirements are already exists!!";
+			}
+			else {
+				requirementMsg = (result * (-1))
+						+ " of requirements already exists!! and rest of the requirement(s) uploaded sucessfully ";
+                       
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return file;
+		return requirementMsg;
 
 	}
+	@RequestMapping(value = "reqSampleDwnld", method = RequestMethod.GET)
+	public void doDownload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	System.out.println("dowload File");	
+	
+	String FILE_PATH = "D:\\excel\\requirements.xlsx";
+	//D:\Anushya\excel
+	
+	File file = new File(FILE_PATH);
+
+	response.setContentType("application/vnd.ms-excel");
+	response.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+    BufferedInputStream inStrem = new BufferedInputStream(new FileInputStream(file));
+    BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
+    
+    byte[] buffer = new byte[1024];
+    int bytesRead = 0;
+    while ((bytesRead = inStrem.read(buffer)) != -1) {
+      outStream.write(buffer, 0, bytesRead);
+    }
+    outStream.flush();
+    inStrem.close();
+
+	
+	
+		
+	}
+	
 
 	@RequestMapping(value = "scheduleService", method = RequestMethod.POST, produces = "text/plain")
 	public @ResponseBody String scheduling(ModelAndView model, HttpServletRequest request,
