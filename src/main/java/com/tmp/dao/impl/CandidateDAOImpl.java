@@ -41,16 +41,17 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		System.out.println("Inside DAO insertCandidateList");
 		
 		for (Associate candidate : candidateList) {
-			int ibuId = getIbuByName(candidate.getEmpIBU());
-			int primarySkillId = getSkillByName(candidate.getPrimarySkill());
-			int secondarySkillId = getSkillByName(candidate.getSecondarySkill());
-			int projId = getProjectAccountDetails(candidate.getProjectId());
-			candidate.setIbuId(ibuId);
-			candidate.setPrimarySkillId(primarySkillId);
-			candidate.setSecondarySkillId(secondarySkillId);
-			candidate.setProjId(projId);
+			
 			int empId = isResourceExist(candidate, userId, userName);
 			if (empId != 0) {
+				int ibuId = getIbuByName(candidate.getEmpIBU());
+				int primarySkillId = getSkillByName(candidate.getPrimarySkill());
+				int secondarySkillId = getSkillByName(candidate.getSecondarySkill());
+				int projId = getProjectAccountDetails(candidate.getProjectId());
+				candidate.setIbuId(ibuId);
+				candidate.setPrimarySkillId(primarySkillId);
+				candidate.setSecondarySkillId(secondarySkillId);
+				candidate.setProjId(projId);
 				insertAssociateProjectDetails(empId, projId, candidate);
 				successCount++;
 			}
