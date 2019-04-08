@@ -895,3 +895,9 @@ CREATE TABLE dbo.Resume_Upload(
 	
 	ALTER TABLE `tmp`.`requirement_profile_mapping` 
 ADD COLUMN `INTERNAL_EVALUATION_RESULT_DATE` VARCHAR(45) NOT NULL AFTER `UPDATED_BY`;
+
+
+
+--05-04-19---------JO as non-mandatory field--
+ALTER TABLE `tmp`.`requirement` 
+CHANGE COLUMN `JO` `JO` INT(11) NULL ;
