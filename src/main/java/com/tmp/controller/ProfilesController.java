@@ -116,13 +116,6 @@ public class ProfilesController {
 	}
 	 
 	
-	
-	
-	
-	
-	
-	
-	
 		@RequestMapping(value = "/profiles", method = RequestMethod.GET)
 	public ModelAndView getProfiles(HttpServletRequest request,
 			@RequestParam(value = "fromCreateProfile", required = false) String fromCreateProfile) throws IOException {
@@ -352,13 +345,17 @@ public class ProfilesController {
 				if(null != profileList && profileList.size() > 0) {
 				int result = profileService.writeDataIntoDB(profileList, userId);
 
-				if (result == 0)
+				if (result == profileList.size())
 					bulkMessage =  "Successfully uploaded a profile(s)!!";
-				else if (profileList.size() == result * (-1))
+				else if (result == 0 )
 					bulkMessage = "All profiles are already exists!!";
+				else if (result == -900)
+					bulkMessage = "Requirement Id not found!!";
+				else if (result == -999 )
+					bulkMessage = "Profile upload failed!!";
 				else
-					bulkMessage = (result * (-1))
-							+ " of profiles already exists!! and rest of the profile(s) uploaded sucessfully ";
+					bulkMessage = (result)
+							+ "profile(s) uploaded sucessfully ";
 				}
 
 			}

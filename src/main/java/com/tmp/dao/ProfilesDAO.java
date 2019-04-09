@@ -40,4 +40,6 @@ public interface ProfilesDAO {
 	public int getIdByStatus(String status);
 	
 	public List<Profile> getOfferProcessingProfiles();
+	
+	public int isRequirementIdExist(Profile profile, String userId);
 }

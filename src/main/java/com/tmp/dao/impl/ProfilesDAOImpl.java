@@ -1252,7 +1252,41 @@ public List<Profile> getOfferProcessingProfiles() {
 		}
 		return id;
 	}
+	
+	
+	public int isRequirementIdExist(Profile profile, String userId) {
+		StringBuffer sql = new StringBuffer(
+				"SELECT ID FROM REQUIREMENT WHERE ID = ?");
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int id = 0;
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sql.toString());
+			ps.setString(1, profile.getReqRefNo());
+			rs = ps.executeQuery();
+			if (rs != null) {
+				while (rs.next()) {
+					return 1;
+				}
+			}
 
+		} catch (SQLException e) {
+			System.out.println("SQLException Occurred " + e.getMessage());
+		} 
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally {
+			closeDBObjects(conn, rs, ps);
+		}
+		return id;
+	
+		
+		}
+		
+		
 	/**
 	 * This method checks if mapping exists for the particular profile
 	 */

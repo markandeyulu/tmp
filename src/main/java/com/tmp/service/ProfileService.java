@@ -27,28 +27,42 @@ ProfilesDAO profilesDAO;
 
 
 	public int writeDataIntoDB(ArrayList<Profile> profileList, String userId) {
-		
+
 		int result = 0;
 		int profileListSize = profileList.size();
 		int processRecordCount = 0;
 		int profileMapingId = 0;
-		
-		for(Profile  profile : profileList) {
-			
-			int profileId = profilesDAO.isProfilesExist(profile, userId);
-			
-			if(profileId == 0){
-				int id = profilesDAO.insertProfile(profile,userId);
-				    profile.setId(id);
-				    
-				    System.out.println(" profile.getReqRefNo() *"+profile.getReqRefNo());
-				    
-					result = profilesDAO.insertProfileMapping(profile,profile.getReqRefNo(), userId);
-					processRecordCount = processRecordCount +1;
-			}
-		
-		}
-		return processRecordCount - profileListSize;
+		int counter = 0;
 
+		for (Profile profile : profileList) {
+			try {
+				int reqId = profilesDAO.isRequirementIdExist(profile, userId);
+				if(reqId == 0) {
+					counter++;
+				}
+				if (reqId == 1) {
+					int profileId = profilesDAO.isProfilesExist(profile, userId);
+
+					if (profileId == 0) {
+						int id = profilesDAO.insertProfile(profile, userId);
+						profile.setId(id);
+
+						System.out.println(" profile.getReqRefNo() *" + profile.getReqRefNo());
+
+						result = profilesDAO.insertProfileMapping(profile, profile.getReqRefNo(), userId);
+						processRecordCount = processRecordCount + 1;
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -999;
+			}
+
+		}
+		if(counter == profileListSize) {
+			return -900;
+		}
+		return processRecordCount ;
 	}
 }
