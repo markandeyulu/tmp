@@ -1,35 +1,21 @@
 package com.tmp.dao.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -39,7 +25,6 @@ import com.tmp.dao.ConfigDAO;
 import com.tmp.dao.ProfilesDAO;
 import com.tmp.dao.RequirementDAO;
 import com.tmp.entity.ConfigKeyValueMapping;
-import com.tmp.entity.Configkey;
 import com.tmp.entity.Profile;
 import com.tmp.entity.Profiles;
 import com.tmp.entity.RequirementProfileMapping;
@@ -320,6 +305,7 @@ public List<Profile> getOfferProcessingProfiles() {
 			conn = dataSource.getConnection();
 
 			profileId = isProfilesExist(profile, strUserId);
+			
 
 			if (StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd())
 					&& !profile.getInitialEvaluationResultAdd().equals("0")) {
@@ -1255,10 +1241,7 @@ public List<Profile> getOfferProcessingProfiles() {
 					if ((contactNum.equals(profile.getContactNo()) && reqRefNum.equals(profile.getReqRefNo()))
 							|| (emailId.equals(profile.getEmail()) && reqRefNum.equals(profile.getReqRefNo()))) {
 						id = rs.getInt("ID");
-					} else {
-						insertProfile(profile, userId);
-					}
-
+					} 
 				}
 			}
 
@@ -1301,6 +1284,7 @@ public List<Profile> getOfferProcessingProfiles() {
 		}
 		return id;
 	}
+	
 
 	/**
 	 * This method inserts profile details from excel sheet
@@ -1327,7 +1311,6 @@ public List<Profile> getOfferProcessingProfiles() {
 		try {
 			conn = dataSource.getConnection();
 
-			profileId = isProfilesExist(profile, userId);
 			int initialEvalRes, customerInterviewStatus;
 			if (StringUtils.isNotBlank(profile.getInitialEvaluationResultAdd())
 					&& !profile.getInitialEvaluationResultAdd().equals("0")) {
@@ -1393,7 +1376,11 @@ public List<Profile> getOfferProcessingProfiles() {
 
 		} catch (SQLException sqlException) {
 			sqlException.getMessage();
-		} finally {
+		}
+		catch(Exception e){
+		e.printStackTrace();	
+		}
+		finally {
 			if (ps2 != null) {
 				try {
 					ps2.close();
@@ -1402,6 +1389,7 @@ public List<Profile> getOfferProcessingProfiles() {
 			}
 			closeDBObjects(conn, generatedKeys, ps);
 		}
+	System.out.println("profileId :"+profileId);
 		return profileId;
 	}
 
@@ -1530,6 +1518,8 @@ public List<Profile> getOfferProcessingProfiles() {
 
 		} catch (SQLException sqlException) {
 			System.out.println("SQLException Occurred " + sqlException.getMessage());
+		} catch (Exception exception) {
+			exception.printStackTrace();
 		} finally {
 			closeDBObjects(conn, null, ps);
 		}
@@ -1577,218 +1567,6 @@ public List<Profile> getOfferProcessingProfiles() {
 
 			ps.setDate(10, tmpDAOUtil.convertUtilDatetoSQLDate(profile.getProfileSharedCustomerDate()));
 		}
-	}
-
-	/**
-	 * This method used to get Excel File
-	 * 
-	 * @param workingDirectory input parameters
-	 * @param fileName         File Object
-	 * @param request          HttpServletRequest Object
-	 * @param userId           input parameters
-	 */
-
-	public int getExcelFile(String workingDirectory, File fileName, String file1, HttpServletRequest request,
-			String userId) {
-
-		FileInputStream fis = null;
-		XSSFWorkbook workbook = null;
-		XSSFSheet sheet = null;
-
-		int result = 0;
-		try {
-			fis = new FileInputStream(file1);
-			// Create an excel workbook from the file system.
-			workbook = new XSSFWorkbook(fis);
-			// Get the first sheet on the workbook.
-			sheet = workbook.getSheetAt(0);
-			Iterator<?> rows = sheet.rowIterator();
-
-			while (rows.hasNext()) {
-
-				XSSFRow row = (XSSFRow) rows.next();
-				XSSFCell cell;
-				for (int i = 0; i < row.getLastCellNum(); i++) {
-					cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-					System.out.print("cell==> " + cell.toString() + " ");
-				}
-				// system.out.println ("Row No.: " + row.getRowNum ());
-				if (row.getRowNum() == 0) {
-					continue; // just skip the rows if row number is 0 or 1
-				} else {
-					Iterator<?> cells = row.cellIterator();
-					Profile profile = new Profile();
-					DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-					while (cells.hasNext()) {
-						String refNo = ((XSSFCell) cells.next()).toString().trim();
-						profile.setReqRefNo(refNo);
-						profile.setName(((XSSFCell) cells.next()).toString().trim());
-						profile.setEmail(((XSSFCell) cells.next()).toString().trim());
-						profile.setContactNo(
-								new BigDecimal(((XSSFCell) cells.next()).getNumericCellValue()).toString().trim());
-
-						String currentCompany = ((XSSFCell) cells.next()).toString().trim();
-						if ((currentCompany != null) && (!currentCompany.isEmpty())) {
-							profile.setCurrentCompany(currentCompany);
-						} else {
-							profile.setCurrentCompany("");
-						}
-
-						String location = ((XSSFCell) cells.next()).toString().trim();
-						if ((location != null) && (!location.isEmpty())) {
-							profile.setLocation(location);
-						} else {
-							profile.setLocation("");
-						}
-
-						String primarySkill = ((XSSFCell) cells.next()).toString().trim();
-						if ((primarySkill != null) && (!primarySkill.isEmpty())) {
-							profile.setPrimarySkillAdd(primarySkill);
-						} else {
-							profile.setPrimarySkillAdd("");
-						}
-
-						String profSharedDate = ((XSSFCell) cells.next()).toString().trim();
-						if ((profSharedDate != null) && (!profSharedDate.equals(""))) {
-							Date profileSharedDate = formatter.parse(profSharedDate);
-							profile.setProfileSharedDate(profileSharedDate);
-						} else {
-							Date profileSharedDate = null;
-							profile.setProfileSharedDate(profileSharedDate);
-						}
-
-						String profileSharedBy = (((XSSFCell) cells.next()).toString().trim());
-						if ((profileSharedBy != null) && (!profileSharedBy.isEmpty())) {
-							profile.setProfileSharedBy(profileSharedBy);
-						} else {
-							profile.setProfileSharedBy("");
-						}
-
-						String yearsofExp = ((XSSFCell) cells.next()).toString().trim();
-						if ((yearsofExp != null) && (!yearsofExp.isEmpty())) {
-							int yearsOfExperience = (int) Double.parseDouble(yearsofExp);
-							profile.setYearsOfExperience(yearsOfExperience);
-						} else {
-							profile.setYearsOfExperience(0);
-						}
-
-						String relevantExp = ((XSSFCell) cells.next()).toString().trim();
-						if ((relevantExp != null) && (!relevantExp.isEmpty())) {
-							int relevantExperience = (int) Double.parseDouble(relevantExp);
-							profile.setRelevantExperience(relevantExperience);
-						} else {
-							profile.setRelevantExperience(0);
-						}
-
-						String noticePerd = ((XSSFCell) cells.next()).toString().trim();
-						if ((noticePerd != null) && (!noticePerd.isEmpty())) {
-							int noticePeriod = (int) Double.parseDouble(noticePerd);
-							profile.setNoticePeriod(noticePeriod);
-						} else {
-							profile.setNoticePeriod(0);
-						}
-
-						String currCTC = ((XSSFCell) cells.next()).toString().trim();
-						if ((currCTC != null) && (!currCTC.isEmpty())) {
-							int currentCTC = (int) Double.parseDouble(currCTC);
-							profile.setCurrentCTC(currentCTC);
-						} else {
-							profile.setCurrentCTC(0);
-						}
-
-						String expectCTC = ((XSSFCell) cells.next()).toString().trim();
-						if ((expectCTC != null) && (!expectCTC.isEmpty())) {
-							int expectedCTC = (int) Double.parseDouble(expectCTC);
-							profile.setExpectedCTC(expectedCTC);
-						} else {
-							profile.setExpectedCTC(0);
-						}
-
-						String allocation = ((XSSFCell) cells.next()).toString().trim();
-						if ((allocation != null) && (!allocation.isEmpty())) {
-							// int isAllocated=(int)Integer.parseInt(allocation);
-							profile.setIsAllocated1(allocation);
-						} else {
-							profile.setIsAllocated1("No");
-						}
-
-						String allocStartDate = ((XSSFCell) cells.next()).toString().trim();
-						if ((allocStartDate != null) && (!allocStartDate.equals(""))) {
-							Date allocationStartDate = formatter.parse(allocStartDate);
-							profile.setAllocationStartDate(allocationStartDate);
-						} else {
-							Date allocationStartDate = null;
-							profile.setAllocationStartDate(allocationStartDate);
-						}
-						String allocEndDate = ((XSSFCell) cells.next()).toString().trim();
-						if ((allocEndDate != null) && (!allocEndDate.equals(""))) {
-							Date allocationEndDate = formatter.parse(allocEndDate);
-							profile.setAllocationEndDate(allocationEndDate);
-						} else {
-							Date allocationEndDate = null;
-							profile.setAllocationEndDate(allocationEndDate);
-						}
-
-						String profileSourceAdd = ((XSSFCell) cells.next()).toString().trim();
-						if ((profileSourceAdd != null) && (!profileSourceAdd.isEmpty())) {
-							profile.setProfileSourceAdd(profileSourceAdd);
-						} else {
-							profile.setProfileSourceAdd("");
-						}
-
-						String remarks = ((XSSFCell) cells.next()).toString();
-						if ((remarks != null) && (!remarks.isEmpty())) {
-							profile.setRemarks(remarks);
-						} else {
-							profile.setRemarks("");
-						}
-
-						int profileId = tmpUtil.isProfilesExist(profile, userId);
-						if (profileId == 0) {
-							int id = tmpUtil.insertProfile(profile, userId);
-							profile.setId(id);
-							int profId = profile.getId();
-							if (profId > 0) {
-								int profileMapingId = tmpUtil.isProfileMapingExist(profId, refNo);
-								if (profileMapingId == 0) {
-									profile.setId(profId);
-									if (profile.getId() > 0) {
-										result = tmpUtil.createProfileRequirementMapping(profile, refNo, userId);
-									}
-								}
-							}
-						} else {
-							int profileMapingId = tmpUtil.isProfileMapingExist(profileId, refNo);
-							if (profileMapingId == 0) {
-								profile.setId(profileId);
-								if (profile.getId() > 0) {
-									result = tmpUtil.createProfileRequirementMapping(profile, refNo, userId);
-								}
-							}
-							workbook.close();
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("Exception occured" + e.getMessage());
-		}
-
-		finally {
-
-			if (fis != null) {
-
-				try {
-					fis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		}
-
-		return result;
 	}
 
 	/**

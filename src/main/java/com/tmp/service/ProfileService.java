@@ -31,6 +31,7 @@ ProfilesDAO profilesDAO;
 		int result = 0;
 		int profileListSize = profileList.size();
 		int processRecordCount = 0;
+		int profileMapingId = 0;
 		
 		for(Profile  profile : profileList) {
 			
@@ -38,23 +39,16 @@ ProfilesDAO profilesDAO;
 			
 			if(profileId == 0){
 				int id = profilesDAO.insertProfile(profile,userId);
-				profile.setId(id);
-				
-			}
-			if(profileId>0){
-				int profileMapingId = profilesDAO.isProfileMapingExist(profileId,profile.getReqRefNo());
-				if(profileMapingId == 0){
-					profile.setId(profileId);
+				    profile.setId(id);
+				    
+				    System.out.println(" profile.getReqRefNo() *"+profile.getReqRefNo());
+				    
 					result = profilesDAO.insertProfileMapping(profile,profile.getReqRefNo(), userId);
-					processRecordCount = processRecordCount + 1;
-				
-				}
+					processRecordCount = processRecordCount +1;
 			}
-			
+		
 		}
 		return processRecordCount - profileListSize;
-		
-		
-	}
 
+	}
 }
