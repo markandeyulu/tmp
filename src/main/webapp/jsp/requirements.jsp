@@ -695,7 +695,7 @@ $('#logout').click(function () {
 							<a class="button" onclick="window.location.reload()" href="#">x</a>
 							
 						</button>
-						<h3 class="modal-title" id="lineModalLabel" style="color: white;">Upload File</h3>
+						<h3 class="modal-title" id="lineModalLabel" style="color: white;">Requirement Bulk Upload File</h3>
 					</div>
 					<div class="modal-body">
 						<div class="container" id="modelreload">

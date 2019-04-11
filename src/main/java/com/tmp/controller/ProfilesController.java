@@ -253,22 +253,26 @@ public class ProfilesController {
 		String candidateMsg = "";
 		String userId = null;
 		String files = null;
+		int resMessage = -800;
 		HttpSession session = request.getSession();
 		userId = session.getAttribute("user").toString();
 		files = new File("D:\\", file).getAbsolutePath();
 		ArrayList<Associate> candidateList = null;
 		if (!files.isEmpty()) {
 			candidateList = candidateExcelRead.getCandidateListFromExcel(files);
-			System.out.println("Before DAO insertCandidateList User "+ userId+ "**Size**"+candidateList.size());
-			int resMessage = candidateExcelRead.insertResourceList(candidateList, userId, "Siva");
-			System.out.println("resMessage "+ resMessage);
-			if(resMessage == 0)
+
+			if (candidateList != null && candidateList.size() > 0)
+				resMessage = candidateExcelRead.insertResourceList(candidateList, userId, "Siva");
+
+			System.out.println("resMessage " + resMessage);
+			if (candidateList == null || candidateList.size() == 0)
+				candidateMsg = "File is Empty!!!";
+			if (resMessage == 0)
 				candidateMsg = "Upload Failed: File has not been uploaded!!!";
-			else if(resMessage == 1)
-				candidateMsg = "Upload Sucess: File has uploaded sucessfully!!!";
-			
+			else if (resMessage > 0)
+				candidateMsg = "Upload Sucess: " + resMessage + " File has uploaded sucessfully!!!";
 		} else {
-		   
+
 			candidateMsg = "File is Empty!!!";
 		}
 		return candidateMsg;

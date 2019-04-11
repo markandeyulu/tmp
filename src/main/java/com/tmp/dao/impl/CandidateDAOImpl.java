@@ -36,7 +36,7 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		int successCount = 0;
 		int failedCount = 0;
 		int candidateListSize = candidateList.size();
-		int result = 0;
+		//int result = 0;
 		
 		System.out.println("Inside DAO insertCandidateList");
 		
@@ -52,16 +52,19 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				candidate.setPrimarySkillId(primarySkillId);
 				candidate.setSecondarySkillId(secondarySkillId);
 				candidate.setProjId(projId);
-				insertAssociateProjectDetails(empId, projId, candidate);
-				successCount++;
+				int success = insertAssociateProjectDetails(empId, projId, candidate);
+				if (success != 0) {
+					successCount++;
+				}
 			}
-			result = 1;
-		}
-		System.out.println("Total Records : "+candidateList);
-		System.out.println("Records inserted : "+successCount);
-		failedCount = candidateListSize - successCount;
-		System.out.println("Records failed to insert : "+failedCount);
-		return result;
+			failedCount = candidateListSize - successCount;
+			System.out.println("Records failed to insert : "+failedCount);
+			
+		}if (successCount == 0){
+			return 0;
+		}else
+			return successCount;
+		
 	}
 
 	/**
@@ -259,7 +262,9 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				ps.setString(3, candidate.getBand());
 				ps.setString(4, candidate.getGender());
 				ps.setString(5, candidate.getHtrFlag());
-				ps.setInt(6, candidate.getIbuId());
+				//ps.setInt(6, candidate.getIbuId());
+				System.out.println("IBU_ID :"+candidate.getIbuId());
+				ps.setInt(6, 1);
 				ps.setDouble(7, candidate.getTotalExperience());
 				ps.setDouble(8, candidate.getTechmExperience());
 				ps.setString(9, candidate.getCurrentCoutnry());
@@ -271,8 +276,12 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				ps.setString(15, candidate.getSupervisorName());
 				ps.setString(16, candidate.getProjectManagerName());
 				ps.setString(17, candidate.getProgramManagerName());
-				ps.setInt(18, candidate.getPrimarySkillId());
-				ps.setInt(19, candidate.getSecondarySkillId());
+				//ps.setInt(18, candidate.getPrimarySkillId());
+				//ps.setInt(19, candidate.getSecondarySkillId());
+				System.out.println("ps :"+candidate.getPrimarySkillId());
+				System.out.println("ss :"+candidate.getSecondarySkillId());
+				ps.setInt(18, 1);
+				ps.setInt(19, 1);
 				ps.setString(20, candidate.getCertifications());
 				ps.setInt(21, candidate.getProjId());
 

@@ -656,7 +656,7 @@ $('#logout').click(function () {
 				<button type="button" id="reload" class="close" data-dismiss="modal" style="background-color: white;">
 					<a class="button" href="#">x</a>
 				</button>
-				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Resume Upload</h3>
+				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Resume Upload </h3>
 			</div>
 			
 			<div class="modal-body">
@@ -700,7 +700,7 @@ $('#logout').click(function () {
 				<button type="button" id="reload" class="close" data-dismiss="modal" style="background-color: white;">
 					<a class="button" href="#">x</a>
 				</button>
-				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Upload Candidate File</h3>
+				<h3 class="modal-title" id="lineModalLabel" style="color: white;">Candidate Upload File</h3>
 			</div>
 			<div class="modal-body">
 				<div class="container" id="modelreload">
@@ -746,7 +746,7 @@ $('#logout').click(function () {
 							<a class="button" onclick="window.location.reload()" href="#">x</a>
 							
 						</button>
-						<h3 class="modal-title" id="lineModalLabel" style="color: white;">Upload File</h3>
+						<h3 class="modal-title" id="lineModalLabel" style="color: white;">Profile Bulk Upload File</h3>
 					</div>
 					<div class="modal-body">
 						<div class="container" id="modelreload">
