@@ -42,8 +42,8 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		
 		for (Associate candidate : candidateList) {
 			
-			int empId = isResourceExist(candidate, userId, userName);
-			if (empId != 0) {
+			int empExist = isResourceExist(candidate, userId, userName);
+			if (empExist == 0) {
 				int ibuId = getIbuByName(candidate.getEmpIBU());
 				int primarySkillId = getSkillByName(candidate.getPrimarySkill());
 				int secondarySkillId = getSkillByName(candidate.getSecondarySkill());
@@ -52,15 +52,18 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 				candidate.setPrimarySkillId(primarySkillId);
 				candidate.setSecondarySkillId(secondarySkillId);
 				candidate.setProjId(projId);
+				
+				int empId = insertCandidateDetails(candidate, userId, userName);
 				int success = insertAssociateProjectDetails(empId, projId, candidate);
-				if (success != 0) {
-					successCount++;
-				}
+				System.out.println("Success" +success);
+				if (success != 0) 
+					successCount = successCount+1;
+				
 			}
-			failedCount = candidateListSize - successCount;
-			System.out.println("Records failed to insert : "+failedCount);
 			
-		}if (successCount == 0){
+			
+		}
+		if (successCount == 0){
 			return 0;
 		}else
 			return successCount;
@@ -96,8 +99,7 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 			}
 
-			if (recordCount == 0)
-				id = insertCandidateDetails(associate, userId, userName);
+			
 
 		} catch (SQLException e) {
 			System.out.println("SQLException Occurred " + e.getMessage());
@@ -107,7 +109,7 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		finally {
 			closeDBObjects(conn, rs, ps);
 		}
-		return id;
+		return recordCount;
 	}
 
 	/**
@@ -300,7 +302,7 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 
 		int ibuId = 0;
 		String ibuDescription = "";
-
+		System.out.println("ibuName" +ibuName);
 		try {
 			conn = dataSource.getConnection();
 			ps = conn.prepareStatement(sql.toString());
@@ -326,6 +328,7 @@ public class CandidateDAOImpl extends BaseDAO implements CandidateDAO {
 		if (ibuId == 0) {
 			ibuId = insertIbuName(ibuName, ibuDescription);
 		}
+		System.out.println("ibuId "+ ibuId );
 		return ibuId;
 	}
 
